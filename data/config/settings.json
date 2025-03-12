@@ -1,0 +1,8 @@
+{
+  "ruleCommandPackages": [
+    "data.scripts.campaign.rulecmd"
+  ],
+  "bonusXP": {
+    "naderin_askedForMoney": 1
+  }
+}

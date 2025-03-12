@@ -1,0 +1,14 @@
+{
+	"id":"naderin",
+	"name":"Night At Derinkuyu",
+	"author":"Anemoia",
+	"version":{
+		"major":0,
+		"minor":1,
+		"patch":0
+	},
+	"description":"How does night work at a space station anyway?",
+	"gameVersion":"0.97a-RC11",
+	"jars":["jars/NightAtDerinkuyu.jar"],
+	"modPlugin":"data.scripts.NaderinModPlugin"
+}

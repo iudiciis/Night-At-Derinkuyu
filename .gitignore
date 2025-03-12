@@ -1,0 +1,11 @@
+# Default ignored files
+/.idea/shelf/
+/.idea/workspace.xml
+
+.idea
+*.iml
+.vscode
+
+# output
+bin
+out
