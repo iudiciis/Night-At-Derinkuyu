@@ -5,10 +5,10 @@
 	"version":{
 		"major":0,
 		"minor":1,
-		"patch":0
+		"patch":2
 	},
 	"description":"How does night work at a space station anyway?",
-	"gameVersion":"0.97a-RC11",
+	"gameVersion":"0.98a-RC7",
 	"jars":["jars/NightAtDerinkuyu.jar"],
 	"modPlugin":"data.scripts.NaderinModPlugin"
 }

@@ -24,6 +24,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     public static enum Stage {
         CONTACT,
         DROP_OFF,
+        SUBMIT,
         COMPLETED,
         FAILED,
     }
@@ -64,7 +65,8 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         setFailureStage(Stage.FAILED);
 
         setStageOnMemoryFlag(Stage.DROP_OFF, giver, "$naderin_tdd_drop");
-        setStageOnMemoryFlag(Stage.COMPLETED, target, "$naderin_tdd_completed");
+        setStageOnMemoryFlag(Stage.SUBMIT, target, "$naderin_tdd_submit");
+        setStageOnMemoryFlag(Stage.COMPLETED, giver, "$naderin_tdd_completed");
         setCreditReward(reward);
 
         return true;
