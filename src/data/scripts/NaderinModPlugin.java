@@ -8,8 +8,6 @@ import data.scripts.campaign.ids.NaderinPeople;
 public class NaderinModPlugin extends BaseModPlugin {
     @Override
     public void onGameLoad(boolean newGame) {
-        if (newGame) {
-            NaderinPeople.createCharacters();
-        }
+        NaderinPeople.createCharacters();
     }
 }

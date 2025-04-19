@@ -22,8 +22,7 @@ public class NaderinPeople {
         ImportantPeopleAPI ip = Global.getSector().getImportantPeople();
         // MarketAPI market = null;
 
-        {
-            // Harlan Hines
+        {   // Harlan Hines
             PersonAPI person = Global.getFactory().createPerson();
             person.setId(HARLAN);
             person.setFaction(Factions.INDEPENDENT);
@@ -47,7 +46,7 @@ public class NaderinPeople {
             person.setGender(Gender.MALE);
             person.setRankId(Ranks.AGENT);
             person.setPostId(Ranks.POST_SMUGGLER);
-            person.setImportance(PersonImportance.MEDIUM);
+            person.setImportance(PersonImportance.HIGH);
             person.getName().setFirst("Remy");
             person.getName().setLast("Laurent");
             person.setVoice(Voices.SPACER);

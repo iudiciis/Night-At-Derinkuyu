@@ -10,6 +10,7 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithSearch;
 import com.fs.starfarer.api.ui.SectorMapAPI;
@@ -18,7 +19,6 @@ import com.fs.starfarer.api.util.Misc;
 import data.scripts.campaign.ids.NaderinPeople;
 
 public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
-
     // See com\fs\starfarer\api\impl\campaign\missions\DeadDropMission.java
 
     public static enum Stage {
@@ -38,8 +38,8 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     @Override
     protected boolean create(MarketAPI createdAt, boolean barEvent) {
         requireSystemNot(createdAt.getStarSystem());
-		requireSystemInterestingAndNotCore();           // can be dangerous
-		preferSystemInInnerSector();                    // preferably not too far
+        requireSystemInterestingAndNotUnsafeOrCore();
+		preferSystemInInnerSector();
 		preferSystemUnexplored();
 		preferSystemInDirectionOfOtherMissions();
         system = pickSystem();
@@ -68,6 +68,18 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         setStageOnMemoryFlag(Stage.SUBMIT, target, "$naderin_tdd_submit");
         setStageOnMemoryFlag(Stage.COMPLETED, giver, "$naderin_tdd_completed");
         setCreditReward(reward);
+
+        // See HubMissionWithTriggers.java
+        beginStageTrigger(Stage.SUBMIT);
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.MERCENARY, FleetTypes.MERC_PRIVATEER, system);
+        triggerSetFleetMissionRef("$naderin_tdd_merc_ref");
+        triggerMakeNoRepImpact();
+        triggerMakeNonHostile();
+        triggerPickLocationTowardsPlayer(system.getCenter(), 90, 2500);
+        triggerOrderFleetInterceptPlayer();
+        triggerFleetStopPursuingPlayerUnlessInStage(Stage.SUBMIT);
+        triggerFleetMakeImportant(null, Stage.SUBMIT);
+        endTrigger();
 
         return true;
     }
@@ -98,6 +110,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         }
     }
 
+    @Override
     protected void updateInteractionDataImpl() {
         set("$naderin_tdd_reward", reward);
         set("$naderin_tdd_aOrAnThing", thing);
@@ -118,6 +131,9 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 			info.addPara("Deliver the package to the specified coordinates in the " +
                     system.getNameWithLowercaseTypeShort() + ".", opad);
 		}
+        if (currentStage == Stage.SUBMIT) {
+            info.addPara("Return to Remy.", opad);
+        }
 	}
 
 	@Override
@@ -132,12 +148,16 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 					system.getNameWithLowercaseTypeShort(), tc, pad);
 			return true;
 		}
+        if (currentStage == Stage.SUBMIT) {
+            info.addPara("Return to Remy for your reward.", tc, pad);
+            return true;
+        }
 		return false;
 	}
 
     @Override
     public SectorEntityToken getMapLocation(SectorMapAPI map) {
-        if (currentStage == Stage.CONTACT) {
+        if (currentStage == Stage.CONTACT || currentStage == Stage.SUBMIT) {
             return getMapLocationFor(Global.getSector().getStarSystem("galatia").getEntityById("derinkuyu_station"));
         }
         if (currentStage == Stage.DROP_OFF) {
