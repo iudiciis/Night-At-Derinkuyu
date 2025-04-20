@@ -33,7 +33,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     protected String thing = "a shielded crate";
     protected SectorEntityToken target;
     protected StarSystemAPI system;
-    protected PersonAPI giver;
+    protected PersonAPI giver; // not really the giver anymore, but still refers to the person paying at the end
 
     @Override
     protected boolean create(MarketAPI createdAt, boolean barEvent) {
@@ -48,15 +48,20 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         target = spawnMissionNode(new LocData(EntityLocationType.HIDDEN_NOT_NEAR_STAR, null, system));
         if (!setEntityMissionRef(target, "$naderin_tdd_ref")) return false;
         target.setName("Drop Point");
+        // target.setCustomDescriptionId("Drop site.");
 
         giver = getImportantPerson(NaderinPeople.REMY);
         if (giver == null) return false;
         if (!setPersonMissionRef(giver, "$naderin_tdd_ref")) return false;
 
-        createdAt.getCommDirectory().addPerson(giver);
-        createdAt.addPerson(giver);
+
+        MarketAPI derinkuyu = getMarket("derinkuyu_market");
+        if (derinkuyu == null) return false;
+        derinkuyu.getCommDirectory().addPerson(giver);
+        derinkuyu.addPerson(giver);
         
         makeImportant(target, "$naderin_tdd_target", Stage.DROP_OFF);
+        makeImportant(giver, "$naderin_tdd_giver", Stage.CONTACT, Stage.SUBMIT);
         
         setName("The Derinkuyu Drop");
         setStoryMission();
@@ -70,15 +75,32 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         setCreditReward(reward);
 
         // See HubMissionWithTriggers.java
+        // Pirate complication
+        beginWithinHyperspaceRangeTrigger(system, 5f, true, Stage.DROP_OFF);
+        triggerCreateFleet(FleetSize.SMALL, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.RAIDER, system);
+        triggerAutoAdjustFleetSize(FleetSize.SMALL, FleetSize.LARGE);
+        triggerPickLocationTowardsPlayer(system.getHyperspaceAnchor(), 10f, getUnits(0.3f));
+        triggerSpawnFleetAtPickedLocation("$naderin_tdd_pirates_ref", null);
+        triggerSetFleetMissionRef("$naderin_tdd_ref");
+        triggerMakeFleetGoAwayAfterDefeat();
+        triggerSetPirateFleet(); // important, fleet behaves differently otherwise when transponder is off
+        // triggerSetPatrol();
+        triggerOrderFleetPatrolHyper(system);
+        endTrigger();
+
+        // Mercenary complication
         beginStageTrigger(Stage.SUBMIT);
-        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.MERCENARY, FleetTypes.MERC_PRIVATEER, system);
-        triggerSetFleetMissionRef("$naderin_tdd_merc_ref");
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.INDEPENDENT, FleetTypes.MERC_PRIVATEER, system);
+        triggerPickLocationTowardsPlayer(system.getCenter(), 10, 2000);
+        triggerSpawnFleetAtPickedLocation("$naderin_tdd_merc_ref", null);
+        triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeNoRepImpact();
         triggerMakeNonHostile();
-        triggerPickLocationTowardsPlayer(system.getCenter(), 90, 2500);
+        triggerMakeFleetIgnoreOtherFleets();
+        triggerMakeFleetGoAwayAfterDefeat();
         triggerOrderFleetInterceptPlayer();
-        triggerFleetStopPursuingPlayerUnlessInStage(Stage.SUBMIT);
         triggerFleetMakeImportant(null, Stage.SUBMIT);
+        triggerFleetSetName("Grey Rock Privateers");
         endTrigger();
 
         return true;
@@ -113,11 +135,16 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     @Override
     protected void updateInteractionDataImpl() {
         set("$naderin_tdd_reward", reward);
-        set("$naderin_tdd_aOrAnThing", thing);
-        set("$naderin_tdd_thing", getWithoutArticle(thing));
+        set("$naderin_tdd_aOrAnThing", thing);                  // unused?
+        set("$naderin_tdd_thing", getWithoutArticle(thing));    // unused?
         set("$naderin_tdd_personName", giver.getNameString());
         set("$naderin_tdd_systemName", system.getNameWithLowercaseTypeShort());
-        set("$naderin_tdd_dist", getDistanceLY(target));
+        // set("$naderin_tdd_dist", getDistanceLY(target));     // getDistanceLY would not use Remy...
+        int dist = 0;
+        if (giver.getMarket() != null) {
+            dist = (int) Math.round(Misc.getDistanceLY(giver.getMarket().getLocationInHyperspace(), target.getLocationInHyperspace()));
+        }
+        set("$naderin_tdd_dist", dist);
 	}
 
     @Override
@@ -125,14 +152,14 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 		float opad = 10f;
 		// Color h = Misc.getHighlightColor();
         if (currentStage == Stage.CONTACT) {
-            info.addPara("Ask Remy about where to deliver the package.", opad);
+            info.addPara("Not knowing the location of the drop themselves, you were told to ask Remy about where to deliver the package.", opad);
         }
 		if (currentStage == Stage.DROP_OFF) {
-			info.addPara("Deliver the package to the specified coordinates in the " +
+			info.addPara("Now knowing the location of the drop, the next step is to deliver the package to the specified coordinates in the " +
                     system.getNameWithLowercaseTypeShort() + ".", opad);
 		}
         if (currentStage == Stage.SUBMIT) {
-            info.addPara("Return to Remy.", opad);
+            info.addPara("Technically having made the drop, you now must return to Remy to receive payment.", opad);
         }
 	}
 
@@ -149,7 +176,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 			return true;
 		}
         if (currentStage == Stage.SUBMIT) {
-            info.addPara("Return to Remy for your reward.", tc, pad);
+            info.addPara("Return to Remy for your reward", tc, pad);
             return true;
         }
 		return false;

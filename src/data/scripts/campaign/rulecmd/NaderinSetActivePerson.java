@@ -13,10 +13,10 @@ import com.fs.starfarer.api.util.Misc.Token;
 /**
  * Sets the provided person as the active person during dialog.
  * Does not start an actual conversation.
+ * Probably already exists in some form.
  * Inspiration taken from com\fs\starfarer\api\impl\campaign\rulecmd\academy\GenGAIntroAcademician.java
  * though truthfully there's a lot of rulecmds that use setActivePerson().
  */
-
 public class NaderinSetActivePerson extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap) {
@@ -26,7 +26,7 @@ public class NaderinSetActivePerson extends BaseCommandPlugin {
         if (person == null) return false;
 
         dialog.getInteractionTarget().setActivePerson(person);
-        dialog.getVisualPanel().showPersonInfo(person, false, true); // minimal mode, relation bar
+        dialog.getVisualPanel().showPersonInfo(person, true, true); // minimal mode, relation bar
 
         return true;
     }

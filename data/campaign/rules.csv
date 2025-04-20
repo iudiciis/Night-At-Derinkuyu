@@ -6,7 +6,7 @@ id,trigger,conditions,script,text,options,notes
 # The Derinkuyu Drop,,,,,,
 ,,,,,,
 # Starting Bar Event,,,,,,
-naderin_tdd_barOpt,AddBarEvents,"$market.id == derinkuyu_market
+naderin_tdd_barOpt,AddBarEvents,"$market.id != derinkuyu_market
 !$global.isInTutorial
 !$global.naderin_tdd_acceptedMission","AddBarEvent naderin_tdd_mission ""Speak with the quiet man at the end of the bar"" ""At the end of the bar, a quiet man sits alone tapping on their Tri-Pad. They glance around from time to time, clearly waiting for something — or someone.""",,,
 naderin_tdd_barSel,DialogOptionSelected,"$option == naderin_tdd_mission","$missionId = naderin_tdd
@@ -67,7 +67,7 @@ You watch as they scurry off into some corner of the bar, ordering themselves a 
 
 It's only when your crew begins loading the package — a shielded crate of... something — onto your flagship that you begin to wonder just what you've gotten yourself into.","naderin_tdd_badger:Demand an explanation
 naderin_tdd_examine:Examine the package discreetly
-backToBar:Take a look around the bar",
+backToBar:Return to the bar",
 naderin_tdd_badger,DialogOptionSelected,"$option == naderin_tdd_badger",,"By the time you catch up with them, they're dead drunk.
 
 You find it unlikely they'll be able to tell you anything of value.","naderin_tdd_examine:Examine the package discreetly
@@ -80,7 +80,7 @@ With practiced precision, your technicians and engineers crack open the shielded
 ""Hey, watch it!"" You hear your chief engineer suddenly bark over comms, overeager machinery powering down in the background. ""The crate was one thing, this is another. Everyone knows these things could be rigged to explode if you touch them wrong. Plus, if we break it apart... well. Scans first.""","naderin_tdd_examine2:Watch your crew get to work",
 naderin_tdd_examine2,DialogOptionSelected,"$option == naderin_tdd_examine2",,"It is after a few scans (and a lecture on following protocol) that your crew discover that the relay is based on already existing designs, only with significant exterior markings and modifications on top. Non-intrusive examinations of the relay's structure are as thorough as possible, but unfortunately the crew are forced to go without the gung-ho of engineering's brand new laser powered breach cutters.
 
-""Could've sworn... no, it's fine work, but not military. Whoever made this slapped on some exterior modifications to a common design, which reminds me of the shortcuts you'd find engineering undergraduates make on their assessments."" Your chief engineer chuckles to themselves, shaking their head a little. ""I suppose this level of makeshift work could plausibly pass for spaceworthy. Not that anyone in their right mind would ever consider it up to code.""","naderin_tdd_examine3:Continue",
+""Could've sworn... no, it's fine work, but not military. Whoever made this slapped on some exterior modifications to a common design, which reminds me of the shortcuts you'd find apprentices make on their assessments."" Your chief engineer chuckles to themselves, shaking their head a little. ""I suppose this level of makeshift work could plausibly pass for spaceworthy. Not that anyone in their right mind would ever consider it up to code.""","naderin_tdd_examine3:Continue",
 naderin_tdd_examine3,DialogOptionSelected,"$option == naderin_tdd_examine3",,"It doesn't take too long for the final report to show up on your Tri-Pad.
 
 ""Looks like this is meant to just broadcast a message,"" your tech officer reports to you. ""What message, if any, we can only know when we make the drop.""","backToBar:Return to the bar",
@@ -110,7 +110,7 @@ naderin_tdd_remyHello,DialogOptionSelected,"$option == naderin_tdd_remyHello","A
 naderin_tdd_remyDetails:""I was told to call you for the details about a dead drop.""",
 naderin_tdd_remyHello2,DialogOptionSelected,"$option == naderin_tdd_remyHello2",,"""What? Oh, it's you! Harlan sent me a message the moment you said yes.""
 
-""I wasn't expecting anyone to take on this mission after how long I'd been waiting... but now that you're here, I can finally get this thing off my back! You have no idea the troubles I've had to go through. Getting Harlan to ask around was my last resort. After talking to all those stuck-up assholes myself—""
+""I wasn't expecting anyone to take on this mission after how long I'd been waiting... but now that you're here, I can finally get this thing off my back! You have no idea all the troubles I've had to go through. Getting Harlan to ask around was my last resort. After talking to all those stuck-up assholes myself—""
 
 Remy decides at that moment to take a swig of alcohol from a bottle beside him, as if there were some metaphorical weight lifting off their shoulders.
 
@@ -119,13 +119,11 @@ naderin_tdd_remyNothing,DialogOptionSelected,"$option == naderin_tdd_remyNothing
 
 Seconds go by before you get the feeling that you should probably start talking.","naderin_tdd_remyHello:""Hello?""
 naderin_tdd_remyDetails:""I was told to call you for the details about a dead drop.""",
-naderin_tdd_remyDetails,DialogOptionSelected,"$option == naderin_tdd_remyDetails","SetTextHighlights $naderin_tdd_systemName $naderin_tdd_dist
-$missionId = naderin_tdd
-$naderin_tdd_drop = true
-Call $global.naderin_tdd_ref updateData
+naderin_tdd_remyDetails,DialogOptionSelected,"$option == naderin_tdd_remyDetails","Call $naderin_tdd_ref viewMap ""Destination: $naderin_tdd_systemName""
 Call $naderin_tdd_ref updateStage
-Call $naderin_tdd_ref viewMap ""Destination: $naderin_tdd_systemName""
-FireAll naderin_tdd_remyDetailOpts","Remy slaps their forehead. ""Right! That! Why else, but... You're here to... yeah, yeah.""
+FireAll naderin_tdd_remyDetailOpts
+SetTextHighlights $naderin_tdd_systemName $naderin_tdd_dist
+$naderin_tdd_drop = true","Remy slaps their forehead. ""Right! That! Why else, but... You're here to... yeah, yeah.""
 
 He leans off to the side, picking up a datapad. ""If you would please go to the $naderin_tdd_systemName about $naderin_tdd_dist light-years away, and drop off the package at the location specified there...""
 
@@ -135,28 +133,30 @@ His voice trails off into the air. Your nav officer receives a ping moments late
 # SetStoryPoint fractions found/set in settings.json
 # Some of those scripts are probably unnecessary"
 naderin_tdd_askDangerOpt,naderin_tdd_remyDetailOpts,"!$askedAboutDanger",,,"naderin_tdd_askDanger:""Danger?""",
-naderin_tdd_askDanger,DialogOptionSelected,"$option == naderin_tdd_askDanger","$canAskCrew = true
-$askedAboutDanger = true
-FireAll naderin_tdd_remyDetailOpts
-","""Oh. Uh. Just a few pirates on the way, that's all. It's sort of the reason nobody wanted to take the mission."" Remy chuckles to himself, as if not believing his own words.
+naderin_tdd_askDanger,DialogOptionSelected,"$option == naderin_tdd_askDanger","$askedAboutDanger = true
+FireAll naderin_tdd_remyDetailOpts","""Oh. Uh. Just a few pirates on the way, that's all. It's sort of the reason nobody wanted to take the mission."" Remy chuckles to himself, as if not believing his own words.
 
 ""Nothing someone like you can't handle, though. Right?""",,
-naderin_tdd_askCrewOpt,naderin_tdd_remyDetailOpts,"$canAskCrew == true",,,"naderin_tdd_askCrew:Ask your info officer about the 'danger'",
-naderin_tdd_askCrew,DialogOptionSelected,"$option == naderin_tdd_askCrew","$canAskCrew = false","Your officer taps a bit on their console, but it's clear that they already know what the danger might be about.
+naderin_tdd_askCrewOpt,naderin_tdd_remyDetailOpts,"$askedAboutDanger
+!$askedCrewAboutDanger",,,"naderin_tdd_askCrew:Ask your information officer about the 'danger'",
+naderin_tdd_askCrew,DialogOptionSelected,"$option == naderin_tdd_askCrew",,"Your officer taps a bit on their console, but it's clear that they already know what the danger might be about.
 
 ""There's rumours. They all seem wholly unsubstantiated, but there's something that comes up just enough that people think it could be true. It's the name, 'Kanta'.""","naderin_tdd_askCrew2:""What?""",
-naderin_tdd_askCrew2,DialogOptionSelected,"$option == naderin_tdd_askCrew2",,"""It's not clear how they're related. But I'd bet they're related somehow.""
+naderin_tdd_askCrew2,DialogOptionSelected,"$option == naderin_tdd_askCrew2","$askedCrewAboutDanger = true
+FireAll naderin_tdd_remyDetailOpts","""It's not clear how they're related. But I'd bet they're related somehow.""
 
 Your ops chief chimes in from the side. ""There's every chance the rumors are all fabricated. Nothing like slandering someone on the local forums to run them out of business.""
 
-There's nothing concrete, but you realise you do have the option of just asking Remy outright.","naderin_tdd_askCrew3:Confront Remy with this information",
-naderin_tdd_askCrew3,DialogOptionSelected,"$option == naderin_tdd_askCrew3","FireAll naderin_tdd_remyDetailOpts","""Uh, Kanta? That Kanta?"" He blinks for a second, an eyebrow raised in thought. ""If I were on her bad side, I'd be dead. And if I were on her good side, well, I wouldn't be here.""
+There's nothing concrete, but you realise you do have the option of just asking Remy outright.",,
+naderin_tdd_askCrew3Opt,naderin_tdd_remyDetailOpts,"$askedCrewAboutDanger
+!$askedRemyAboutDanger",,,"naderin_tdd_askCrew3:Confront Remy with this information",
+naderin_tdd_askCrew3,DialogOptionSelected,"$option == naderin_tdd_askCrew3","$askedRemyAboutDanger = true
+FireAll naderin_tdd_remyDetailOpts","""Uh, Kanta? That Kanta?"" He blinks for a second, an eyebrow raised in thought. ""If I were on her bad side, I'd be dead. And if I were on her good side, well, I wouldn't be here.""
 
-He swishes his bottle of cheap alcohol around. You don't have the impression that Remy's much of a good actor, but it's certainly possible that he's lying.
+He swishes his bottle of cheap alcohol around idly. You don't have the impression that Remy's much of a good actor, but it's certainly possible that he's lying.
 
 It's equally possible that you're overthinking this.",,
-naderin_tdd_askForMoreOpt,naderin_tdd_remyDetailOpts,"!$askedForMore","SetStoryOption naderin_tdd_askForMore 1 naderin_askedForMoney ui_char_spent_story_point ""Convinced Remy to give you more credits to complete a dead drop""
-$askedForMore = true",,"naderin_tdd_askForMore:""Actually, that's a little far. I need more credits.""",
+naderin_tdd_askForMoreOpt,naderin_tdd_remyDetailOpts,"!$askedForMore","SetStoryOption naderin_tdd_askForMore 1 naderin_askedForMoney ui_char_spent_story_point ""Convinced Remy to give you more credits to complete a dead drop""",,"naderin_tdd_askForMore:""Actually, that's a little far. I need more credits.""",
 naderin_tdd_askForMore,DialogOptionSelected,"$option == naderin_tdd_askForMore",,"You have a hunch Remy isn't the sort to spend their credits wisely. To have thousands of credits at your fingertips and yet to be willing to live in squalor?
 
 ""What? Why would you need...?""
@@ -164,14 +164,25 @@ naderin_tdd_askForMore,DialogOptionSelected,"$option == naderin_tdd_askForMore",
 ","naderin_tdd_askForMore2:Let them think about it",
 naderin_tdd_askForMore2,DialogOptionSelected,"$option == naderin_tdd_askForMore2",,"You stay silent, letting Remy do all the thinking in your stead. Over a matter of minutes, you slowly see his face change dozens of times as the gears click in his brain.
 
-""...right, right. More credits would make sense. You need fuel and supplies, and maybe a little extra as a buffer for unforeseen damages. That'd mean this would have to be an advance on the original reward. And then add some more for delivering something nobody else wanted to deliver...""","naderin_tdd_askForMore3:""You're starting to understand now.""
-naderin_tdd_askForMore3:Stay silent",
-naderin_tdd_askForMore3,DialogOptionSelected,"$option == naderin_tdd_askForMore2","AddCredits 25000","Eventually, you see the credits enter your account. 
+""...right, right. More credits would make sense. You need fuel and supplies, and maybe a little extra as a buffer for unforeseen damages. That'd mean this would have to be an advance on the original reward. And then add some more for delivering something nobody else wanted to deliver...""","naderin_tdd_askForMore3Opt1:""You're starting to understand now.""
+naderin_tdd_askForMore3Opt2:Stay silent",
+naderin_tdd_askForMore3Opt1,DialogOptionSelected,"$option == naderin_tdd_askForMore3Opt1","$option = naderin_tdd_askForMore3
+FireBest DialogOptionSelected",,,
+naderin_tdd_askForMore3Opt2,DialogOptionSelected,"$option == naderin_tdd_askForMore3Opt2","$option = naderin_tdd_askForMore3
+FireBest DialogOptionSelected",,,
+naderin_tdd_askForMore3,DialogOptionSelected,"$option == naderin_tdd_askForMore3","AddCredits 25000
+$askedForMore = true","Eventually, you see the credits enter your account. 
 
 ""That's all I can give you on top of what we've already agreed on."" Remy grimaces, tapping rapidly on something off screen. ""Unfortunately, I now have some pressing business to attend to on account of the gaping hole in my account, so if you'll excuse me...""
 
 Then with a swipe of his fingers, Remy cuts off the connection. It seems he'll be busy for a while yet.","cutCommLinkNoText:Continue",
-naderin_tdd_remyLeaveOpt,naderin_tdd_remyDetailOpts,,,,"cutCommLink:Cut the comm link",
+naderin_tdd_remyLeaveOpt,naderin_tdd_remyDetailOpts,,,,"naderin_tdd_remyLeave:Cut the comm link",
+naderin_tdd_remyLeave,DialogOptionSelected,"$option == naderin_tdd_remyLeave","$option = cutCommLinkNoText
+FireBest DialogOptionSelected","You cut the comm link.
+
+Not a minute after does an apologetic message arrive from Remy, suddenly informing you that you'll have to return to him to recieve payment, rather than immediately upon making the drop.
+
+You get the feeling that there'll be more unforeseen complications in the future.",,
 naderin_tdd_greetAgain,PickGreeting,"$id == naderin_remy
 Call $naderin_tdd_ref updateData
 $naderin_tdd_stage == DROP_OFF score:1000","ShowPersonVisual
@@ -238,7 +249,7 @@ naderin_tdd_objectScan3,DialogOptionSelected,"$option == naderin_tdd_objectScan3
 Your comms officer taps at their console, but they appear to make no progress. ""The hyperwave message is just junk. Nothing we can sift out from the static, $playerSirOrMadam.""
 
 ""That relay was junk,"" your chief engineer scoffs from the side. ""But failing like that? I can't believe I even thought it was spaceworthy.""","naderin_tdd_objectScan4:Order the relay's remains analysed",
-naderin_tdd_objectScan4,DialogOptionSelected,"$option == naderin_tdd_objectScan4","$naderin_tdd_completed = true
+naderin_tdd_objectScan4,DialogOptionSelected,"$option == naderin_tdd_objectScan4","$naderin_tdd_submit = true
 Call $naderin_tdd_ref updateStage","Salvage crews depart shortly after you give the order, and results come in promptly without issue.
 
 ""Now that we were able to take a closer look, we were able to confirm that there wasn't much of a chance of it working properly in the first place. A modified relay like this? It's like self-sabotage with how shoddy the workmanship is.""
@@ -246,31 +257,92 @@ Call $naderin_tdd_ref updateStage","Salvage crews depart shortly after you give 
 Despite this, your sensors officer notes that even if the onboard electronics were turned to slag when the thing tore itself apart, the garbled hyperwave burst was certainly still strong enough to alert any nearby fleets of your presence.","defaultLeave:Leave",
 "#END Drop Interaction",,,,,,
 ,,,,,,
+# Pirate Interaction,,,,,,
+naderin_tdd_pirateEncounter,BeginFleetEncounter,"$faction.id == pirates
+$naderin_tdd_pirates_ref == true
+!$entity.tdd_alreadyMetPlayer",,,,
+naderin_tdd_pirateCommsFriendly,OpenCommLink,"$isPirate
+!$isHostile
+$faction.friendlyToPlayer
+$naderin_tdd_pirates_ref score:2000
+!$entity.tdd_hasMetPlayer","$entity.tdd_hasMetPlayer
+$menuState = fleetConvMain 0
+FireAll PopulateOptions","""Ah. Hm? Thought you were someone else.""",,
+naderin_tdd_pirateOptFriendly,PopulateOptions,"$faction.id == pirates
+$faction.friendlyToPlayer
+$naderin_tdd_pirates_ref score:100",,,"naderin_tdd_pirateHeardFriendly:""Are you, by chance, here to intercept a drop?""",
+naderin_tdd_pirateHeardFriendly,DialogOptionSelected,,"FireAll PopulateOptions","""Eh? Not a clue what you're talking about.""
+
+It's quickly made clear that these pirates are here because they heard a salvage fleet was passing through here, but mentions of a dead drop are only met with blank stares. 
+
+You realise they had no idea about the drop.",,
+naderin_tdd_pirateCommsNeutral,OpenCommLink,"$faction.id == pirates
+$naderin_tdd_pirates_ref score:2000
+!$entity.isHostile
+!$entity.tdd_hasMetPlayer","$entity.tdd_hasMetPlayer
+$menuState = fleetConvMain 0
+FireAll PopulateOptions","""Daft or something? What're you talkin' to us for?""",,
+naderin_tdd_pirateOptNeutral,PopulateOptions,"$naderin_tdd_pirates_ref score:100
+!$entity.isHostile",,,"naderin_tdd_pirateHeardNeutral:""Intercepting a dead drop today?""",
+naderin_tdd_pirateHeardNeutral,DialogOptionSelected,,"FireAll PopulateOptions","""What sort of question is that? Get lost.""
+
+Further questions are met with varying mixes of indifference and annoyance. It's clear you aren't getting anything out of them.",,
+naderin_tdd_pirateCommsHostile,OpenCommLink,"$faction.id == pirates
+$entity.isPirate == true
+$entity.isHostile == true
+$naderin_tdd_pirates_ref == true
+!$entity.tdd_hasMetPlayer
+$entity.relativeStrength >= 0","$entity.tdd_hasMetPlayer
+FireAll PopulateOptions","The comms line fizzles into being. On the other side, the pirate $personRank seems to lean to the side for a second as someone speaks into their ear.
+
+""I suppose we could have ourselves a talk before the blasting starts."" $HeOrShe raises a brow, then alternates between raising one or the other in some sort of a mocking gesture. ""So? Speak 'fore we get bored.""",,"# trying to get higher condition score"
+naderin_tdd_pirateOptHostile,PopulateOptions,"$naderin_tdd_pirates_ref",,,"naderin_tdd_pirateHeardNeutral:""You're here for the drop, aren't you?""",
+naderin_tdd_pirateHeardHostile,DialogOptionSelected,,"$entity.ignorePlayerCommRequests = true 1
+FireAll PopulateOptions","""What? That's what you wanted to ask?"" $HeOrShe deflates in disappointment, their good humour fading into impatience.
+
+""Why would we ever tell you, you rad-addled dirt-scrubber?""",,
+"#END Pirate Interaction",,,,,,
+,,,,,,
 # Mercenary Interaction,,,,,,
+naderin_tdd_mercFleetEncounter,BeginFleetEncounter,"$naderin_tdd_merc_ref score: 100
+!$entity.alreadyTalkedToPlayer
+!$player.naderin_tdd_talkedToMerc","FleetDesc
+HailPlayer",,,"# in this mission, we'll only consider them ""met"" if the player talks to them"
 naderin_tdd_mercInitialOpen,OpenCommLink,"$entity.naderin_tdd_merc_ref score:100
 !$entity.alreadyTalkedToPlayer
-!$entity.tookTheDeal","$entity.alreadyAlreadyTalkedToPlayer = true
+!$entity.tookTheDeal","$entity.alreadyTalkedToPlayer = true
 $player.naderin_tdd_talkedToMerc = true
 SetTextHighlights 10,000
 FireAll naderin_tdd_mercOpts","$personName looks at you with a blank gaze.
 
-They don't bother with pleasantries, getting straight to business. ""The location of your 'drop', and you get 10,000 credits. Deal?""",,
+They don't bother with pleasantries, getting straight to business. ""The location of your drop, and you get 10,000 credits. Deal?""",,
 naderin_tdd_mercOpen,OpenCommLink,"$entity.naderin_tdd_merc_ref score:100
 $entity.alreadyTalkedToPlayer
 !$entity.tookTheDeal","SetTextHighlights 10,000
 FireAll naderin_tdd_mercOpts","$personName looks at you with a blank gaze, but there's a hint of annoyance there now.
 
-""Changed your mind? The location of your 'drop', and you get 10,000 credits. Deal?""",,
+""Changed your mind? The location of your drop, and you get 10,000 credits. Deal?""",,
 naderin_tdd_mercDetailsOpt,naderin_tdd_mercOpts,"!$askedForDetails",,,"naderin_tdd_mercDetails:""What do you need that information for?""",
 naderin_tdd_mercDetails,DialogOptionSelected,"$option == naderin_tdd_mercDetails","$askedForDetails = true
-FireAll naderin_tdd_mercOpts","""You know how it is, $playerSirOrMadam. Confidential.""",,
-naderin_tdd_mercDetailsOpt2,naderin_tdd_mercOpts,"$askedForDetails",,,"naderin_tdd_mercDetails2:""Is there no way I could convince you?""",
-naderin_tdd_mercDetails2,DialogOptionSelected,"$option == naderin_tdd_mercDetails2","FireAll naderin_tdd_mercOpts","""A contract's a contract. But."" $HeOrShe gives you a crack of a smile.
+FireAll naderin_tdd_mercOpts","""You know how it is. Confidential.""",,
+naderin_tdd_mercDetailsOpt2,naderin_tdd_mercOpts,"$askedForDetails
+!$askedToConvince",,,"naderin_tdd_mercDetails2:""Is there no way I could convince you otherwise?""",
+naderin_tdd_mercDetails2,DialogOptionSelected,"$option == naderin_tdd_mercDetails2","$askedToConvince = true
+FireAll naderin_tdd_mercOpts","""A contract's a contract. But."" $HeOrShe gives you a crack of a smile.
 
 ""As one captain to another, I believe you might be better suited asking questions to your employer. They are the one responsible, no? Better their words than mine. Now, do we have a deal?""",,
-naderin_tdd_mercDealOpt,naderin_tdd_mercOpts,,,,"naderin_tdd_mercDeal:Accept the deal",
+naderin_tdd_mercJustThatOpt,naderin_tdd_mercOpts,"!$askedJustThat",,,"naderin_tdd_mercJustThat:""And all you want is the location?""",
+naderin_tdd_mercJustThat,DialogOptionSelected,"$option == naderin_tdd_mercJustThat","$askedJustThat = true
+FireAll naderin_tdd_mercOpts","""Nothing about the drop itself. Or you. Just the location of the drop, captain.""",,
+naderin_tdd_mercAndIfOpt,naderin_tdd_mercOpts,"!$askedAndIf",,,"naderin_tdd_mercAndIf:""And if we refuse?""",
+naderin_tdd_mercAndIf,DialogOptionSelected,"$option == naderin_tdd_mercAndIf","$askedAndIf = true
+FireAll naderin_tdd_mercOpts","There's a hint of exasperation on $hisOrHer face now. ""We will not be resorting to violence, if that is what you are asking.""",,
+naderin_tdd_mercDealOpt,naderin_tdd_mercOpts,,,,"naderin_tdd_mercDeal:Accept the deal and transmit coordinates",
 naderin_tdd_mercDeal,DialogOptionSelected,"$option == naderin_tdd_mercDeal","$entity.tookTheDeal = true
+MakeOtherFleetImportant false
 AddCredits 10000","""A pleasure doing business with you, captain.""","cutCommLink:Cut the comm link",
+naderin_tdd_mercRefuseOpt,naderin_tdd_mercOpts,,,,"naderin_tdd_mercRefuse:Refuse",
+naderin_tdd_mercRefuse,DialogOptionSelected,"$option == naderin_tdd_mercRefuse",,"The mercenary $personRank sighs before cutting the comm link.","cutCommLinkNoText:Continue",
 naderin_tdd_mercCutCommsOpt,naderin_tdd_mercOpts,,,,"cutCommLink:Cut the comm link",
 "#END Mercenary Interaction",,,,,,
 ,,,,,,
@@ -290,7 +362,7 @@ FireBest DialogOptionSelected","""I do, don't I?""",,
 naderin_tdd_remyConv2,DialogOptionSelected,"$option == naderin_tdd_remyConv2","$option = naderin_tdd_remyConv3
 FireBest DialogOptionSelected","""I know. I know.""",,
 naderin_tdd_remyConv3,DialogOptionSelected,"$option == naderin_tdd_remyConv3",,"Remy sighs, leaning back in his chair. ""Ah, whatever. I'll just tell you now. I'm in debt.""","naderin_tdd_remyConvDebt:""Debt?""
-naderin_tdd_remyConvDebtWho:""Who are you in debt to?""",
+naderin_tdd_remyConvDebtWho:""Who are you indebted to?""",
 naderin_tdd_remyConvDebt,DialogOptionSelected,"$option == naderin_tdd_remyConvDebt",,"""Yes. Debt. What, is this a foreign concept to you?""","naderin_tdd_remyConvDebtNo:""No, I've never been in debt.""
 naderin_tdd_remyConvDebtMock:""Debt is for losers.""
 naderin_tdd_remyConvDebtComisserate:""Yeah. Those Tri-Tachyon investors, huh?""
@@ -327,7 +399,7 @@ FireAll naderin_tdd_remyDropOpts","""Mercenaries? And not pirates?""
 Remy narrows his eyes, looking off to the side in thought. ""It can't have been that important, surely? But if what you say is true...""",,
 naderin_tdd_remyHelpOpt,naderin_tdd_remyDropOpts,"$player.naderin_tdd_talkedToMerc == true
 $askedIntentional",,,"naderin_tdd_remyHelp:""You want my help?""",
-naderin_tdd_remyHelp,DialogOptionSelected,"$option == naderin_tdd_remyHelp","FireAll naderin_remyHelpOpts","""Not for free. For money, of course! You're the kind of person who'd do anything for money, right?""",,
+naderin_tdd_remyHelp,DialogOptionSelected,"$option == naderin_tdd_remyHelp","FireAll naderin_remyHelpOpts","""Not for free. For credits, of course! You're the kind of person who'd do anything for money, right?""",,
 naderin_tdd_remyHelpYesOpt,naderin_remyHelpOpts,,,,"naderin_remyHelpYes:""You could say that.""",
 naderin_tdd_remyHelpYes,DialogOptionSelected,"$option == naderin_remyHelpYes","$option = naderin_tdd_remyFinal
 FireBest DialogOptionSelected","""Great!"" Remy beams at you. ""I don't have any pressing tasks at the moment, but if you drop by a while later, I should have something for you.""",,
@@ -340,10 +412,14 @@ naderin_tdd_remyHelpMaybe,DialogOptionSelected,"$option == naderin_tdd_remyHelpM
 FireBest DialogOptionSelected","""Fair enough. I'm glad you're open to the idea nonetheless."" Remy beams at you. ""I don't have any pressing tasks at the moment, but if you drop by a while later, I should have something for you.""",,
 naderin_tdd_remyHelpNoOpts,naderin_remyHelpOpts,,,,"naderin_tdd_remyHelpNo:""I can't help you any further than this.""",
 naderin_tdd_remyHelpNo,DialogOptionSelected,"$option == naderin_tdd_remyHelpNo","$option = naderin_tdd_remyFinal
-FireBest DialogOptionSelected","""That's a shame."" Remy sighs. ""But if you're still open to the idea in the future, drop by anytime!""",,
-naderin_tdd_remyFinal,DialogOptionSelected,"$option == naderin_tdd_remyFinal",,"""Unfortunately, as riveting as our talk was, I really must be going."" He drags out a bottle of liquor from the side and opens it up with a cheap bottle opener as he speaks. ""Oh, and before I forget. Payment, right? I'll have the credits transferred over to you in a bit.""
+FireBest DialogOptionSelected","""That's a shame."" Remy sighs in disappointment. ""But if you're still open to the idea in the future, drop by anytime. I'll have something ready for you.""",,
+naderin_tdd_remyFinal,DialogOptionSelected,"$option == naderin_tdd_remyFinal","AddPotentialContact naderin_remy
+$naderin_tdd_completed = true
+Call $naderin_tdd_ref updateStage","Your conversation is interrupted by the pings of notifications stacking up on Remy's side of the call. ""Ah, excuse me. Work's piling up. You probably still have a lot of questions. But that... that'll have to be for another time.""
 
-""I'll see you later, hopefully! Burn bright, captain.""","cutCommLink:Cut the comm link",
+""As riveting as our talk was, I really must be going."" You realise that Remy is already holding a cheap bottle of liquor, ready to drink himself to oblivion. With a tap, lines of text trail across his screen, the glow of his console flickering with worrying speed onto his tired eyes.
+
+""Oh, and before I forget. Payment, right? Sending the credits now. I'll see you later! Hopefully. Burn bright, captain.""","cutCommLink:Cut the comm link",
 "#END After The Drop",,,,,,
 "#END The Derinkuyu Drop",,,,,,
 ,,,,,,

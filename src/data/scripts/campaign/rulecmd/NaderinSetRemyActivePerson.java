@@ -15,6 +15,7 @@ import com.fs.starfarer.api.util.Misc.Token;
  * Does not start an actual conversation.
  * Based on com\fs\starfarer\api\impl\campaign\rulecmd\academy\GenGAIntroAcademician.java
  */
+@Deprecated
 public class NaderinSetRemyActivePerson extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Token> params, Map<String, MemoryAPI> memoryMap) {
