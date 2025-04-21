@@ -4,5 +4,11 @@
   ],
   "bonusXP": {
     "naderin_askedForMoney": 1
+  },
+
+  "graphics": {
+    "illustrations": {
+      "vanilla_generic_probe": "graphics/illustrations/vanilla_generic_probe.jpg"
+    }
   }
 }

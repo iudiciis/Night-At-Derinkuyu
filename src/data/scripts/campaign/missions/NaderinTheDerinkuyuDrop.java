@@ -73,6 +73,8 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         setStageOnMemoryFlag(Stage.SUBMIT, target, "$naderin_tdd_submit");
         setStageOnMemoryFlag(Stage.COMPLETED, giver, "$naderin_tdd_completed");
         setCreditReward(reward);
+        setRepRewardPerson(0f);
+        setRepRewardFaction(0f);
 
         // See HubMissionWithTriggers.java
         // Pirate complication
@@ -83,7 +85,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         triggerSpawnFleetAtPickedLocation("$naderin_tdd_pirates_ref", null);
         triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeFleetGoAwayAfterDefeat();
-        triggerSetPirateFleet(); // important, fleet behaves differently otherwise when transponder is off
+        triggerSetPirateFleet(); // important, pirate fleet behaves differently otherwise when transponder is off
         // triggerSetPatrol();
         triggerOrderFleetPatrolHyper(system);
         endTrigger();
@@ -91,7 +93,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         // Mercenary complication
         beginStageTrigger(Stage.SUBMIT);
         triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.INDEPENDENT, FleetTypes.MERC_PRIVATEER, system);
-        triggerPickLocationTowardsPlayer(system.getCenter(), 10, 2000);
+        triggerPickLocationAtClosestToPlayerJumpPoint(system);
         triggerSpawnFleetAtPickedLocation("$naderin_tdd_merc_ref", null);
         triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeNoRepImpact();
@@ -135,11 +137,11 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     @Override
     protected void updateInteractionDataImpl() {
         set("$naderin_tdd_reward", reward);
-        set("$naderin_tdd_aOrAnThing", thing);                  // unused?
-        set("$naderin_tdd_thing", getWithoutArticle(thing));    // unused?
+        set("$naderin_tdd_aOrAnThing", thing);                  // unused
+        set("$naderin_tdd_thing", getWithoutArticle(thing));    // unused
         set("$naderin_tdd_personName", giver.getNameString());
         set("$naderin_tdd_systemName", system.getNameWithLowercaseTypeShort());
-        // set("$naderin_tdd_dist", getDistanceLY(target));     // getDistanceLY would not use Remy...
+        // set("$naderin_tdd_dist", getDistanceLY(target));     // getDistanceLY relies on the quest originator
         int dist = 0;
         if (giver.getMarket() != null) {
             dist = (int) Math.round(Misc.getDistanceLY(giver.getMarket().getLocationInHyperspace(), target.getLocationInHyperspace()));
@@ -150,7 +152,6 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     @Override
 	public void addDescriptionForNonEndStage(TooltipMakerAPI info, float width, float height) {
 		float opad = 10f;
-		// Color h = Misc.getHighlightColor();
         if (currentStage == Stage.CONTACT) {
             info.addPara("Not knowing the location of the drop themselves, you were told to ask Remy about where to deliver the package.", opad);
         }
@@ -165,7 +166,6 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 
 	@Override
 	public boolean addNextStepText(TooltipMakerAPI info, Color tc, float pad) {
-		// Color h = Misc.getHighlightColor();
         if (currentStage == Stage.CONTACT) {
             info.addPara("Ask Remy at Derinkuyu Station about where to deliver the package", tc, pad);
             return true;
