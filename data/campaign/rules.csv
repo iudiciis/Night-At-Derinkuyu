@@ -133,7 +133,7 @@ He leans off to the side, picking up a datapad. ""If you would please go to the 
 
 His voice trails off into the air. Your nav officer receives a ping moments later. Coordinates received.
 
-""That would be perfect!"" Remy beams at you with a thankful smile. ""I trust you can get this done in a jiffy, despite the danger! But no rush, no rush. There's no deadline for this mission. Good luck!""",,"# Call viewMap is not vanilla
+""That would be perfect!"" Remy beams at you with a thankful smile. ""I trust you can get this done in a jiffy, despite the danger! But no rush, no rush. There's no deadline for this mission. Good luck!""",,"# Call viewMap is not vanilla. change required likely due to Remy not being original quest giver
 # SetStoryPoint fractions found/set in settings.json
 # Some of those scripts are probably unnecessary"
 naderin_tdd_askDangerOpt,naderin_tdd_remyDetailOpts,"!$askedAboutDanger",,,"naderin_tdd_askDanger:""Danger?""",
@@ -427,9 +427,10 @@ naderin_tdd_remyHelpNo,DialogOptionSelected,"$option == naderin_tdd_remyHelpNo",
 Call $naderin_tdd_ref updateStage
 AdjustRepPerson naderin_remy FRIENDLY 5","""That's a shame."" Remy sighs in disappointment. ""But if you're still open to the idea in the future, drop by anytime. I'll have something ready for you.""","naderin_tdd_remyFinal:Continue",
 naderin_tdd_remyFinal,DialogOptionSelected,"$option == naderin_tdd_remyFinal","AddPotentialContact naderin_remy
-unsetAll $naderin_tdd","Your conversation is interrupted by a confirmation of payment on your side, and the ping of notifications stacking up on Remy's side of the call. ""Ah, excuse me. Work's piling up. You probably still have a lot of questions. But that... that'll have to be for another time.""
+unsetAll $naderin_tdd","Your conversation is interrupted by a confirmation of payment on your side, and the ping of notifications stacking up on Remy's side of the call. ""Ah, excuse me. Work's piling up. Apologies if you thought I was new at this or something but... well, hey, everyone runs into a few surprise problems every now and again, right? Ha ha ha. Ha ha. Ha.""
 
-""As riveting as our talk was, I really must be going."" You realise that Remy is already holding a cheap bottle of liquor, ready to drink himself to oblivion. With a tap, lines of text trail across his screen, the glow of his console flickering with worrying speed onto his tired eyes.
+Remy coughs a little before continuing. ""You probably still have a lot of questions. But that... yes, that'll have to be for another time. So.""","naderin_tdd_remyFinal2: Continue",
+naderin_tdd_remyFinal2,DialogOptionSelected,"$option == naderin_tdd_remyFinal2",,"""As riveting as our talk was, I really must be going."" You realise that Remy is already holding a cheap bottle of liquor, ready to drink himself to oblivion. With a tap, lines of text trail across his screen, the glow of his console flickering with worrying speed onto his tired eyes.
 
 ""I'll see you later! Hopefully. Burn bright, captain.""","cutCommLink:Cut the comm link",
 "#END After The Drop",,,,,,
@@ -448,18 +449,183 @@ You wait several moments before the call connects.
 ""Uh, Remy here."" Remy looks at you, rubbing their eyes. ""Can I help you?""",,
 naderin_remyContactPrintAcceptText,ContactPrintAcceptText,"$id == naderin_remy score:200",,"""Nice.""
 OR
-""Good luck with that, captain.""
+""Good luck with that, captain."" It's at that moment $heOrShe begins celebrating with a bottle of alcohol.
 OR
-$HeOrShe simply nods. ""A good dealing, I think you'll agree.""",,"# there's also a trigger for decline dialogue, which I might add in later"
+$HeOrShe simply nods. ""A good dealing, I think you'll agree.""",,
+naderin_remyContactPrintDeclineText,ContactPrintDeclineText,"$id == naderin_remy score:200",,"""Well, let me know if you change your mind.""
+OR
+$HeOrShe seems to think things over. ""Perhaps next time.""
+OR
+""Oh well."" $HeOrShe shrugs.
+OR
+""Right,"" $heOrShe says, ""I'm sure I can figure out some alternative.""
+OR
+$HeOrShe nods, brow furrowed, and says ""I understand.""
+OR
+A look of disappointment crosses $hisOrHer face, but $heOrShe simply shrugs.
+OR
+$HeOrShe looks thoughtful, ""I see, captain. Your loss I suppose.""
+OR
+""It's a missed opportunity, captain, but it's your decision.""",,"# currently just the generic dialog"
 ,,,,,,
-# NEW DIRECTORY,,,,,,
-"#END NEW DIRECTORY",,,,,,
+# Blueprint Intel (Vanilla),,,,,,
+naderin_remy_sitmBlurb,sitm_blurb,"$id == naderin_remy score:200",,"""Someone's selling the location of $sitm_aOrAnItem on some online storefront. I've verified the veracity of the information, if you're interested.""",,
+naderin_remy_sitmOfferTextContact,DialogOptionSelected,"$option == sitm_start
+$id == naderin_remy score:200","$missionId = sitm
+Highlight $sitm_price
+DoCanAffordCheck $sitm_price contact_accept false","$HeOrShe brings up a document on their console, reading it over before $heOrShe speaks to you. ""Apparently, they bought the info from a fence at their local bar, then tried to get it themselves with a rusty Hound and a Dram.""
+
+""Of course, they came back bruised and broken, so now they're reselling the data at a discount to whoever the hell wants it just so the original seller loses most of their cut. And it's working... somehow. The price keeps dropping by a few creds every day or so, like some half-baked bidding war in reverse.""
+
+""Their asking price is $sitm_price credits for the location data. Sure, half the sector's bought it by now, but only a captain like you'd be capable of actually finding the thing.""","contact_accept:Accept
+contact_decline:Decline",
+"#END Blueprint Intel (Vanilla)",,,,,,
+,,,,,,
+# Cheap Commodity (Vanilla),,,,,,
+naderin_remy_cheapComBlurb,cheapCom_blurb,"$id == naderin_remy score:200",,"""There's some surplus $cheapCom_commodityName available for cheap, if you want it.""",,
+naderin_remy_cheapComOfferTextLocal,DialogOptionSelected,"$option == cheapCom_start
+$cheapCom_variation == LOCAL
+$id == naderin_remy score:200","$missionId = cheapCom
+FireBest CheapComOfferText
+ShowRemainingCapacity $cheapCom_commodityId
+DoCanAffordCheck $cheapCom_totalPrice contact_accept true",,"contact_accept:Accept
+contact_decline:Decline","# could add extra dialog here"
+naderin_remy_cheapComOfferTextRemote,DialogOptionSelected,"$option == cheapCom_start
+$cheapCom_variation == REMOTE
+$id == naderin_remy score:200","$missionId = cheapCom
+FireBest CheapComOfferText",,"contact_accept:Accept
+contact_decline:Decline","# could add extra dialog here"
+naderin_remy_cheapComTextLocal,CheapComOfferText,"$cheapCom_variation == LOCAL
+!$cheapCom_barEvent
+$id == naderin_remy score:200","SetTextHighlights $cheapCom_quantity $cheapCom_pricePerUnit","""Someone cancelled last minute, so the locals have a few extra warehouses full of stuff they want gone. I can hook you up with the goods, if you've got the room.""
+
+""They're willing to sell, um,"" $heOrShe glances at $hisOrHer TriPad, ""Ah.  $cheapCom_quantity units of $cheapCom_commodityName for $cheapCom_pricePerUnit per unit.""",,
+naderin_remy_cheapComTextRemote,CheapComOfferText,"$cheapCom_variation == REMOTE
+!$cheapCom_barEvent
+$id == naderin_remy score:200","SetTextHighlights $cheapCom_quantity $cheapCom_dist $cheapCom_pricePerUnit $cheapCom_totalPrice
+Call $cheapCom_ref showMap ""Destination: $cheapCom_marketName""","""The fleet that was meant to pick up the goods were unfortunately blown up by pirates, so now there's some surplus available. Shame about the state of shipping in the sector, but it's a good opportunity for you, captain.""
+
+""There's $cheapCom_quantity units of $cheapCom_commodityName $cheapCom_marketOnOrAt $cheapCom_marketName, $cheapCom_dist light-years away. They're willing to part with the lot at $cheapCom_pricePerUnit per unit, or $cheapCom_totalPrice total. You'll have to talk to $cheapCom_personPost $cheapCom_personName to make the arrangements.""",,
+"#END Cheap Commodity (Vanilla)",,,,,,
+,,,,,,
+# Commodity Production (Vanilla),,,,,,
+naderin_remy_cpmBlurb,cpm_blurb,"$cpm_underworld
+$id == naderin_remy score:200",,"""The people here are getting a bit fed up with the brands sold wholesale nowadays, so there's good room for a supply of $cpm_commodityName covering a period of several cycles.""
+OR
+""There's some sort of strategic consideration going on where a few top brass want an extra source of $cpm_commodityName available reliably for several cycles.""",,
+naderin_remy_cpmOfferTextContact,DialogOptionSelected,"$option == cpm_start
+$cpm_underworld
+$id == naderin_remy score:200","$missionId = cpm
+SetTextHighlights $cpm_needed $cpm_missionCycles $cpm_monthlyPayment $cpm_contractCycles $cpm_totalPayment","""The current suppliers aren't quite cutting it these past few cycles, so there's a little room for us to disrupt the market a little. So, the details are..."" $HeOrShe picks up a datapad, scrolling through the contents before they continue.
+
+""Right. Can you help supply $cpm_needed units of $cpm_commodityName? We'll need it available within $cpm_missionCycles cycles. Get it done and you'll get monthly payments of $cpm_monthlyPayment credits over $cpm_contractCycles, for a total of $cpm_totalPayment credits.""
+
+""We'll even let you put your face on the packaging, if you want. Just as long as the supply doesn't go dry, we'll both get a little richer from this arrangement.""","contact_accept:Accept
+contact_decline:Decline",
+"#END Commodity Production (Vanilla)",,,,,,
+,,,,,,
+# Custom Production (Vanilla),,,,,,
+naderin_remy_cpcBlurb,cpc_blurb,"$cpc_armsDealer
+$id == naderin_remy score:200",,"""Someone's getting a supply of military-grade ships and weapons soon. I could pull a few strings and get some of it diverted to you, if you'd like.""",,
+naderin_remy_cpcOfferTextContact,DialogOptionSelected,"$option == cpc_start
+$cpc_armsDealer
+$id == naderin_remy score:200","$missionId = cpc
+SetTextHighlights $cpc_maxCapacity $cpc_costPercent $cpc_days
+DoCanAffordCheck 0 cpc_pickPlayerBP false","""We've got some rich kid ordering military-grade equipment here, of all places. I mean, $entity.name? Seriously?"" $HeOrShe clicks their tongue, amused.
+
+""Anyway, they don't want their blood relatives figuring out they've squandered their inheritance on a shipment of kneepads, so to speak, so I figure we'll be able to divert $cpc_maxCapacity credits worth of manufacturing capacity to you.""
+
+""We'll still need to bump up the cost to cut myself a profit, and to mask our interference here, so everything'll cost $cpc_costPercent of the base cost. That way, they probably won't notice the mistake on their accounting ledgers in between all their shiny new toys, so... well, when the delivery's made in about $cpc_days, neither of us will need to be worried about anyone asking questions.""","cpc_pickPlayerBP:Make a selection from your own blueprints
+cpc_pickContactBP:See what blueprints they have available
+contact_decline:Decline",
+"#END Custom Production (Vanilla)",,,,,,
+,,,,,,
+# Dead Drop (Vanilla),,,,,,
+naderin_remy_ddroBlurb,ddro_blurb,"$id == naderin_remy score:200",,"""Hey, so. Another dead drop. Just a normal one, if you're down for it.""",,
+naderin_remy_ddroOfferTextContact,DialogOptionSelected,"$option == ddro_start
+$id == naderin_remy score:200","$missionId = ddro
+Highlight $ddro_dist $ddro_reward
+Call $ddro_ref showMap ""Destination: $ddro_systemName""","""Hey, the first one we did together might have been a touch scuffed, but this one I'm just the middleman for. You won't have to worry about any rumours this time around. Probably.""
+
+""You know the drill. Deliver this item to the specified location in $ddro_systemName, $ddro_dist light-years away. Don't be seen making the drop, and don't tell anyone about it. The reward is $ddro_reward credits."" $HeOrShe taps at $hisOrHer datapad and your display is overlaid with a $ddro_aOrAnThing.
+
+As you check over the details, you overhear $PersonName grumbling about how ""work gets gobbled up if I'm not the one asking"" and ""Why does nobody want to do anything for me if I'm the one asking?"", finishing off with sighs of woe.
+
+
+
+
+","contact_accept:Accept
+contact_decline:Decline",
+"#END Dead Drop (Vanilla)",,,,,,
+,,,,,,
+# Disrupt Spaceport (Vanilla),,,,,,
+naderin_remy_dspBlurb,dsp_blurb,"$id == naderin_remy score:200",,"""Big ticket item here. Someone wants the $dsp_industry $dsp_marketOnOrAt $dsp_marketName disrupted.""",,
+naderin_remy_dspOfferTextContact,DialogOptionSelected,"$option == dsp_start
+$id == naderin_remy score:200","$missionId = dsp
+Highlight $dsp_dist $dsp_disruptDays $dsp_reward $dsp_marines
+Call $dsp_ref showMap ""Target: $dsp_marketName""","""I'll get straight to it, captain. The task is to see the $dsp_industry $dsp_marketOnOrAt $dsp_marketName, $dsp_dist light-years away disrupted for at least $dsp_disruptDays days. On success, you'll recieve $dsp_reward credits.""
+
+$HeOrShe sets aside the bottle of grog they had been drinking, quickly bringing up further details onto a shared holo-display. ""Tac-intel's identified a few points of consideration. Take a look."" The details are consistent and thorough overall, giving you a complete overview on $dsp_marketName.
+
+Assuming you don't bother taking down any orbital stations, or try cutting off incoming shipments to cause a few supply disruptions, you estimate that you'd need around $dsp_marines marines to carry out this raid.","contact_accept:Accept
+contact_decline:Decline",
+"#END Disrupt Spaceport (Vanilla)",,,,,,
+,,,,,,
+# Jailbreak Mission (Vanilla),,,,,,
+naderin_remy_jabrBlurb,,"$id == naderin_remy score:200",,"""A certain individual of interest has been, ah, unjustly imprisoned. Your help resolving this would be much appreciated.""",,
+naderin_remy_jabrOfferTextContact,DialogOptionSelected,"$option == jabr_start
+$id == naderin_remy score:200","$missionId = jabr
+Highlight $jabr_dist $jabr_reward $jabr_marines
+Call $jabr_ref showMap ""Target: $jabr_marketName""","""Not my circus, but someone's referred me this task because they're a little desperate for solutions. No idea why, but I'll relay the details of the operation to you.""
+
+""Extract the target on $jabr_marketOnOrAt $jabr_marketName, located $jabr_dist light-years away. There's a reward of $jabr_reward credits on a successful extraction and upon handover of the individual to me. I'll handle discreet transfer to our mutual client from there.""
+
+$HeOrShe picks up a datapad, quickly bringing up further details onto a shared holo-display. ""Not to say our client hasn't done anything. They've managed to collect some tac-intel on their ground defences should things get a bit spicy. Take a look.""
+
+You estimate that you'd need around $dsp_marines marines to carry out this operation, assuming you go straight in for an extraction without any preliminary groundwork.","contact_accept:Accept
+contact_decline:Decline",
+"#END Jailbreak Mission (Vanilla)",,,,,,
+,,,,,,
+# Hand-me-down Freighter (Vanilla),,,,,,
+naderin_remy_hmdfBlurb,hmdf_blurb,"$id == naderin_remy score:200",,"""I have an old freighter sitting around, picking up dust. Perhaps you'd like to take it?""",,
+naderin_remy_hmdfOfferTextContact,DialogOptionSelected,"$option == hmdf_start
+$id == naderin_remy score:200","$missionId = hmdf
+SetTextHighlights $hmdf_price","""A miner took out a loan with this $hmdf_hullClass freighter as collateral. Needless to say, they've defaulted on their debt, so this thing's getting sold. Or scrapped. Either way, I can sell it to you for $hmdf_price credits.""","hmdf_look:Ask for detailed info on the freighter
+contact_decline:Decline",
+naderin_remy_hmdfLookAtFreighter,DialogOptionSelected,"$option == hmdf_look
+$id == naderin_remy score:200","Call $hmdf_ref showShip
+DoCanAffordCheck $hmdf_price contact_accept false","$personName taps a few buttons to pull up the freighter schematics for your examination. ""How's it look? Not the best, but it'd be better in your hands than mine.""","contact_accept:Buy the freighter for $hmdf_price credits
+contact_decline:Decline",
+"#END Hand-me-down Freighter (Vanilla)",,,,,,
+,,,,,,
+# Procurement Mission (Vanilla),,,,,,
+naderin_remy_proComBlurb,proCom_blurb,"$id == naderin_remy score:200",,"""I need to procure a quantity of $proCom_commodityName.""
+OR
+""I require delivery of a cargo of $proCom_commodityName.""
+OR
+""I need a shipment of $proCom_commodityName.""
+OR
+""I'm in need of some $proCom_commodityName, if you're willing to find some.""",,
+naderin_remy_proComTextLocal,,,,,,
+"#END Procurement Mission (Vanilla)",,,,,,
+,,,,,,
+# Security Codes (Vanilla),,,,,,
+naderin_remy_secoBlurb,seco_blurb,"$id == naderin_remy score:200",,"""I've got the latest $seco_faction facility defense security codes. Should make ground operations a breeze.""",,
+naderin_remy_secoOfferTextContact,DialogOptionSelected,"$option == seco_start
+$id == naderin_remy score:200","$missionId = seco
+SetTextHighlightColors $seco_factionColor h h
+SetTextHighlights $seco_faction $seco_price $seco_days
+DoCanAffordCheck $seco_price contact_accept false","""Managed to bribe someone for some $seco_faction security codes that'll give you the upper hand in one ground operation, but they'll probably catch on after you use them. I'll send them over for $seco_price credits.""
+
+The codes will be good for $seco_days days before they become useless.","contact_accept:Buy the security codes
+contact_decline:Decline",
+"#END Security Codes (Vanilla)",,,,,,
 ,,,,,,
 # Ship Hijacking (Vanilla),,,,,,
 naderin_remy_hijackBlurb,hijack_blurb,"$id == naderin_remy score:200",,"""Some idiot parked their ship in front of one of my warehouses. I was planning to get it towed, but we could just as easily arrange it to be, ah, stolen.""",,
 naderin_remy_hijackOfferTextContact,DialogOptionSelected,"$option == hijack_start
 $id == naderin_remy score:200","$missionId = hijack
-SetTextHighlights $hijack_price $hijack_marines","""This $hijack_hull $hijack_designation is, for some reason, parked incorrectly in front of one of my warehouses! And honestly, these days we've got damn fine autopilot, so if you can guess how annoyed I am, hah! The idiot couldn't park on a landing gantry if their life depended on it.""
+SetTextHighlights $hijack_hull $hijack_designation $hijack_price $hijack_marines","""This $hijack_hull $hijack_designation is, for some reason, parked incorrectly in front of one of my warehouses! And honestly, these days we've got damn fine autopilot, so if you can guess how annoyed I am, hah! These idiots couldn't park on a landing gantry if their life depended on it.""
 
 $HeOrShe takes a moment to calm down before they continue.
 
@@ -485,17 +651,69 @@ $id == naderin_remy score:200",,"After the newly liberated ship joins your fleet
 ""Clean as can be, but someone's bound to figure out something's up eventually,"" $heOrShe sighs. ""Of course, since the original owner was a bit of a knobhead, I think people will be thanking you rather than angry at you, funnily enough.""","contact_acceptNoText:Continue",
 "#END Ship Hijacking (Vanilla)",,,,,,
 ,,,,,,
-# Security Codes (Vanilla),,,,,,
-naderin_remy_secoBlurb,seco_blurb,"$id == naderin_remy score:200",,"""I've got the latest $seco_faction facility defense security codes. Should make ground operations a breeze.""",,
-naderin_remy_secoOfferTextContact,DialogOptionSelected,"$option == seco_start
-$id == naderin_remy score:200","$missionId = seco
-SetTextHighlightColors $seco_factionColor h h
-SetTextHighlights $seco_faction $seco_price $seco_days
-DoCanAffordCheck $seco_price contact_accept false","""Managed to bribe someone for some $seco_faction security codes that'll give you the upper hand in one ground operation, but they'll probably catch on after you use them. I'll send them over for $seco_price credits.""
-
-The codes will be good for $seco_days days before they become useless.","contact_accept:Buy the security codes
+# Smuggling Mission (Vanilla),,,,,,
+naderin_remy_smugBlurb,smug_blurb,"$id == naderin_remy score:200",,"""Want to help me get some $smug_commodityName quietly moved to $smug_marketName?""
+OR
+""Going to move some $smug_commodityName to $smug_marketName. You want in?""",,
+naderin_remy_smugOfferTextContact,DialogOptionSelected,"$option == smug_start
+$id == naderin_remy score:200","$missionId = smug
+SetTextHighlights $smug_quantity $smug_dist $smug_reward
+ShowRemainingCapacity $smug_commodityId
+Call $smug_ref showMap ""Destination: $smug_marketName""","""I'm planning on moving $smug_quantity units of $smug_commodityName over to $smug_marketName, $smug_dist light-years away. It's illegal stuff, obviously, but why they want this specific brand of stuff I haven't a clue. Still, you can't let the local authorities know you're smuggling this crap if you want to get paid $smug_reward credits on delivery.""","contact_accept:Accept
 contact_decline:Decline",
-"#END Security Codes (Vanilla)",,,,,,
+"#END Smuggling Mission (Vanilla)",,,,,,
+,,,,,,
+# Spysat Deployment (Vanilla),,,,,,
+naderin_remy_ssatBlurb,ssat_blurb,"$id == naderin_remy score:200",,"""I require $ssat_marketName monitored closely. It'll probably take a spy satellite in orbit.""
+OR
+""$ssat_marketName has trouble brewing for a few contacts of mine. Deploying a small spy satellite should be enough for me to keep tabs on the situation.""",,"# ssat_underworld"
+naderin_remy_ssatOfferTextContact,DialogOptionSelected,"$option == ssat_start
+$id == naderin_remy score:200","$missionId = ssat
+SetTextHighlights $ssat_reward
+Call $ssat_ref showMap ""Target: $ssat_marketName""","""I need eyes on $ssat_marketName, in the $ssat_systemName. All my available assets are currently preoccupied, so a satellite in orbit would be perfect."" 
+
+$personName taps at a datapad, bringing up a holo of a spy satellite beside $himOrHer.
+
+""Neat, huh? You can buy them from wherever if you have the right connections. Everyone with an eye and a brain will know what's up as a consequence, so make sure no patrols are tracking you when you deploy it in orbit. Do it right, and you'll get paid $ssat_reward credits. Sound good to you?""","contact_accept:Accept
+contact_decline:Decline",
+"#END Spysat Deployment (Vanilla)",,,,,,
+,,,,,,
+# Underworld Bounty (Vanilla),,,,,,
+naderin_remy_ucbBlurb,ucb_blurb,"$id == naderin_remy score:200",,"""Someone's unfortunately found themselves on my hit list. You could do the dirty work for me, if you'd like.""",,
+naderin_remy_ucbOfferTextContact,DialogOptionSelected,"$option == ucb_start
+$id == naderin_remy score:200","$missionId = ucb
+$option = ucb_showOptions 0
+FireBest DialogOptionSelected","""They say the independents are a faction unto themselves in the Persean Sector, but if you've seen the petty infighting I've seen, ha!"" $HeOrShe shakes their head, a sense of disappointment flashing across their face.
+
+""Suffice it to say that you're going to do some dirty work if you take me up on this... but not for anything on the level of someone's grand scheme. We're playing bit roles in the Persean Sector's crappiest soap opera, and a lot of bodies are about to get spaced.""
+
+""But, ah."" $HeOrShe looks at you with a grin. ""It pays pretty well, huh?""
+OR
+""Let's put it like this. You don't normally think about the influence of the independents in the Persean Sector, right?"" $HeOrShe gestures at a softly glowing ad-holo playing theatrically behind him, punctuating $hisOrHer every sentence with exaggerated sound effects and visual cues. ""After all, the big players are folk like the Hegemony. And you'd be right, all the way 'til you came down to comms me. Why? Because you're about to go blow up the little toys of the big players!""
+
+""League patrol in the pocket of rogues? Hegemony inspector too overzealous in their search? Church patrol trying to confiscate perfectly legal scientific equipment? That's when people start calling on us, to start reminding them that the spacers of the sector can be just every bit as ruthless as the pirates they claim to protect us from.""
+
+""...well, not that I necessarily believe all that, but we'll get paid well either way. Just like I got paid to say all that,"" $HeOrShe adds with a sardonic laugh, flicking the ad-holo off with a dismissive gesture.",,
+,,,,,,
+# Bounty Details,,,,,,
+naderin_remy_ucbTrader,CBTraderOfferDesc,"$id == naderin_remy score:200","Highlight $bcb_dist $bcb_days $bcb_reward","""There's a trade fleet that's rubbed certain folks the wrong way. How, we don't know, but such is their 'transgression' that they're asking me to get someone — you, should you accept — to give them the show of their lives.""
+
+$HeOrShe pulls up what looks like an internal customs inspection order, with an attached fleet disposition report. ""They're in the $bcb_systemName, $bcb_dist light-years away, thanks to our tried and true tactic of holding them up for inspection. Should be plenty of room for you to get in and quietly smack them down, hopefully without ruffling too many feathers.""
+
+""But it seems that they've probably seen similar crap pulled on other captains they've known, so there's a patrol on guard to make sure they don't blow up before they leave in about $bcb_days days. It's down to you to see to it that they feel the wrath of our employer... and your paycheck. A paycheck to the tune of $bcb_reward credits, should you accept.""",,
+naderin_remy_ucbPatrol,CBPatrolOfferDesc,"$id == naderin_remy score:200","SetTextHighlightColors $bcb_patrolFactionColor h h h
+Highlight $bcb_patrolFaction $bcb_dist $bcb_days $bcb_reward","""Take a look at this idiot."" $HeOrShe pulls up a standard ID holo of a military officer in uniform. ""$bcb_targetName. Made it far too obvious they were getting paid to 'inspect' our fellow spacers. Shouldn't have been a problem if every single inspection they'd done in the past cycle hadn't mysteriously left the victims missing half of their fleet, but unfortunately $bcb_targetHeOrShe's damn well messed up. People are rightfully angry about it, and so you're going to teach $bcb_targetHimOrHer a lesson they won't forget.""
+
+""As for the details... $bcb_TargetHeOrShe's commanding a $bcb_patrolFaction patrol fleet operating out of $bcb_targetMarketName in the $bcb_systemName, $bcb_dist light-years away. You'll find $bcb_targetHimOrHer patrolling around, perhaps near a nearby jump-point, or one of their orbital strategic assets, etcetera.""
+
+$HeOrShe shuts off the ID holo, and prepares to send the details over to your flagship with a quick swipe of $hisOrHer fingers. ""My, or I suppose, our client wants this poor sap spaced out of $bcb_targetHisOrHer flagship within $bcb_days days, and is willing to pay $bcb_reward credits to see it through.""",,
+naderin_remy_ucbMerc,CBMercUWOfferDesc,"$id == naderin_remy score:200","Highlight $bcb_dist $bcb_days $bcb_reward","$HeOrShe pulls up a clear holo taken from a popular dating service. ""Ah, love. Shame this merc won't live long enough to find it. After all, just like you, $bcb_targetName's been running around doing people's dirty work. Caught involved in too many 'customs inspections', you see.""
+
+$PersonName flicks the holo away and pulls up a sector map. ""We're pretty sure $bcb_targetHeOrShe's on some wild goose chase in the $bcb_systemName, $bcb_dist light-years away. Something about a weapons stash, I believe, though it does sound similar to the kind of tactics those pirates use.""
+
+""All the easier for me now that I don't have to lift a finger pulling the strings myself, sure. But I doubt whoever strung them up like this did enough of a job to keep them there for any longer than $bcb_days days. But you'll get a hefty payout of $bcb_reward credits if you complete it in time, so... sound good to you?""",,
+"#END Bounty Details",,,,,,
+"#END Underworld Bounty (Vanilla)",,,,,,
 ,,,,,,
 # Extraction Mission (todo),,,,,,
 naderin_remyExtr_blurb1,naderin_remyExtr_blurb,"$remyExtr_variation == COLONY",,"""Huh."" $HeOrShe clicks their tongue as their glance at their datapad. ""There's a friend of mine that is, ah, shall we say, in need of extraction. There was an incident that left 'em behind bars, and they want out as soon as possible.""",,"# todo?"
