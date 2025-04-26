@@ -1,0 +1,4 @@
+Version 0.1.0
+- First release candidate!
+    - Adds a single, short bar mission
+    - Adds an Independent Underworld contact with (mostly) custom dialogue for vanilla missions
