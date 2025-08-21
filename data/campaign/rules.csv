@@ -446,12 +446,18 @@ OR
 OR
 You wait several moments before the call connects.
 
-""Uh, Remy here."" Remy looks at you, rubbing their eyes. ""Can I help you?""",,
+""Uh, Remy here."" Remy looks at you, rubbing their eyes. ""Can I help you?""
+OR
+You must have come at a good time, because Remy appears much more alert and energetic than most of the other times you've ever met him.
+
+""If it ain't my favourite captain!"" Remy beams at you as he quietly sets aside a bottle opener. ""How can I be helpin' you today?""",,
 naderin_remyContactPrintAcceptText,ContactPrintAcceptText,"$id == naderin_remy score:200",,"""Nice.""
 OR
 ""Good luck with that, captain."" It's at that moment $heOrShe begins celebrating with a bottle of alcohol.
 OR
-$HeOrShe simply nods. ""A good dealing, I think you'll agree.""",,
+$HeOrShe simply nods. ""A good dealing, I think you'll agree.""
+OR
+$HeOrShe smiles, leaving the words of gratitude unsaid. In response, you ignore the clinking of bottles offscreen, not quite sure what to make of their drinking problem.",,
 naderin_remyContactPrintDeclineText,ContactPrintDeclineText,"$id == naderin_remy score:200",,"""Well, let me know if you change your mind.""
 OR
 $HeOrShe seems to think things over. ""Perhaps next time.""
