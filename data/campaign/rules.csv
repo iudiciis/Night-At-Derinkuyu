@@ -3,10 +3,133 @@ id,trigger,conditions,script,text,options,notes
 ,,,,,,
 # Missions,,,,,,
 ,,,,,,
+# Finding The Luminary,,,,,,
+,,,,,,
+# Bar Intro,,,,,,
+naderin_ftl_blurbBar,naderin_ftl_blurbBar,,,"Some poor fellow is nursing their hangover with a bottle of alcohol, occasionally glancing up from their drunken stupor to ask passing by captains for help about what appears to be a ship they've lost.",,
+naderin_ftl_optionBar,naderin_ftl_optionBar,,,,"naderin_ftl_startBar:See what about their ship is giving them such a hangover",
+naderin_ftl_optionTextBar,DialogOptionSelected,"$option == naderin_ftl_startBar","$missionId = naderin_ftl
+FireAll naderin_ftl_greetingOpts
+Call $naderin_ftl_ref showGiver","""Captain!"" $HeOrShe sneezes uncontrollably as you come close. There's a moment as you maneuver yourself to be just out of range of the river of snot and alcohol dribbling down the front of $hisOrHer face and onto the floor.
+
+To be sick, crying, and drunk was not the best of combinations, to put it lightly.
+
+""You've got to help me find my ship. Please-"" $HeOrShe sneezes again, and out of the corner of your eye, you notice your bodyguards take two steps back. Cowards.",,
+naderin_ftl_askShipOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == false",,,"naderin_ftl_askShip:Ask about what happened",
+naderin_ftl_askShip,DialogOptionSelected,"$option == naderin_ftl_askShip","$askedWhatHappened = true
+SetTextHighlights ""The Luminary""
+FireAll naderin_ftl_greetingOpts
+Call $naderin_ftl_ref updateStage","""Ah. Right."" $HeOrShe sniffles. ""I had this most lovely ship. I called her The Luminary, because she was my light in the darkness. Me and her, so many journeys we've had together... ah.""
+
+You wait patiently for the poor fellow to blow through another round of Tri-Tachyon branded tissues. ""Sorry, captain. It's just... Pirates! Pirates struck down my pride and joy, and now for all I know it's a pile of scrap in their cursed holds. So... if you would do me a favour and find out what happened to 'er, I'd at least have some sense of closure."" ",,
+naderin_ftl_findCoverOpt,naderin_ftl_greetingOpts,"$foundCover == false
+$askedAboutPayment == false",,,"5:naderin_ftl_findCover:Find some cover before it's too late",
+naderin_ftl_findCover,DialogOptionSelected,"$option == naderin_ftl_findCover","$foundCover = true
+FireAll naderin_ftl_greetingOpts","Deciding not to risk any sort of biohazard from impacting your person and landing you in the medbay for a week, you motion one of your guards to stand in front of you.
+
+""Shields up, eh? I can't blame you for that, captain."" The snot-dribbling fellow wheezes between chunks of words. ""They getting hazard pay at least?""
+
+There's no doubting that there's a Reaper missile stuffed deep inside $hisOrHer lungs, you justify to yourself. No way will you be taking the risk of facing that head on alone.",,
+naderin_ftl_askLeadsOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
+$askedForLeads == false",,,"naderin_ftl_askLeads:Ask for the ship's last known location",
+naderin_ftl_askLeads,DialogOptionSelected,"$option == naderin_ftl_askLeads","$askedForLeads = true
+FireAll naderin_ftl_greetingOpts
+Highlight $naderin_ftl_systemName $naderin_ftl_dist
+Call $naderin_ftl_ref viewMap ""Location: $naderin_ftl_systemName""","""I lost her in the $naderin_ftl_systemName just a month or two ago. Not even that far! Just $naderin_ftl_dist lightyears away.""
+
+There's a moment of silence as $heOrShe collects $hisOrHerself. ""It was a good fight, it really was! Just... there was too many of them. And... I was a coward. I wasn't even at the helm when she blew!""
+
+$HeOrShe slumps down, a hand reaching out for another Tri-Tachyon branded tissue. ""We were so close to retirement too, she and I. So close.""",,
+naderin_ftl_askAboutBattleOpt,naderin_ftl_greetingOpts,"$askedForLeads == true
+$askedAboutBattle == false",,,"naderin_ftl_askAboutBattle:""How did the battle go, exactly?""",
+naderin_ftl_askAboutBattle,DialogOptionSelected,"$option == naderin_ftl_askAboutBattle","$askedAboutBattle = true
+SetTextHighlights ""Apogee-class cruiser""","""You want to know... fine. If you think it'll help."" $HeOrShe manages a quick gulp of alcohol before $heOrShe begins to recount their tale of woe.
+
+""It was a routine survey mission. The Luminary was perfect for the job, of course. She was an Apogee-class cruiser, and she'd seen her fair share of battles. So had I, but... those pirates. Normally, a fleet of their size'd be too slow to catch us, but they caught us by surprise as we were jumping in.""
+
+""We were too close to run, so we fought. It took us losing half the surveying fleet before we could disengage, and make a break for it. We e-burned away in a panic, and the pirates... sustained burn. Can you believe that?""","naderin_ftl_askAboutBattleCont:Continue",
+naderin_ftl_askAboutBattleCont,DialogOptionSelected,"$option == naderin_ftl_askAboutBattleCont","FireAll naderin_ftl_greetingOpts","The outcome was obvious. The pirate fleet caught up eventually to the panicked survey fleet and managed to defeat the rest of the fleet in a second engagement. It was, as $heOrShe puts it, ""a hopeless battle"".
+
+""I was lucky enough to escape that second fight on a Dram as it were, captain. Might have been the cowardice, luck, or both, but at least I'm here to tell the tale.""
+
+$HeOrShe takes the chance to grab yet another handful of Tri-Tachyon branded tissues before you continue.",,
+naderin_ftl_askAboutShipOpt,naderin_ftl_greetingOpts,"$askedAboutShip == false
+$askedWhatHappened == true",,,"naderin_ftl_askAboutShip:Ask about The Luminary",
+naderin_ftl_askAboutShip,DialogOptionSelected,"$option == naderin_ftl_askAboutShip","$askedAboutShip = true
+SetTextHighlights Apogee
+FireAll naderin_ftl_greetingOpts
+Call $naderin_ftl_ref showShip","$HeOrShe drags out a battered Tri-Pad from the side. With a single swipe, The Luminary appears with little fanfare as you scrutinise the details.
+
+""That's her, captain. The best Apogee I'd ever had."" You hear a sniffle. ""Rare as they are... I'm such a fool to lose her.""",,
+naderin_ftl_askAboutPaymentOpt,naderin_ftl_greetingOpts,"$askedAboutPayment == false
+$askedWhatHappened == true",,,"naderin_ftl_askAboutPayment:Ask about payment",
+naderin_ftl_askAboutPayment,DialogOptionSelected,"$option == naderin_ftl_askAboutPayment","$askedAboutPayment = true
+FireAll naderin_ftl_greetingOpts
+SetTextHighlights 50,000 ""The Luminary's final fate"" 100,000 ""return her to me""","""50,000 credits if you get me news on The Luminary's final fate in this wretched sector. Or 100,000 if you recover her yourself and return her to me. Not that I have all that much hope...""",,
+naderin_ftl_acceptOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
+$askedForLeads == true
+$askedAboutBattle == true
+$askedAboutShip == true
+$askedAboutPayment == true",,,"naderin_ftl_accept:Accept",
+naderin_ftl_accept,DialogOptionSelected,"$option == naderin_ftl_accept","BarCMD accept $missionId","""Thank you, captain. I'll spare you no more words... Ludd knows I need another shot. Bartender!""
+
+Just as you begin to up and leave, you suddenly feel something wrong. Warning signs blare inside your head, attuned from countless battles in fleet combat. What's coming? Assassins? A raid? Perhaps-
+
+You stand there blankly, seeing the equivalent of a Reaper missile having blown apart the front of your clothes and turned you into a walking biohazard. 
+
+$naderin_ftl_personName calls out from the front door just before they slink away into the streets. ""Um. Sorry. We'll be in contact, yeah?"" $HeOrShe flashes a smile before dashing away.
+
+You are, of course, not at all embarrassed when the barkeep politely asks you to leave.","naderin_ftl_postAccept:Continue after a quick cleanup",
+naderin_ftl_acceptCovered,DialogOptionSelected,"$option == naderin_ftl_accept
+$foundCover == true","BarCMD accept $missionId","""Thank you, captain. I'll spare you no more words... Ludd knows I need another shot. Bartender!""
+
+Just as you begin to up and leave, you suddenly feel something wrong. Warning signs blare inside your head, attuned from countless battles in fleet combat. What's coming? Assassins? A raid? Perhaps-
+
+Your bodyguard suddenly steps in the way of what sounds like gunfire before you can even react. There's a moment of pin drop silence before you look up and see the state of your bodyguard.
+
+It's a testament to the professionalism of your bodyguards, you feel, that they can somehow remain so stoic despite the mess splattered all over their face.
+
+$naderin_ftl_personName calls out from the front door just before they slink away into the streets. ""Um. Sorry about that. We'll be in contact, yeah?"" $HeOrShe flashes a smile before dashing away.","naderin_ftl_postAccept:Continue after sending your bodyguard away for decontamination",
+naderin_ftl_postAccept,DialogOptionSelected,"$option == naderin_ftl_postAccept","FireBest ContactPostAccept
+BarCMD returnFromEvent false",,,"reason: mission accepted message appears before conversation exits to bar"
+naderin_ftl_declineOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
+$askedForLeads == true
+$askedAboutBattle == true
+$askedAboutShip == true
+$askedAboutPayment == true",,,"naderin_ftl_decline:Decline, explaining that it's a lost cause",
+naderin_ftl_decline,DialogOptionSelected,"$option == naderin_ftl_decline",,"""Oh. No, I understand. Thank you for listening, captain. It's the least you could have done for me. And, unfortunately, it's more'n anyone here's done so far!""
+
+They breathe a wheeze of a chuckle as you leave them to their evergrowing pile of used Tri-Tachyon branded tissues. And a polite request for them to leave from the proprietor that $heOrShe is pretending to not hear, by the looks of it.","contact_declineBarNoContinue:Look around the bar",
+"#END Bar Intro",,,,,,
+,,,,,,
+# The Search,,,,,,
+"#END The Search",,,,,,
+,,,,,,
+# The Complication,,,,,,
+"#END The Complication",,,,,,
+,,,,,,
+# The Starworks,,,,,,
+"#END The Starworks",,,,,,
+,,,,,,
+# Luminary Found,,,,,,
+"#END Luminary Found",,,,,,
+"#END Finding The Luminary",,,,,,
+,,,,,,
+# A Curious Probe,,,,,,
+,,,,,,
+# That's A Probe,,,,,,
+NEW RULE,,,,,,
+"#END That's A Probe",,,,,,
+,,,,,,
+# Looking For A Reward,,,,,,
+"#END Looking For A Reward",,,,,,
+"#END A Curious Probe",,,,,,
+,,,,,,
 # The Derinkuyu Drop,,,,,,
 ,,,,,,
 # Starting Bar Event,,,,,,
-naderin_tdd_barOpt,AddBarEvents,"RollProbability 0.3
+naderin_tdd_barOpt,AddBarEvents,"#RollProbability 0.3
+RollProbability 0
 $market.id != derinkuyu_market
 !$global.isInTutorial
 !$global.naderin_tdd_acceptedMission","AddBarEvent naderin_tdd_mission ""Speak with the quiet man at the end of the bar"" ""At the end of the bar, a quiet man sits alone tapping on their Tri-Pad. They glance around from time to time, clearly waiting for something — or someone.""",,,

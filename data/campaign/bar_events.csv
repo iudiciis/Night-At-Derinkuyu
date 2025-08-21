@@ -1,0 +1,2 @@
+bar event id,tags,freq,prob,min dur,max dur,min timeout,max timeout,min accepted timeout,max accepted timeout,plugin
+naderin_ftl,"priority, non_repeatable",100,1,30,40,15,20,99999,99999,data.scripts.campaign.missions.NaderinFindingTheLuminary
