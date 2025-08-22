@@ -9,22 +9,22 @@ id,trigger,conditions,script,text,options,notes
 naderin_ftl_blurbBar,naderin_ftl_blurbBar,,,"Some poor fellow is nursing their hangover with a bottle of alcohol, occasionally glancing up from their drunken stupor to ask passing by captains for help about what appears to be a ship they've lost.",,
 naderin_ftl_optionBar,naderin_ftl_optionBar,,,,"naderin_ftl_startBar:See what about their ship is giving them such a hangover",
 naderin_ftl_optionTextBar,DialogOptionSelected,"$option == naderin_ftl_startBar","$missionId = naderin_ftl
-FireAll naderin_ftl_greetingOpts
-Call $naderin_ftl_ref showGiver","""Captain!"" $HeOrShe sneezes uncontrollably as you come close. There's a moment as you maneuver yourself to be just out of range of the river of snot and alcohol dribbling down the front of $hisOrHer face and onto the floor.
+FireAll naderin_ftl_greetingOpts","""Captain!"" $HeOrShe sneezes uncontrollably as you come close. There's a moment as you maneuver yourself to be just out of range of the river of snot and alcohol dribbling down the front of $hisOrHer face and onto the floor.
 
-To be sick, crying, and drunk was not the best of combinations, to put it lightly.
+To be sick, crying, and drunk is not the best of combinations, to put it lightly.
 
 ""You've got to help me find my ship. Please-"" $HeOrShe sneezes again, and out of the corner of your eye, you notice your bodyguards take two steps back. Cowards.",,
 naderin_ftl_askShipOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == false",,,"naderin_ftl_askShip:Ask about what happened",
 naderin_ftl_askShip,DialogOptionSelected,"$option == naderin_ftl_askShip","$askedWhatHappened = true
 SetTextHighlights ""The Luminary""
-FireAll naderin_ftl_greetingOpts
-Call $naderin_ftl_ref updateStage","""Ah. Right."" $HeOrShe sniffles. ""I had this most lovely ship. I called her The Luminary, because she was my light in the darkness. Me and her, so many journeys we've had together... ah.""
+FireAll naderin_ftl_greetingOpts","""Ah. Right."" $HeOrShe sniffles. ""I had this most lovely ship. I called her The Luminary, because she was my light in the darkness. Me and her, so many journeys we've had together... ah.""
 
 You wait patiently for the poor fellow to blow through another round of Tri-Tachyon branded tissues. ""Sorry, captain. It's just... Pirates! Pirates struck down my pride and joy, and now for all I know it's a pile of scrap in their cursed holds. So... if you would do me a favour and find out what happened to 'er, I'd at least have some sense of closure."" ",,
 naderin_ftl_findCoverOpt,naderin_ftl_greetingOpts,"$foundCover == false
 $askedAboutPayment == false",,,"5:naderin_ftl_findCover:Find some cover before it's too late",
 naderin_ftl_findCover,DialogOptionSelected,"$option == naderin_ftl_findCover","$foundCover = true
+Call $global.naderin_ftl_ref showGiver
+FireBest naderin_ftl_reopenMap
 FireAll naderin_ftl_greetingOpts","Deciding not to risk any sort of biohazard from impacting your person and landing you in the medbay for a week, you motion one of your guards to stand in front of you.
 
 ""Shields up, eh? I can't blame you for that, captain."" The snot-dribbling fellow wheezes between chunks of words. ""They getting hazard pay at least?""
@@ -35,14 +35,16 @@ $askedForLeads == false",,,"naderin_ftl_askLeads:Ask for the ship's last known l
 naderin_ftl_askLeads,DialogOptionSelected,"$option == naderin_ftl_askLeads","$askedForLeads = true
 FireAll naderin_ftl_greetingOpts
 Highlight $naderin_ftl_systemName $naderin_ftl_dist
-Call $naderin_ftl_ref viewMap ""Location: $naderin_ftl_systemName""","""I lost her in the $naderin_ftl_systemName just a month or two ago. Not even that far! Just $naderin_ftl_dist lightyears away.""
+Call $global.naderin_ftl_ref getMapForDebrisPhase ""Location: $naderin_ftl_systemName""","""I lost her in the $naderin_ftl_systemName just a month or two ago. Not even that far! Just $naderin_ftl_dist lightyears away.""
 
-There's a moment of silence as $heOrShe collects $hisOrHerself. ""It was a good fight, it really was! Just... there was too many of them. And... I was a coward. I wasn't even at the helm when she blew!""
+There's a moment of silence as $heOrShe collects $himOrHerself. ""It was a good fight, it really was! Just... there was too many of them. And... I was a coward. I wasn't even at the helm when she blew!""
 
 $HeOrShe slumps down, a hand reaching out for another Tri-Tachyon branded tissue. ""We were so close to retirement too, she and I. So close.""",,
 naderin_ftl_askAboutBattleOpt,naderin_ftl_greetingOpts,"$askedForLeads == true
 $askedAboutBattle == false",,,"naderin_ftl_askAboutBattle:""How did the battle go, exactly?""",
 naderin_ftl_askAboutBattle,DialogOptionSelected,"$option == naderin_ftl_askAboutBattle","$askedAboutBattle = true
+Call $global.naderin_ftl_ref showGiver
+FireBest naderin_ftl_reopenMap
 SetTextHighlights ""Apogee-class cruiser""","""You want to know... fine. If you think it'll help."" $HeOrShe manages a quick gulp of alcohol before $heOrShe begins to recount their tale of woe.
 
 ""It was a routine survey mission. The Luminary was perfect for the job, of course. She was an Apogee-class cruiser, and she'd seen her fair share of battles. So had I, but... those pirates. Normally, a fleet of their size'd be too slow to catch us, but they caught us by surprise as we were jumping in.""
@@ -57,13 +59,17 @@ naderin_ftl_askAboutShipOpt,naderin_ftl_greetingOpts,"$askedAboutShip == false
 $askedWhatHappened == true",,,"naderin_ftl_askAboutShip:Ask about The Luminary",
 naderin_ftl_askAboutShip,DialogOptionSelected,"$option == naderin_ftl_askAboutShip","$askedAboutShip = true
 SetTextHighlights Apogee
-FireAll naderin_ftl_greetingOpts
-Call $naderin_ftl_ref showShip","$HeOrShe drags out a battered Tri-Pad from the side. With a single swipe, The Luminary appears with little fanfare as you scrutinise the details.
+Call $global.naderin_ftl_ref showShip
+FireAll naderin_ftl_greetingOpts","$HeOrShe drags out a battered Tri-Pad from the side. With a single swipe, The Luminary appears with little fanfare as you scrutinise the details.
 
-""That's her, captain. The best Apogee I'd ever had."" You hear a sniffle. ""Rare as they are... I'm such a fool to lose her.""",,
+""That's her, captain. The best Apogee I'd ever had."" You hear a sniffle. ""Rare as they are... I'm such a fool to lose her.""
+
+You note that the details appear to also contain projections on the lasting damage it would have suffered after it was lost in battle. Assuming, of course, that it was recovered rather than salvaged for parts.",,"# I WONDER WHY SOME NEED THE .global PREFIX AND OTHERS DON'T????"
 naderin_ftl_askAboutPaymentOpt,naderin_ftl_greetingOpts,"$askedAboutPayment == false
 $askedWhatHappened == true",,,"naderin_ftl_askAboutPayment:Ask about payment",
 naderin_ftl_askAboutPayment,DialogOptionSelected,"$option == naderin_ftl_askAboutPayment","$askedAboutPayment = true
+Call $global.naderin_ftl_ref showGiver
+FireBest naderin_ftl_reopenMap
 FireAll naderin_ftl_greetingOpts
 SetTextHighlights 50,000 ""The Luminary's final fate"" 100,000 ""return her to me""","""50,000 credits if you get me news on The Luminary's final fate in this wretched sector. Or 100,000 if you recover her yourself and return her to me. Not that I have all that much hope...""",,
 naderin_ftl_acceptOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
@@ -99,13 +105,49 @@ $askedAboutShip == true
 $askedAboutPayment == true",,,"naderin_ftl_decline:Decline, explaining that it's a lost cause",
 naderin_ftl_decline,DialogOptionSelected,"$option == naderin_ftl_decline",,"""Oh. No, I understand. Thank you for listening, captain. It's the least you could have done for me. And, unfortunately, it's more'n anyone here's done so far!""
 
-They breathe a wheeze of a chuckle as you leave them to their evergrowing pile of used Tri-Tachyon branded tissues. And a polite request for them to leave from the proprietor that $heOrShe is pretending to not hear, by the looks of it.","contact_declineBarNoContinue:Look around the bar",
+They breathe a wheeze of a chuckle as you leave them to their evergrowing pile of used Tri-Tachyon branded tissues. And a polite request for $himOrHer to leave from the proprietor that $heOrShe is pretending to not hear, by the looks of it.","contact_declineBarNoContinue:Look around the bar",
+naderin_ftl_reopenMap,naderin_ftl_reopenMap,"$askedForLeads == true","Call $global.naderin_ftl_ref getMapForDebrisPhase ""Location: $naderin_ftl_systemName""",,,"only reopen the map after viewing the ship if we've already seen it"
 "#END Bar Intro",,,,,,
 ,,,,,,
 # The Search,,,,,,
+naderin_ftl_fdfInteraction,OpenInteractionDialog,"$naderin_ftl_fdf score:1000
+$alreadySeen == false","$alreadySeen = true
+Call $global.naderin_ftl_ref getMapForSecondDebris ""Predicted Location: Debris Field""","""Surprising to see this field hasn't drifted off after so long. Normally, these sort of debris fields scatter too wide to be of any use after a month or two."" Your ops chief chimes in from the side, eyes glued to a screen.
+
+A preliminary investigation reveals that the volume of debris here appears less than expected, even after accounting for attempted salvage efforts and the passage of time.
+
+Judging from the misshapen breach cuts found between chunks of hull, the victors likely scavenged the debris field after having caught their prey.
+
+""The defending fleet must have managed to disengage after some losses on both sides. If what we've been told is true... well, there'll be a second debris field around here in the direction the survey fleet attempted to escape to. I'd assume somewhere to hide... maybe here, $PlayerSirOrMadam.""","naderin_ftl_fdfInteractionCont:Continue",
+naderin_ftl_fdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_fdfInteractionCont","Call $global.naderin_ftl_ref makeUnimportant
+FireBest OpenInteractionDialog",,,"# unimportant cmd found in BaseHubMission"
+naderin_ftl_sdfInteraction,OpenInteractionDialog,"$naderin_ftl_sdf score:1000
+$alreadySeen == false","ShowDefaultVisual
+Call $global.naderin_ftl_ref updateData","A preliminary scan and investigation indicates that this is most likely the location where your client's survey team fought and lost a second, decisive engagement against a markedly superior pirate fleet.
+
+""$PlayerSirOrMadam,"" your communications officer reports. ""There's life signs in the wreckage. Orders?""","naderin_ftl_sdfInteractionCont:Search for survivors
+defaultLeave:Leave for now",
+naderin_ftl_sdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_sdfInteractionCont","AddCommodity crew 13
+$alreadySeen = true","Salvage teams are sent into the wreckage, searching for survivors amidst the slowly drifting sections of metal and debris. Without any intact hulls to look through, efforts are quick and fruitful as a dozen or so survivors are recovered from hidden cryopods and sealed bulkheads.
+
+They, of course, gratefully join your crew for free. Some recount seeing the pirates play 'games' with the survivors. From captured crewmembers being walked off the airlock, to ship batteries firing wildly at the wreckage, it's a tale that makes you surprised there were any survivors at all.
+","naderin_ftl_sdfInteractionCont2:Continue",
+naderin_ftl_sdfInteractionCont2,DialogOptionSelected,"$option == naderin_ftl_sdfInteractionCont2","$global.naderin_ftl_searched = true
+SetTextHighlights $naderin_ftl_supplySystemName $naderin_ftl_supplySystemDist
+Call $global.naderin_ftl_ref getMapForSupplyPhase ""Location: $naderin_ftl_supplySystemName""
+Call $naderin_tdd_ref updateStage","While your crew do all the administrative work of assigning rooms and interviewing survivors, one such survivor reveals that they know where the pirate fleet left to.
+
+""Bastards laughed at us,"" they spit. ""Thought we'd been left for dead, spilled the beans like a villain on the holo-dramas. Can't wait to see their faces when you show up... It's the $naderin_ftl_supplySystemName system, captain.""
+
+Your nav officer helpfully pulls up the system on-screen, noting that it is $naderin_ftl_supplySystemDist lightyears away from your $shipOrFleet's current position.
+
+""They've a supply cache snuck away there."" The survivor continues. ""We gave 'em a good fight, so they've run to lick their wounds. Don't let them.""","naderin_ftl_sdfInteractionCont3:Continue",
+naderin_ftl_sdfInteractionCont3,DialogOptionSelected,"$option == naderin_ftl_sdfInteractionCont3","Call $global.naderin_ftl_ref makeUnimportant
+FireBest OpenInteractionDialog",,,"makeUnimportant unnecessary probably for this specific case: code probably already handles that by limiting importance to the stage"
 "#END The Search",,,,,,
 ,,,,,,
 # The Complication,,,,,,
+naderin_ftl_,,,,,,
 "#END The Complication",,,,,,
 ,,,,,,
 # The Starworks,,,,,,

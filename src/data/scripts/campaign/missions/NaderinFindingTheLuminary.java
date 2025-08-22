@@ -3,6 +3,7 @@ package data.scripts.campaign.missions;
 import java.awt.Color;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.fs.starfarer.api.Global;
@@ -23,7 +24,6 @@ import com.fs.starfarer.api.util.Misc;
 public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
     public static enum Stage {
-        CONTACT,
         SEARCHING_SALVAGE,
         RESUPPLY_INTERCEPT,
         VISITING_THE_STARWORKS,
@@ -41,6 +41,11 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     protected MarketAPI starworks;
     protected FleetMemberAPI fleetMember;
     protected int reward = 100000;
+
+    @Override
+    public boolean shouldShowAtMarket(MarketAPI market) {
+        return !market.getFactionId().equals(Factions.PIRATES);
+    }
 
     @Override
     protected boolean create(MarketAPI createdAt, boolean barEvent) {
@@ -87,13 +92,15 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         requireSystemNot(salvageSystem);
         requireSystemInterestingAndNotUnsafeOrCore();
         preferSystemUnexplored();
+        preferSystemWithinRangeOf(salvageSystem.getLocation(), 2f, 10f);
         pirateSystem = pickSystem(true);
         if (pirateSystem == null) return false;
 
         // Ship - from hand-me-down
         ShipVariantAPI variant = Global.getSettings().getVariant("apogee_Balanced").clone();
+        variant.clear();
 
-        int dMods = 2 + genRandom.nextInt(3);
+        int dMods = 2 + genRandom.nextInt(2);
         DModManager.addDMods(variant, true, dMods, genRandom);
         DModManager.removeDMod(variant, HullMods.COMP_STORAGE);
 
@@ -134,13 +141,10 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
         setName("Finding The Luminary");
         setStoryMission();
-        setStartingStage(Stage.CONTACT);
+        setStartingStage(Stage.SEARCHING_SALVAGE);
         setSuccessStage(Stage.COMPLETED);
         setFailureStage(Stage.FAILED);
 
-        // could have used only memory flags if we had the cache/debris entity variables
-        // ...could we get it while keeping spawns trigger based?
-        setStageOnMemoryFlag(Stage.SEARCHING_SALVAGE, giver, "$naderin_ftl_given");
         setStageOnGlobalFlag(Stage.RESUPPLY_INTERCEPT, "$naderin_ftl_searched");
         setStageOnGlobalFlag(Stage.VISITING_THE_STARWORKS, "$naderin_ftl_located");
         setStageOnMemoryFlag(Stage.PAYMENT, starworks, "$naderin_ftl_acquired");
@@ -151,13 +155,15 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
     @Override
     protected boolean callAction(String action, String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
+        InteractionDialogAPI dialogWorkaround = Global.getSector().getCampaignUI().getCurrentInteractionDialog();   // uhhh undo when you get around to it
+
         if (action.equals("showShip")) {
-            dialog.getVisualPanel().showFleetMemberInfo(fleetMember, true);
+            dialogWorkaround.getVisualPanel().showFleetMemberInfo(fleetMember, true);
             return true;
         } else if (action.equals("showGiver")) {
-            dialog.getVisualPanel().showPersonInfo(giver, true);
+            dialogWorkaround.getVisualPanel().showPersonInfo(getPerson(), true);
             return true;
-        } else if (action.equals("viewMap")) {     // Not to be confused with the vanilla showMap
+        } else if (action.equals("getMapForDebrisPhase")) {     // similar to the vanilla showMap
             SectorEntityToken mapLoc = getMapLocationFor(salvageSystem.getCenter());
             if (mapLoc != null) {
                 String title = params.get(1).getStringWithTokenReplacement(ruleId, dialog, memoryMap);
@@ -171,13 +177,53 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                     color = mapMarkerNameColor;
                 }
 
-                dialog.getVisualPanel().showMapMarker(mapLoc,
+                dialogWorkaround.getVisualPanel().showMapMarker(mapLoc,
+                        title, color,
+                        true, icon, text, tags);
+            }
+            return true;
+        } else if (action.equals("getMapForSupplyPhase")) { // lovely code duplication. will solve later
+            SectorEntityToken mapLoc = getMapLocationFor(pirateSystem.getCenter());
+            if (mapLoc != null) {
+                String title = params.get(1).getStringWithTokenReplacement(ruleId, dialog, memoryMap);
+                String text = "";
+                Set<String> tags = getIntelTags(null);
+                tags.remove(Tags.INTEL_ACCEPTED);
+                String icon = getIcon();
+
+                Color color = getFactionForUIColors().getBaseUIColor();
+                if (mapMarkerNameColor != null) {
+                    color = mapMarkerNameColor;
+                }
+
+                dialogWorkaround.getVisualPanel().showMapMarker(mapLoc,
+                        title, color,
+                        true, icon, text, tags);
+            }
+            return true;
+        } else if (action.equals("getMapForSecondDebris")) {
+            SectorEntityToken entity = Global.getSector().getEntitiesWithTag("$naderin_ftl_sdf").get(0); // surely we can do better than this
+            SectorEntityToken mapLoc = getMapLocationFor(entity);
+            if (mapLoc != null) {
+                String title = params.get(1).getStringWithTokenReplacement(ruleId, dialog, memoryMap);
+                String text = "";
+                Set<String> tags = getIntelTags(null);
+                tags.remove(Tags.INTEL_ACCEPTED);
+                String icon = getIcon();
+
+                Color color = getFactionForUIColors().getBaseUIColor();
+                if (mapMarkerNameColor != null) {
+                    color = mapMarkerNameColor;
+                }
+
+                dialogWorkaround.getVisualPanel().showMapMarker(mapLoc,
                         title, color,
                         true, icon, text, tags);
             }
             return true;
         }
-        return super.callAction(action, ruleId, dialog, params, memoryMap);
+        return false;
+        //return super.callAction(action, ruleId, dialog, params, memoryMap);
     }
 
     @Override
@@ -189,6 +235,8 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         set("$naderin_ftl_luminary", fleetMember);
         set("$naderin_ftl_systemName", salvageSystem.getNameWithLowercaseTypeShort());
         set("$naderin_ftl_dist", getDistanceLY(salvageSystem));
+        set("$naderin_ftl_supplySystemName", pirateSystem.getNameWithLowercaseTypeShort());
+        set("$naderin_ftl_supplySystemDist", getDistanceLY(pirateSystem));
         // Note: $naderin_ftl_blurbBar and $naderin_ftl_optionBar is defined elsewhere
         // Ensure person_missions.csv and/or bar_events.csv has the right id
     }
