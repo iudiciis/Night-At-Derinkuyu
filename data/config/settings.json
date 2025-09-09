@@ -3,7 +3,8 @@
     "data.scripts.campaign.rulecmd"
   ],
   "bonusXP": {
-    "naderin_askedForMoney": 1
+    "naderin_askedForMoney": 1,
+    "naderin_ftl_convinced": 1
   },
 
   "graphics": {
