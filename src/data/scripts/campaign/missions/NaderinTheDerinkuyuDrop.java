@@ -92,7 +92,9 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
 
         // Mercenary complication
         beginStageTrigger(Stage.SUBMIT);
-        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.INDEPENDENT, FleetTypes.MERC_PRIVATEER, system);
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.HIGHER, Factions.MERCENARY, FleetTypes.MERC_PRIVATEER, system);
+        triggerSetFleetOfficers(OfficerNum.MORE, OfficerQuality.HIGHER);
+        triggerSetFleetFaction(Factions.INDEPENDENT);
         triggerPickLocationAtClosestToPlayerJumpPoint(system);
         triggerSpawnFleetAtPickedLocation("$naderin_tdd_merc_ref", null);
         triggerSetFleetMissionRef("$naderin_tdd_ref");

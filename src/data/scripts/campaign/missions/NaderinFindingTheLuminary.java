@@ -16,6 +16,7 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
+import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
@@ -80,7 +81,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         }
 
         // Giver
-        PersonAPI giver = getPerson();
+        giver = getPerson();
         if (giver == null) return false;
         makeImportant(giver, "$naderin_ftl_giver", Stage.PAYMENT, Stage.COMPLETED);
 
@@ -121,7 +122,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         // Debris Fields
         beginStageTrigger(Stage.SEARCHING_SALVAGE);
         LocData firstDebrisLoc = new LocData(EntityLocationType.ORBITING_PLANET_OR_STAR, null, salvageSystem);
-        triggerSpawnDebrisField(600f, 1f, firstDebrisLoc);
+        triggerSpawnDebrisField(400f, 1f, firstDebrisLoc);
         triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE);
         endTrigger();
 
@@ -147,10 +148,10 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         beginStageTrigger(Stage.RESUPPLY_INTERCEPT);
         LocData supplyCacheLoc = new LocData(EntityLocationType.HIDDEN_NOT_NEAR_STAR, null, pirateSystem);
         triggerSpawnEntity(Entities.SUPPLY_CACHE, supplyCacheLoc);
-        triggerEntityMakeImportant("$naderin_ftl_cache", Stage.RESUPPLY_INTERCEPT);
+        triggerEntityMakeImportant("$naderin_ftl_cache", Stage.RESUPPLY_INTERCEPT, Stage.VISITING_THE_STARWORKS);
         triggerSetEntityFlag("$naderin_ftl_hasLocation", Stage.RESUPPLY_INTERCEPT);
 
-        triggerCreateFleet(FleetSize.SMALL, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.PATROL_SMALL, pirateSystem);
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.PATROL_SMALL, pirateSystem);
         triggerAutoAdjustFleetStrengthMajor();
         triggerSetStandardHostilePirateFlags();
         triggerMakeFleetIgnoredByOtherFleets();
@@ -158,6 +159,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerSpawnFleetAtPickedLocation("$naderin_ftl_pirates", null);
         triggerOrderFleetPatrolEntity(true);
         triggerSetFleetMissionRef("$naderin_ftl_ref");
+        triggerFleetMakeImportant("$naderin_ftl_pirate", Stage.RESUPPLY_INTERCEPT);
         endTrigger();
 
         // Starworks Complication
@@ -175,8 +177,8 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         setStageOnGlobalFlag(Stage.SECOND_SALVAGE, "$naderin_ftl_calculated");
         setStageOnGlobalFlag(Stage.RESUPPLY_INTERCEPT, "$naderin_ftl_searched");
         setStageOnGlobalFlag(Stage.VISITING_THE_STARWORKS, "$naderin_ftl_located");
-        setStageOnMemoryFlag(Stage.PAYMENT, starworks, "$naderin_ftl_acquired");
-        setStageOnMemoryFlag(Stage.COMPLETED, giver, "$naderin_ftl_returned");
+        setStageOnGlobalFlag(Stage.PAYMENT, "$naderin_ftl_acquired");
+        setStageOnMemoryFlag(Stage.COMPLETED, getPerson(), "$naderin_ftl_returned");
 
         return true;
     }
@@ -209,6 +211,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         return super.callAction(action, ruleId, dialog, params, memoryMap);
     }
 
+    // too lazy to find a vanilla cmd that works, so I guess this will have to do
     private boolean getMapVisual(SectorEntityToken targetEntity, InteractionDialogAPI dialog, String title) {
         SectorEntityToken mapLoc = getMapLocationFor(targetEntity);
         if (mapLoc != null) {
@@ -237,10 +240,12 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         set("$naderin_ftl_himOrHer", getPerson().getHimOrHer());
         set("$naderin_ftl_hisOrHer", getPerson().getHisOrHer());
         set("$naderin_ftl_luminary", fleetMember);
+        set("$naderin_ftl_raidDifficulty", 100f);
         set("$naderin_ftl_systemName", salvageSystem.getNameWithLowercaseTypeShort());
         set("$naderin_ftl_dist", getDistanceLY(salvageSystem));
         set("$naderin_ftl_supplySystemName", pirateSystem.getNameWithLowercaseTypeShort());
-        set("$naderin_ftl_supplySystemDist", getDistanceLY(pirateSystem));
+        // we want the distance between these two, not from the bar
+        set("$naderin_ftl_supplySystemDist", Math.round(Misc.getDistanceLY(salvageSystem.getCenter(), pirateSystem.getCenter())));
         // Note: $naderin_ftl_blurbBar and $naderin_ftl_optionBar is defined elsewhere
         // Ensure person_missions.csv and/or bar_events.csv has the right id
     }
@@ -248,27 +253,45 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     @Override
     public void addDescriptionForNonEndStage(TooltipMakerAPI info, float width, float height) {
         float opad = 10f;
+        Color h = Misc.getHighlightColor();
+        FactionAPI f = starworks.getFaction();
         if (currentStage == Stage.SEARCHING_SALVAGE) {
-            info.addPara(getGoToSystemTextShort(salvageSystem) + " and investigate the system for any clues to The Luminary.", opad);
+            LabelAPI label;
+            label = info.addPara(getGoToSystemTextShort(salvageSystem) + " and investigate the system for any clues to The Luminary.", opad);
+            label.setHighlight("The Luminary");
+            label.setHighlightColor(h);
         }
         if (currentStage == Stage.SECOND_SALVAGE) {
-            info.addPara(getGoToSystemTextShort(salvageSystem) + " and investigate the system for further clues to The Luminary.", opad);
+            LabelAPI label;
+            label = info.addPara(getGoToSystemTextShort(salvageSystem) + " and investigate the system for further clues to The Luminary.", opad);
+            label.setHighlight("The Luminary");
+            label.setHighlightColor(h);
         }
         if (currentStage == Stage.RESUPPLY_INTERCEPT) {
-            info.addPara(getGoToSystemTextShort(pirateSystem) + " and see if the pirates have The Luminary. Or at least, find out what they did to it.", opad);
+            LabelAPI label;
+            label = info.addPara(getGoToSystemTextShort(pirateSystem) + " and see if the pirates have The Luminary. Or at least, find out what they did to it.", opad);
+            label.setHighlight("The Luminary");
+            label.setHighlightColor(h);
         }
         if (currentStage == Stage.VISITING_THE_STARWORKS) {
-            info.addPara(getGoToMarketText(starworks) + " and recover The Luminary if at all possible.", opad);
-            addStandardMarketDesc(null, starworks, info, opad);
+            LabelAPI label;
+            label = info.addPara(getGoToMarketText(starworks) + " and recover The Luminary if at all possible from the " +
+                    f.getDisplayNameWithArticle() + ".", opad);
+            label.setHighlight("The Luminary", starworks.getName(), f.getDisplayNameWithArticle());
+            label.setHighlightColors(h, f.getBaseUIColor(), f.getBaseUIColor());
         }
         if (currentStage == Stage.PAYMENT) {
+            LabelAPI label;
             if(Global.getSector().getMemoryWithoutUpdate().contains("$naderin_ftl_keep")) {
-                info.addPara("It's time to return what you've 'found' of The Luminary to " + giver.getNameString() + ".", opad);
+                label = info.addPara("It's time to return what you've 'found' of The Luminary to " + getPerson().getNameString() + ".", opad);
             } else {
-                info.addPara("It's time to return what you've found of The Luminary to " + giver.getNameString() + ".", opad);
+                label = info.addPara("It's time to return what you've found of The Luminary to " + getPerson().getNameString() + ".", opad);
             }
+            label.setHighlight("The Luminary");
+            label.setHighlightColor(h);
+
             info.addPara("And get paid for it too, of course.", opad);
-            addStandardMarketDesc("Go to ", giver.getMarket(), info, opad);
+            addStandardMarketDesc("Go to", getPerson().getMarket(), info, opad);
         }
     }
 
@@ -284,10 +307,10 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             info.addPara("See if the pirate fleet in the " + pirateSystem.getName() + " system knows anything about The Luminary's whereabouts", tc, pad);
             return true;
         } else if (currentStage == Stage.VISITING_THE_STARWORKS) {
-            info.addPara("See if you can recover The Luminary from the pirates at Kapteyn Starworks", tc, pad);
+            info.addPara("See if you can recover The Luminary from the pirates at " + starworks.getName(), tc, pad);
             return true;
         } else if (currentStage == Stage.PAYMENT) {
-            info.addPara("Get paid by " + giver.getNameString() + " at " + giver.getMarket() + ".", tc, pad);
+            info.addPara("Get paid by " + getPerson().getNameString() + " at " + getPerson().getMarket().getName(), tc, pad);
         }
 
         return false;
@@ -302,9 +325,9 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         } else if (currentStage == Stage.RESUPPLY_INTERCEPT) {
             return pirateSystem.getCenter();
         } else if (currentStage == Stage.VISITING_THE_STARWORKS) {
-            return starworks.getPlanetEntity();
+            return starworks.getStarSystem().getCenter();
         } else if (currentStage == Stage.PAYMENT) {
-            return giver.getMarket().getPlanetEntity();
+            return getPerson().getMarket().getPlanetEntity();
         } else {
             return super.getMapLocation(map);
         }
