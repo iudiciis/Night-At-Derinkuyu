@@ -6,14 +6,14 @@ id,trigger,conditions,script,text,options,notes
 # Finding The Luminary,,,,,,
 ,,,,,,
 # Bar Intro,,,,,,
-naderin_ftl_blurbBar,naderin_ftl_blurbBar,,,"Some poor fellow is nursing their hangover with a bottle of alcohol, occasionally glancing up from their drunken stupor to ask passing by captains for help about what appears to be a ship they've lost.",,
+naderin_ftl_blurbBar,naderin_ftl_blurbBar,,,"Some poor fellow is nursing their hangover with a bottle of alcohol, occasionally glancing up from their drunken stupor to ask passing captains for help about what appears to be a ship they've lost.",,
 naderin_ftl_optionBar,naderin_ftl_optionBar,,,,"naderin_ftl_startBar:See what about their ship is giving them such a hangover",
 naderin_ftl_optionTextBar,DialogOptionSelected,"$option == naderin_ftl_startBar","$missionId = naderin_ftl
 FireAll naderin_ftl_greetingOpts","""Captain!"" $HeOrShe sneezes uncontrollably as you come close. There's a moment as you maneuver yourself to be just out of range of the river of snot and alcohol dribbling down the front of $hisOrHer face and onto the floor.
 
 To be sick, crying, and drunk is not the best of combinations, to put it lightly.
 
-""Mind if you help me find my ship?"" $HeOrShe sneezes again, and out of the corner of your eye, you notice your bodyguards take two steps back. Cowards.",,
+""Mind if you help me find my ship?"" $HeOrShe sneezes again, and out of the corner of your eye, you notice your bodyguards take two steps back.",,
 naderin_ftl_askShipOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == false",,,"naderin_ftl_askShip:Ask about what happened",
 naderin_ftl_askShip,DialogOptionSelected,"$option == naderin_ftl_askShip","$askedWhatHappened = true
 SetTextHighlights ""The Luminary""
@@ -71,7 +71,7 @@ naderin_ftl_askAboutPayment,DialogOptionSelected,"$option == naderin_ftl_askAbou
 Call $global.naderin_ftl_ref showGiver
 FireBest naderin_ftl_reopenMap
 FireAll naderin_ftl_greetingOpts
-SetTextHighlights 50,000 ""The Luminary's final fate"" 100,000 ""return her to me""","""50,000 credits if you get me news on The Luminary's final fate in this wretched sector. Or 100,000 if you recover her yourself and return her to me. Not that I have all that much hope...""",,
+SetTextHighlights 50,000 ""The Luminary's final fate"" 150,000 ""return her to me""","""50,000 credits if you get me news on The Luminary's final fate in this wretched sector. Or 150,000 if you recover her yourself and return her to me. Not that I have all that much hope...""",,
 naderin_ftl_acceptOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
 $askedForLeads == true
 $askedAboutBattle == true
@@ -81,14 +81,14 @@ naderin_ftl_accept,DialogOptionSelected,"$option == naderin_ftl_accept",,"""Than
 
 Just as you begin to up and leave, you suddenly feel something wrong. Warning signs blare inside your head, attuned from countless battles in fleet combat. What's coming? Assassins? A raid? Perhaps-","naderin_ftl_cover:Continue",
 naderin_ftl_acceptNotCovered,DialogOptionSelected,"$option == naderin_ftl_cover","BarCMD accept $missionId
-Call $global.naderin_ftl_ref playSoundHitHeavy","You stand there blankly, seeing the equivalent of a Reaper missile having blown apart the front of your clothes and turned you into a walking biohazard. 
+Call $global.naderin_ftl_ref playSoundHitHeavy","You stand there blankly, seeing the equivalent of a Reaper missile having blown apart the front of your clothes and turning you into a walking biohazard. 
 
 $naderin_ftl_personName calls out from the front door just before they slink away into the streets. ""Um. Sorry. We'll be in contact, yeah?"" $HeOrShe flashes a smile before dashing away.
 
-You are, of course, not at all embarrassed when the barkeep politely asks you to leave.","naderin_ftl_postAccept:Continue after a quick cleanup",
+You are, of course, not at all embarrassed when the barkeep politely asks you to leave.","naderin_ftl_postAccept:Continue after a change of clothes",
 naderin_ftl_acceptCovered,DialogOptionSelected,"$option == naderin_ftl_cover
 $foundCover == true","BarCMD accept $missionId
-Call $global.naderin_ftl_ref playSoundHitHeavy","Before you can even react your bodyguard steps in the way of what sounds like bulkheads crunching in on themselves. There's a moment of pin drop silence before you look and see the state of your bodyguard.
+Call $global.naderin_ftl_ref playSoundHitHeavy","Before you can even react, your bodyguard steps in the way of what sounds like bulkheads crunching in on themselves. There's a moment of pin drop silence before you look and see the unfortunate state of your bodyguard.
 
 It's a testament to the professionalism of your bodyguards, you feel, that they can somehow remain so stoic despite the mess splattered all over their face.
 
@@ -99,8 +99,8 @@ naderin_ftl_declineOpt,naderin_ftl_greetingOpts,"$askedWhatHappened == true
 $askedForLeads == true
 $askedAboutBattle == true
 $askedAboutShip == true
-$askedAboutPayment == true",,,"naderin_ftl_decline:Decline, explaining that it's a lost cause",
-naderin_ftl_decline,DialogOptionSelected,"$option == naderin_ftl_decline",,"""Oh. No, I understand. Thank you for listening, captain. It's the least you could have done for me. And, unfortunately, it's more'n anyone here's done so far!""
+$askedAboutPayment == true","SetShortcut naderin_ftl_decline ""ESCAPE""",,"naderin_ftl_decline:Decline, explaining that it's a lost cause",
+naderin_ftl_decline,DialogOptionSelected,"$option == naderin_ftl_decline","SetShortcut contact_declineBarNoContinue ""ESCAPE""","""Oh. No, I understand. Thank you for listening, captain. It's the least you could have done for me. And, unfortunately, it's more'n anyone here's done so far!""
 
 They breathe a wheeze of a chuckle as you leave them to their evergrowing pile of used Tri-Tachyon branded tissues. And a polite request for $himOrHer to leave from the proprietor that $heOrShe is pretending to not hear, by the looks of it.","contact_declineBarNoContinue:Look around the bar",
 naderin_ftl_reopenMap,naderin_ftl_reopenMap,"$askedForLeads == true","Call $global.naderin_ftl_ref getMapForDebrisPhase ""Location: $naderin_ftl_systemName""",,,"only reopen the map after viewing the ship if we've already seen it"
@@ -112,7 +112,7 @@ $alreadySeen == false","$alreadySeen = true
 ShowDefaultVisual","""Surprising to see this field hasn't drifted off after so long. Normally, these sort of debris fields scatter too wide to be of any use after a month or two."" Your ops chief chimes in from the side, eyes glued to a screen.
 
 A preliminary investigation reveals that the volume of debris here appears less than expected, even after accounting for attempted salvage efforts and the passage of time.","naderin_ftl_fdfInteractionCont:Investigate further","consider using ShowSalvageEntityDetails instead"
-naderin_ftl_fdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_fdfInteractionCont","FireBest naderin_ftl_fdfInteractionIfFirstCond","Judging from complicated guesswork and calculations going far over your head more often than you'd like, the misshapen breach cuts found between chunks of hull appear to have some sort of relation to the heat dissipation of the debris. In other words, the victors likely scavenged the debris field after having caught their prey.","naderin_ftl_fdfInteractionCont2:Continue",
+naderin_ftl_fdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_fdfInteractionCont","FireBest naderin_ftl_fdfInteractionIfFirstCond","Judging from complicated guesswork and calculations going far over your head more often than you'd like, the misshapen breach cuts found between chunks of hull appear to have some sort of relation to the heat dissipation of the debris. In other words, the victors likely scavenged the most dense parts of the debris field after having caught their prey. Perhaps, you wonder, in an effort to look for something.","naderin_ftl_fdfInteractionCont2:Continue",
 naderin_ftl_fdfInteractionIfFirstCond,naderin_ftl_fdfInteractionIfFirstCond,"$global.naderin_ftl_secondFound == false","FireBest naderin_ftl_fdfInteractionIfFirst",,,
 naderin_ftl_fdfInteractionIfFirst,naderin_ftl_fdfInteractionIfFirst,,"SetTextHighlights ""map""
 $global.naderin_ftl_calculated = true
@@ -128,19 +128,19 @@ FireBest OpenInteractionDialog",,,"# unimportant cmd found in BaseHubMission"
 naderin_ftl_fdfHostileNearby,OpenInteractionDialog,"$naderin_ftl_fdf score:1000
 $alreadySeen == false
 HostileFleetNearbyAndAware","ShowDefaultVisual
-SetShortcut defaultLeave ESCAPE","Scans indicate that this debris field is possibly related to The Luminary. However, a nearby hostile fleet is tracking your movements, making further exploration impossible.","100:defaultLeave:Leave",
+SetShortcut defaultLeave ESCAPE
+SetTextHighlights ""The Luminary""","Scans indicate that this debris field is possibly related to The Luminary. However, a nearby hostile fleet is tracking your movements, making further exploration impossible.","100:defaultLeave:Leave",
 naderin_ftl_sdfInteraction,OpenInteractionDialog,"$naderin_ftl_sdf score:1000
 $alreadySeen == false","ShowDefaultVisual
 $global.naderin_ftl_secondFound = true
-Call $global.naderin_ftl_ref updateData","A preliminary scan and investigation indicates that this is most likely the location where your client's survey team fought and lost a second, decisive engagement against a markedly superior pirate fleet.
+Call $global.naderin_ftl_ref updateData","A preliminary scan indicates that this is most likely the location where your client's survey team fought and lost a second, decisive engagement against a markedly superior pirate fleet.
 
 ""$PlayerSirOrMadam,"" your communications officer reports. ""There's life signs in the wreckage. Orders?""","naderin_ftl_sdfInteractionCont:Search for survivors
 defaultLeave:Leave for now",
 naderin_ftl_sdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_sdfInteractionCont","AddCommodity crew 13
-$alreadySeen = true","Salvage teams are sent into the wreckage, searching for survivors amidst the slowly drifting sections of metal and debris. Without any intact hulls to look through, efforts are quick and fruitful as a dozen or so survivors are recovered from hidden cryopods and sealed bulkheads.
+$alreadySeen = true","Salvage teams are sent into the wreckage, searching for survivors amidst the slowly drifting sections of metal and debris. Efforts are quick and fruitful as a dozen or so survivors are recovered from nestled cryopods and sealed bulkheads.
 
-They, of course, gratefully join your crew for free. Some recount seeing the pirates play 'games' with the survivors. From captured crewmembers being walked off the airlock, to ship batteries firing wildly at the wreckage, it's a tale that makes you surprised there were any survivors at all.
-","naderin_ftl_sdfInteractionCont2:Continue",
+They, of course, gratefully join your crew for free. Some recount seeing the pirates play 'games' with the survivors. From captured crewmembers being walked off the airlock, to ship batteries firing wildly at the wreckage, it's a tale that makes you surprised there were any survivors at all.","naderin_ftl_sdfInteractionCont2:Continue",
 naderin_ftl_sdfInteractionCont2,DialogOptionSelected,"$option == naderin_ftl_sdfInteractionCont2","$global.naderin_ftl_searched = true
 SetTextHighlights $naderin_ftl_supplySystemName $naderin_ftl_supplySystemDist
 Call $global.naderin_ftl_ref getMapForSupplyPhase ""Location: $naderin_ftl_supplySystemName""
@@ -156,12 +156,14 @@ FireBest OpenInteractionDialog",,,"makeUnimportant unnecessary probably for this
 naderin_ftl_sdfHostileNearby,OpenInteractionDialog,"$naderin_ftl_sdf score:1000
 $alreadySeen == false
 HostileFleetNearbyAndAware","ShowDefaultVisual
+SetTextHighlights ""The Luminary""
 SetShortcut defaultLeave ESCAPE","Immediate scans indicate that this debris field almost certainly offers a lead to The Luminary's whereabouts. However, a nearby hostile fleet is tracking your movements, making further exploration impossible.","100:defaultLeave:Leave",
 "#END The Search",,,,,,
 ,,,,,,
 # The Complication,,,,,,
 naderin_ftl_cacheInteraction,OpenInteractionDialog,"$naderin_ftl_cache score:1000","ShowDefaultVisual
 Call $global.naderin_ftl_ref updateData
+SetTextHighlights ""The Luminary""
 $salvageLeaveText = Leave 0
 FireAll PopulateSalvageOptions1","Caches like these have often been used by pirates and independents with a need for a more convenient resupply point in the more distant edges of the sector. By replacing a trip back to the core worlds with a hidden cache, it's hoped that a savvy captain might be able to operate out in deep space for longer.
 
@@ -180,17 +182,20 @@ It all disappears in short order as your salvors take anything of value and scat
 naderin_ftl_cacheSalvageActual,DialogOptionSelected,"$option == naderin_ftl_cacheSalvageActual","$doNotDismissDialogAfterSalvage = true
 SalvageEntity checkAccidents
 FireBest naderin_ftl_cachePostSalvageEvent",,,
-naderin_ftl_cachePostSalvageNothing,naderin_ftl_cachePostSalvageEvent,,"#DismissDialog","There's nothing left for you here. Time to go.","0:defaultLeave:Leave",
-naderin_ftl_cacheObjectiveLocated,naderin_ftl_cachePostSalvageEvent,"$naderin_ftl_hasLocation == true","SetTextHighlights ""Kapteyn Starworks""
+naderin_ftl_cachePostSalvageNothing,naderin_ftl_cachePostSalvageEvent,,"SetTextHighlights ""The Luminary"" ""Kapteyn Starworks""","It's only after salvage is complete that your crew discover that one particular datapad appears to mention The Luminary. It appears that the ship has already been traded to another pirate fleet intent on ""a fun day of science"" at Kapteyn Starworks.
+
+Nothing you don't already know, unfortunately.","0:defaultLeave:Leave",
+naderin_ftl_cacheObjectiveLocated,naderin_ftl_cachePostSalvageEvent,"$naderin_ftl_hasLocation == true","SetTextHighlights ""The Luminary"" ""Kapteyn Starworks""
 $global.naderin_ftl_located = true
 Call $global.naderin_ftl_ref updateStage
-$entity.naderin_ftl_hasLocation = false","It's only after salvage is complete that your crew discover that one particular datapad appears to mention The Luminary - and the fact that it has already been traded to another pirate fleet intent on ""a fun day of science"" at Kapteyn Starworks.","0:defaultLeave:Leave",
+$entity.naderin_ftl_hasLocation = false","It's only after salvage is complete that your crew discover that one particular datapad appears to mention The Luminary. It appears that the ship has already been traded to another pirate fleet intent on ""a fun day of science"" at Kapteyn Starworks.","0:defaultLeave:Leave",
 naderin_ftl_cacheHostileNearby,OpenInteractionDialog,"$naderin_ftl_cache score:1000
 HostileFleetNearbyAndAware","ShowDefaultVisual
+SetTextHighlights ""The Luminary""
 SetShortcut defaultLeave ESCAPE","Approaching the cache, active scans identify key markings that make it extremely likely that it contains information related to The Luminary. However, a nearby hostile fleet is tracking your movements, making further investigation impossible.","100:defaultLeave:Leave",
 naderin_ftl_pirateEncounter,BeginFleetEncounter,"$naderin_ftl_pirates score:3000
-$entity.alreadyMetPlayer == false
-!$entity.trickedByPlayer","FleetDesc
+!$alreadyMetPlayer
+!$trickedByPlayer","FleetDesc
 HailPlayer
 Call $naderin_tdd_ref updateData",,,
 naderin_ftl_pirateCommsHostile,OpenCommLink,"$entity.naderin_ftl_pirates score:3000
@@ -241,7 +246,7 @@ Thankfully, your intel officer is much better at sifting through the noise than 
 naderin_ftl_pirateOptThreatenHostile,PopulateOptions,"$entity.naderin_ftl_pirates score:3000
 $entity.isHostile
 $negotiated == true",,,"naderin_ftl_pirateThreatenHostile:""Oh, I think you do know. And you'll be telling me now, or else.""",
-naderin_ftl_pirateThreatenHostile,DialogOptionSelected,"$option == naderin_ftl_pirateThreatenHostile",,"$HeOrShe breathes in slowly, closes their eyes, and gives out one deep sigh.
+naderin_ftl_pirateThreatenHostile,DialogOptionSelected,"$option == naderin_ftl_pirateThreatenHostile",,"$HeOrShe breathes in slowly, closes $hisOrHer eyes, and gives out one deep sigh.
 
 ""No.""
 
@@ -259,19 +264,25 @@ naderin_ftl_pirateOptAskNeutral,PopulateOptions,"$entity.naderin_ftl_pirates sco
 !$entity.isHostile
 !$entity.asked",,,"naderin_ftl_pirateAskNeutral:Ask them if they know about The Luminary",
 naderin_ftl_pirateAskNeutral,DialogOptionSelected,"$option == naderin_ftl_pirateAskNeutral","$entity.asked = true
-SetTextHighlights ""Kapteyn Starworks""","""What?"" $HeOrShe sits up and leans forward in their seat. ""You wanted it too? Aw, cap'n, if I knew everyone wanted it that much... alas. It's out of my hands now.""
+SetTextHighlights ""Kapteyn Starworks""
+$global.naderin_ftl_located = true
+Call $global.naderin_ftl_ref updateStage","""What?"" $HeOrShe sits up and leans forward in their seat. ""You wanted it too? Aw, cap'n, if I knew everyone wanted it that much... hah. It's out of my hands now.""
 
-They shrug. ""I traded it to some other folk for some supplies. They'll be heading on over to Kapteyn Starworks, I think? Maybe you can catch up, cut a deal with 'em before they do their 'sciencey thing'. Whatever that is.""","cutCommLink:Thank them and cut the comm-link",
+They shrug. ""I traded it to some other folk for some supplies. They'll be heading on over to Kapteyn Starworks, I think? Maybe you can catch up, cut a deal with 'em before they do their 'sciencey thing'. Whatever that is.""","cutCommLink:Thank them and cut the comm link",
 "#END The Complication",,,,,,
 ,,,,,,
 # The Starworks,,,,,,
+,,,,,,
+# Raid For The Luminary,,,,,,
 naderin_ftl_raidOption,PopulateOptions,"$market.naderin_ftl_starworks score:1000
 !$isPerson
 Call $global.naderin_ftl_ref updateData","$raidDifficulty = $naderin_ftl_raidDifficulty 0
-$raidGoBackTrigger = PopulateOptions 0
+$raidGoBackTrigger = naderin_ftl_raidBack 0
 $raidContinueTrigger = naderin_ftl_raidFinished2 0
 AddRaidObjective genericIcon ""Perform ship hijacking operation"" LOW 3000 naderin_ftl_raidFinished1
 FireBest naderin_ftl_disableLuminaryRaidIfNeeded",,"2:naderin_ftl_raidStart:Prepare a raid to acquire The Luminary","continueTrigger: raidFinished2 is given as a dialogue option after raidFinished1 fires"
+naderin_ftl_raidBack,naderin_ftl_raidBack,,"ShowDefaultVisual
+FireAll PopulateOptions",,,"Go back opt is automatically provided"
 naderin_ftl_disableLuminaryRaidIfNeeded,naderin_ftl_disableLuminaryRaidIfNeeded,"HostileFleetNearbyAndAware","SetEnabled naderin_ftl_raidStart false
 SetTooltip naderin_ftl_raidStart ""A nearby hostile fleet is tracking your movements, making a viable ground operation impossible.""",,,
 naderin_ftl_raidStart,DialogOptionSelected,"$option == naderin_ftl_raidStart","ShowImageVisual raid_prepare","You convene your senior officers to discuss the option of seizing The Luminary outright. Initial queries from your crew to the local authorities are rebuffed, but simple visual observation from orbit easily identifies The Luminary sitting in one of the spaceports. From there, it's not hard to figure out that the pirates are intentionally showing off their prize... and preparing for what your crew believe to be certain ""special modifications"".
@@ -279,40 +290,140 @@ naderin_ftl_raidStart,DialogOptionSelected,"$option == naderin_ftl_raidStart","S
 Ship hijacking operations have been done before, and initial plans are drafted based on past occurrences. Projections estimate the operation will require only a fair amount of marines ending in only light casualties. Assuming, of course, that extraction is complete before local security elements can properly activate in response.","mktRaidNonMarket:Continue",
 naderin_ftl_raidFinished1,naderin_ftl_raidFinished1,,,"The plan your officers decided on involved, of course, the art of surprise.
 
-It's quiet at first as marine squads arrive slowly onto the port concourse disguised as unsuspecting crew looking to unload and unwind. All manage to snake their way towards the docking bays where The Luminary is held, but stop short of entering the particular section where your prize is stored. Tactical teams discreetly take their time preparing charges, taking positions, and coordinating with targeting feeds onboard your $shipOrFleet.
+Marine squads arrive slowly onto the port concourse disguised as unsuspecting crew looking to unload and unwind. All manage to snake their way towards the docking bays where The Luminary is held, but stop short of entering the particular section where your prize is stored. Tactical teams discreetly take their time preparing charges, taking positions, and coordinating with targeting feeds onboard your $shipOrFleet.
 
-Chaos breaks out instantly the moment your tac lead gives the go-ahead, and what counts for security is quickly overwhelmed in a burst of flashes. A couple marines rush into the Apogee and are met with additional gunfire - comms crackle as your marines find themselves fighting for control both inside the ship and out in the docking bay as the first of local security begin to pour in earlier than expected.",,
+Chaos breaks out instantly the moment your tac lead gives the go-ahead, and what counts for security is quickly overwhelmed in a burst of flashes. A squad of marines rush into the Apogee and are met with additional gunfire, comms crackling as your marines find themselves fighting for control both inside the ship and out in the docking bay as the first of local security begin to pour in earlier than expected.",,
 naderin_ftl_raidFinished2,naderin_ftl_raidFinished2,,"AddShip $naderin_ftl_luminary
 $global.naderin_ftl_acquired = true
+$global.naderin_ftl_raidedForLuminary = true
 Call $global.naderin_ftl_ref updateStage","Bridge crew execute EW solutions as marines simultaneously toss out smoke charges in an attempt to buy time. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
 
 With station-side security unable to do more than leave a few scorch marks on the Apogee as it links up with your $shipOrFleet, the outcome is obvious. 
 
 Complete success.","naderin_ftl_raidFinished3:Continue",
-naderin_ftl_raidFinished3,DialogOptionSelected,"$option == naderin_ftl_raidFinished3",,"""We're damned lucky they kept the ship doors open,"" the tac lead reports to you in the later debriefing. There's a moment as you watch the acrid plasma markings dotting their power armour undersuit visibly smoke on the comms-feed. Better for you that they're currently on The Luminary rather than with you on the flagship, maybe. Certainly for your nose at least.
+naderin_ftl_raidFinished3,DialogOptionSelected,"$option == naderin_ftl_raidFinished3",,"""We're damned lucky they kept the ship doors open,"" the tac lead reports to you in the later debriefing. ""But the job's done, eh?""
 
-It's moments later when your sensors officer shouts in alarm: it seems several station batteries have come online. Presumably to take pot shots at your fleet if you don't leave soon.","naderin_ftl_raidFinishedEnd:""Nav, time to go.""",
+There's a moment as you watch the acrid plasma markings dotting their power armour undersuit visibly smoke on the comms-feed. Better for you that they're currently on The Luminary rather than with you on the flagship, maybe. Certainly for your nose at least.
+
+It's seconds later when your sensors officer shouts in alarm: it seems several station batteries have come online and are swivelling towards the general direction of your fleet.","naderin_ftl_raidFinishedEnd:""Nav, time to go.""",
 naderin_ftl_raidFinishedEnd,DialogOptionSelected,"$option == naderin_ftl_raidFinishedEnd","DismissDialog",,,
+"#END Raid For The Luminary",,,,,,
+,,,,,,
+# Ask Comm Directory,,,,,,
+naderin_ftl_askQuartermasterOpt,PopulateOptions,"$postId == supplyOfficer
+$market.id == station_kapteyn
+$global.naderin_ftl_located == true",,,"naderin_ftl_askQuartermaster:""I'm looking for a ship called 'The Luminary'.""",
+naderin_ftl_askQuartermaster,DialogOptionSelected,"$option == naderin_ftl_askQuartermaster",,"Immediately, you notice $himOrHer suppress the urge to sigh.
+
+""I know you're trying to tiptoe around the subject because you're the eighth idiot today, and the answer's the same. Yes, that one ship in the spaceport is a funny colour, but no. I don't know what kind of relationship the boss and portboss have, and I don't care to know! Now, is that all and you've wasted my time, or do you have something of actual importance to tell me?""","cutCommLink:""Nevermind.""",
+naderin_ftl_askBossOpt,PopulateOptions,"$postId == administrator
+$market.id == station_kapteyn
+$global.naderin_ftl_located == true",,,"naderin_ftl_askBoss:""I'm looking for a ship called 'The Luminary'.""",
+naderin_ftl_askBoss,DialogOptionSelected,"$option == naderin_ftl_askBoss","FireAll naderin_ftl_bossOpts","""Right. And I'd be able to help you because...?""
+
+It's not clear whether or not $heOrShe can help with The Luminary, but they do appear quite willing to find out given the right incentives.","cutCommLink:""Nevermind.""",
+naderin_ftl_askBossPinkOpt,naderin_ftl_bossOpts,"$global.naderin_ftl_pink == true
+!$askedPink",,,"naderin_ftl_askBossPink:""Just wanted to ask, why is The Luminary pink?""",
+naderin_ftl_askBossPink,DialogOptionSelected,"$option == naderin_ftl_askBossPink","$askedPink = true
+AddStoryPoints 1
+FireAll naderin_ftl_bossOpts","""Ah, you noticed, did you? That was my idea. Yeah. Great, isn't it?""",,
+naderin_ftl_askBossCutCommsOpt,naderin_ftl_bossOpts,,,,"cutCommLink:""Nevermind.""",
+naderin_ftl_askPortbossOpt,PopulateOptions,"$postId == portmaster
+$market.id == station_kapteyn
+$global.naderin_ftl_located == true",,,"naderin_ftl_askPortboss:""I'm looking for a ship called 'The Luminary'.""",
+naderin_ftl_askPortboss,DialogOptionSelected,"$option == naderin_ftl_askPortboss",,"""What, the Apogee that came in a while back?"" $HeOrShe stares at you for a moment, as if to size you up. ""Why are you asking?""","naderin_ftl_askPortbossBuy:""Just looking to buy it. For a fair price, of course.""
+naderin_ftl_askPortbossInterest:""I'd like to see how the 'decorations' are coming along.""
+cutCommLink:""Nevermind.""",
+naderin_ftl_askPortbossBuy,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy","Call $global.naderin_ftl_ref updateData
+SetTooltip naderin_ftl_askPortbossBuy25 ""A gut feeling tells you that offering only this much is a bad idea.""
+FireBest naderin_ftl_askPortbossBuyCheck25
+FireBest naderin_ftl_askPortbossBuyCheck50
+FireBest naderin_ftl_askPortbossBuyCheck100","""Ah. But, alas. It is a shame that I must tell you no."" $HeOrShe sighs dramatically, suddenly swept up into theatrical flair. ""If only for the several thousands of us on the concourse mourning the brave crewmen that laid down their lives to obtain this great prize. What could you give, that they might give this memory of their sacrifice to you freely?""
+
+You briefly glance down at a bridge console displaying a live feed of a crowd of onlookers watching a half-dozen or so oversized spray-cans on cranes adding to The Luminary's colourful paint job.","naderin_ftl_askPortbossBuy25:""Will 25,000 credits do?""
+naderin_ftl_askPortbossBuy50:""50,000 credits, then.""
+naderin_ftl_askPortbossBuy100:""100,000 credits, in honour of the fallen.""
+cutCommLink:Make an excuse and cut the comm-link",
+naderin_ftl_askPortbossBuy25,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy25","AdjustRepActivePerson INHOSPITABLE -5","$HeOrShe frowns. ""I see. Nevermind.""
+
+They cut the comm-link.","cutCommLinkNoText:Continue",
+naderin_ftl_askPortbossBuy25Check,naderin_ftl_askPortbossBuyCheck25,"$player.credits < 25000","SetEnabled naderin_ftl_askPortbossBuy25 false
+SetTooltip naderin_ftl_askPortbossBuy25 ""You don't have the 25,000 credits needed for this.""",,,
+naderin_ftl_askPortbossBuy50,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy50","SetStoryOption naderin_ftl_askPortbossBuy50Haggle 1 naderin_ftl_insisted ui_char_spent_story_point ""Convinced a portboss to hand over The Luminary for just 50,000 credits""
+FireBest naderin_ftl_askPortbossBuyCheck75
+FireBest naderin_ftl_askPortbossBuyCheck100","$HeOrShe shakes their head. ""Is this truly the price you are willing to pay? Are you so heartless to be unwilling to pay more credits, that the memories of the fallen might be honoured with the respect that they deserve?""
+
+Another glance down at the console and you see that The Luminary has a lovely addition of a phallic object emblazoned upon an increasingly gaudy, glittery exterior.","naderin_ftl_askPortbossBuy50Haggle:Insist on 50,000 credits
+naderin_ftl_askPortbossBuy75:""I can do no more than 75,000 credits.""
+naderin_ftl_askPortbossBuy100:""100,000 credits, then.""
+cutCommLink:Make an excuse and cut the comm-link",
+naderin_ftl_askPortbossBuy50Check,naderin_ftl_askPortbossBuyCheck50,"$player.credits < 50000","SetEnabled naderin_ftl_askPortbossBuy50 false
+SetTooltip naderin_ftl_askPortbossBuy50 ""You don't have the 50,000 credits needed for this.""",,,
+naderin_ftl_askPortbossBuy100,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy100","AdjustRepActivePerson COOPERATIVE 5
+AddCredits -100000","$HeOrShe is suddenly all smiles and platitudes. ""Damn, really? I, er, mean, truly, the people of this sector might still have hope if only there were more charitable folk like you. The arrangements will be made shortly.""
+
+As $heOrShe makes a call in the background, you can't help but hear a mumble or two about all the gullible suckers in the world. You tune $himOrHer out and take the moment to glance down at the console, where you see that they're moving much faster than before. Hopefully, your client won't mind the cargo hold full of... things... being dumped onto The Luminary's defaced exterior. Or the creative phrasing and imagery they've used. 
+
+Very creative, you have to admit.","naderin_ftl_buyLuminaryFromPortboss:Continue",
+naderin_ftl_askPortbossBuy100Check,naderin_ftl_askPortbossBuyCheck100,"$player.credits < 100000","SetEnabled naderin_ftl_askPortbossBuy100 false
+SetTooltip naderin_ftl_askPortbossBuy100 ""You don't have the 100,000 credits needed for this.""",,,
+naderin_ftl_askPortbossBuy75,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy75","AdjustRepActivePerson COOPERATIVE 1
+AddCredits -75000","$HeOrShe smiles at you, but only until the payment goes through. ""I am glad the two of us could come to an agreement. The arrangements will be made shortly.""
+
+As $heOrShe makes a call in the background, you can't help but hear a mumble or two about the decline of good business in the sector. You tune $himOrHer out and take the moment to glance down at the console, where you see that they're moving much faster than before. Hopefully, your client won't mind the cargo hold full of... things... being dumped onto The Luminary's defaced exterior. Or the creative phrasing and imagery they've used. 
+
+Very creative, you have to admit.","naderin_ftl_buyLuminaryFromPortboss:Continue",
+naderin_ftl_askPortbossBuy75Check,naderin_ftl_askPortbossBuyCheck75,"$player.credits < 75000","SetEnabled naderin_ftl_askPortbossBuy75 false
+SetTooltip naderin_ftl_askPortbossBuy75 ""You don't have the 75,000 credits needed for this.""",,,
+naderin_ftl_askPortbossBuy50Haggle,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy50Haggle",,"You stop their 'impassioned speech' with a raised palm.
+
+Stunning them into silence, you express your deep empathy and sincere desire to help all those affected in this unfortunate turn of events. There's a long speech about the expenses and time investment required to support the now impoverished, needy communities of traumatised citizens of the Persean Sector. Truly, it is a privilege to be able to support these people through these trying times, and there is no doubt that their name will be remembered for days to come should their promises come to fruition.","naderin_ftl_askPortbossBuy50HaggleCont:Continue",
+naderin_ftl_askPortbossBuy50HaggleCont,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy50HaggleCont",,"Unfortunately, as the charitable individual you are, there is but only a limited amount of funding you can allocate to the various causes throughout the sector, and 50,000 is all you can spare. But there is hope! Already, your crew are sending along vast data packages filled to the brink with strategies and the helplines needed to bring all those affected out of the abyss of despair and towards a brand new dawn that is the future, for what future could there be but one where you hand over 50,000 credits in exchange for one Apogee?
+
+""...Oh. You're right. What am I doing? Looking for profit when all these people... My people..."" $HeOrShe shakes $hisOrHer head. ""You are absolutely right. I will make the arrangements now. Please standby."" The comm-link feed cuts to what you find to be a surprisingly aesthetic holding screen.
+OR
+Unfortunately, as the charitable individual you are, there is but only a limited amount of funding you can allocate to the various causes throughout the sector, and 50,000 is all you can spare. But there is hope! Already, your crew are sending along vast data packages filled to the brink with strategies and the helplines needed to bring all those affected out of the abyss of despair and towards a brand new dawn that is the future, for what future could there be but one where you hand over 50,000 credits in exchange for one Apogee?
+
+""...I, alright, okay, fine, please."" $HeOrShe shakes $hisOrHer head, defeated. ""Fine, fine. I'll make the arrangements now. And tell your crew to cut the damn wordy help packages, I don't need a thousand of them in my inbox!"" The comm-link feed fizzles to what you find to be a surprisingly aesthetic holding screen.","naderin_ftl_buyLuminaryFromPortbossAlt:Continue",
+naderin_ftl_buyLuminaryFromPortboss,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortboss","AddShip $naderin_ftl_luminary
+$global.naderin_ftl_acquired = true
+Call $global.naderin_ftl_ref updateStage","It is not long before you confirm receipt of The Luminary forming up alongside your $shipOrFleet.
+
+""The ship may not appear up to spec, sure."" $HeOrShe pauses to find the words. ""Unfortunate, what hooligans get up to in space. But, from one pirate to their vict-, er, fellow spacer, it do be what it... do be? Whatever. Just take it and go.""","cutCommLink:Cut the comm-link",
+naderin_ftl_buyLuminaryFromPortbossAlt,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortbossAlt","AddCredits -50000
+AddShip $naderin_ftl_luminary
+AdjustRep $faction.id FRIENDLY 1
+$global.naderin_ftl_acquired = true
+Call $global.naderin_ftl_ref updateStage","The arrangements are made quickly and it is not long before you confirm receipt of The Luminary forming up alongside your $shipOrFleet.
+
+""The ship may not appear up to spec, sure. Unfortunate, what hooligans get up to in space. But, from one pirate to their fellow spacer, it do be what it... do be? Or...""
+
+They pause for a moment. $HeOrShe looks you up and down, but differently now. As if seeing someone else. ""Captain,"" $heOrShe nods. ""A pirate I may be, but I have work to do.""","cutCommLink:Cut the comm-link",
+naderin_ftl_askPortbossInterest,DialogOptionSelected,"$option == naderin_ftl_askPortbossInterest
+","$global.naderin_ftl_pink = true","""Pretty, eh? Bought it at a deep discount, I'll tell you. Bit bland as it stands, so I think the boys can spice it up a notch."" $HeOrShe brings up a live feed of the 'decorating', where you find a crowd of spectators watching oiled men crack bottles of slime against the hull while a half-dozen cranes operate strange makeshift devices from above.
+
+""Ach, okay. I'll admit it. When they offered to decorate, I said yeah because they're all going to die in a dozen cycles or two, right? So go hog wild, have fun before we bury you in Ludd's embrace. And, well, I was expecting something... cooler. From them. You know? Like the Mk. II variants we have for some of the other ships. Not this."" They halfheartedly gesture with a hand. 
+
+You have to admit, The Luminary might be a little more pink and glittery than anyone ever expected it to be.","naderin_ftl_askPortbossBuy:""Just looking to buy it. For a fair price, of course.""
+cutCommLink:""Nevermind.""",
+"#END Ask Comm Directory",,,,,,
 "#END The Starworks",,,,,,
 ,,,,,,
 # Luminary Found,,,,,,
-naderin_ftl_withLuminary,,,,,,
+naderin_ftl_withLuminary,PickGreeting,"$naderin_ftl_giver == true",,,,
 "#END Luminary Found",,,,,,
 "#END Finding The Luminary",,,,,,
 ,,,,,,
 # A Curious Probe,,,,,,
 ,,,,,,
 # That's A Probe,,,,,,
-,,,,,,
 "#END That's A Probe",,,,,,
 ,,,,,,
 # Looking For A Reward,,,,,,
-,,,,,,
 "#END Looking For A Reward",,,,,,
 "#END A Curious Probe",,,,,,
 ,,,,,,
 # Just Like Alexander At Telemessos,,,,,,
-,,,,,,
 "#END Just Like Alexander At Telemessos",,,,,,
 ,,,,,,
 # The Derinkuyu Drop,,,,,,

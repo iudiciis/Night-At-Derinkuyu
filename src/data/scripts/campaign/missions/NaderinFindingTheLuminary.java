@@ -112,7 +112,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         ShipVariantAPI variant = Global.getSettings().getVariant("apogee_Balanced").clone();
         variant.clear();
 
-        int dMods = 2 + genRandom.nextInt(2);
+        int dMods = 4 + genRandom.nextInt(2);
         DModManager.addDMods(variant, true, dMods, genRandom);
         fleetMember = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variant);
         fleetMember.setShipName("ISS The Luminary");
@@ -140,7 +140,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             secondDebrisField.setDetectionRangeDetailsOverrideMult(10f);
             secondDebrisField.setSensorProfile(20000f);
             secondDebrisField.setTransponderOn(true);
-            // context.entity = secondDebrisField;  // a thought: would this help me do it all in triggers?
+            // context.entity = secondDebrisField;
         });
         endTrigger();
 
@@ -151,10 +151,10 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerEntityMakeImportant("$naderin_ftl_cache", Stage.RESUPPLY_INTERCEPT, Stage.VISITING_THE_STARWORKS);
         triggerSetEntityFlag("$naderin_ftl_hasLocation", Stage.RESUPPLY_INTERCEPT);
 
-        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.PATROL_SMALL, pirateSystem);
-        triggerAutoAdjustFleetStrengthMajor();
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.PATROL_MEDIUM, pirateSystem);
+        triggerAutoAdjustFleetStrengthModerate();
         triggerSetStandardHostilePirateFlags();
-        triggerMakeFleetIgnoredByOtherFleets();
+        //triggerMakeFleetIgnoredByOtherFleets();
         triggerPickLocationAtInSystemJumpPoint(pirateSystem);
         triggerSpawnFleetAtPickedLocation("$naderin_ftl_pirates", null);
         triggerOrderFleetPatrolEntity(true);
@@ -162,9 +162,14 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerFleetMakeImportant("$naderin_ftl_pirate", Stage.RESUPPLY_INTERCEPT);
         endTrigger();
 
-        // Starworks Complication
+        // Starworks Complications
         triggerCreateMediumPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
         triggerCreateSmallPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
+        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 100f);
+
+        beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary");
+        triggerIncreaseMarketHostileTimeout(starworks, 15f);
+        endTrigger();
 
         // Stages
         setName("Finding The Luminary");
@@ -197,11 +202,11 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             }
             case "getMapForDebrisPhase" -> {        // similar to the vanilla showMap
                 String title = params.get(1).getStringWithTokenReplacement(ruleId, dialog, memoryMap);
-                return getMapVisual(salvageSystem.getCenter(), dialog, title);
+                return tryGetMapVisual(salvageSystem.getCenter(), dialog, title);
             }
             case "getMapForSupplyPhase" -> {
                 String title = params.get(1).getStringWithTokenReplacement(ruleId, dialog, memoryMap);
-                return getMapVisual(pirateSystem.getCenter(), dialog, title);
+                return tryGetMapVisual(pirateSystem.getCenter(), dialog, title);
             }
             case "playSoundHitHeavy" -> {
                 Global.getSoundPlayer().playSound("hit_heavy", 1f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
@@ -212,7 +217,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     }
 
     // too lazy to find a vanilla cmd that works, so I guess this will have to do
-    private boolean getMapVisual(SectorEntityToken targetEntity, InteractionDialogAPI dialog, String title) {
+    private boolean tryGetMapVisual(SectorEntityToken targetEntity, InteractionDialogAPI dialog, String title) {
         SectorEntityToken mapLoc = getMapLocationFor(targetEntity);
         if (mapLoc != null) {
             String text = "";
@@ -230,7 +235,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                     true, icon, text, tags);
             return true;
         }
-        return false;   // just for debugging... just in case
+        return false;
     }
 
     @Override
