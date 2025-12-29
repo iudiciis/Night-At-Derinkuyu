@@ -124,6 +124,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         LocData firstDebrisLoc = new LocData(EntityLocationType.ORBITING_PLANET_OR_STAR, null, salvageSystem);
         triggerSpawnDebrisField(400f, 1f, firstDebrisLoc);
         triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE);
+        triggerSetEntityFlag("$naderin_ftl_fdf_note", Stage.SEARCHING_SALVAGE, Stage.SECOND_SALVAGE);
         endTrigger();
 
         // probably better to instantiate now rather than on trigger
