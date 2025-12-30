@@ -134,13 +134,13 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
         // surely there's an easier way to instantly reveal an entity's location to the player
         beginStageTrigger(Stage.SECOND_SALVAGE);
+        // triggerMakeDiscoverable, maybe
         triggerCustomAction(context -> {
             // I have no idea which ones we actually need and which ones we can get rid of
             secondDebrisField.getDetectedRangeMod().modifyFlat("gen", 10f);
             secondDebrisField.setExtendedDetectedAtRange(20000f);
             secondDebrisField.setDetectionRangeDetailsOverrideMult(10f);
             secondDebrisField.setSensorProfile(20000f);
-            secondDebrisField.setTransponderOn(true);
             // context.entity = secondDebrisField;
         });
         endTrigger();
@@ -166,11 +166,12 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         // Starworks Complications
         triggerCreateMediumPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
         triggerCreateSmallPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
-        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 100f);
 
-        beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary");
-        triggerIncreaseMarketHostileTimeout(starworks, 15f);
+        beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary", Stage.VISITING_THE_STARWORKS, Stage.PAYMENT);
+        triggerIncreaseMarketHostileTimeout(starworks, 30f);
         endTrigger();
+
+        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 100f);
 
         // Stages
         setName("Finding The Luminary");
