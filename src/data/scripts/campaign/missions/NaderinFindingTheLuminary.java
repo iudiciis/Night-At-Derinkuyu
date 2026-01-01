@@ -48,7 +48,8 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     protected PersonAPI giver;
     protected MarketAPI starworks;
     protected FleetMemberAPI fleetMember;
-    protected int reward = 100000;
+    protected int reward = 150000;
+    protected float raidDifficulty = 150f;
 
     // Apparently more for organisation - can go into the create function instead.
     @Override
@@ -123,8 +124,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         beginStageTrigger(Stage.SEARCHING_SALVAGE);
         LocData firstDebrisLoc = new LocData(EntityLocationType.ORBITING_PLANET_OR_STAR, null, salvageSystem);
         triggerSpawnDebrisField(400f, 1f, firstDebrisLoc);
-        triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE);
-        triggerSetEntityFlag("$naderin_ftl_fdf_note", Stage.SEARCHING_SALVAGE, Stage.SECOND_SALVAGE);
+        triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE, Stage.SECOND_SALVAGE);
         endTrigger();
 
         // probably better to instantiate now rather than on trigger
@@ -156,6 +156,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerAutoAdjustFleetStrengthModerate();
         triggerSetStandardHostilePirateFlags();
         //triggerMakeFleetIgnoredByOtherFleets();
+        triggerMakeFleetIgnoreOtherFleets();
         triggerPickLocationAtInSystemJumpPoint(pirateSystem);
         triggerSpawnFleetAtPickedLocation("$naderin_ftl_pirates", null);
         triggerOrderFleetPatrolEntity(true);
@@ -167,11 +168,21 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerCreateMediumPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
         triggerCreateSmallPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
 
+        beginGlobalFlagTrigger("$naderin_ftl_learnToCopyPasses");
+        triggerCustomAction(context -> {
+            if (raidDifficulty == 150f) raidDifficulty = 100f;
+        });
+        endTrigger();
+
+        beginGlobalFlagTrigger("$naderin_ftl_increasedSecurity");
+        triggerCustomAction(context -> raidDifficulty = 300f);
+        endTrigger();
+
         beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary", Stage.VISITING_THE_STARWORKS, Stage.PAYMENT);
         triggerIncreaseMarketHostileTimeout(starworks, 30f);
         endTrigger();
 
-        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 100f);
+        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 10f);
 
         // Stages
         setName("Finding The Luminary");
@@ -247,7 +258,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         set("$naderin_ftl_himOrHer", getPerson().getHimOrHer());
         set("$naderin_ftl_hisOrHer", getPerson().getHisOrHer());
         set("$naderin_ftl_luminary", fleetMember);
-        set("$naderin_ftl_raidDifficulty", 100f);
+        set("$naderin_ftl_raidDifficulty", raidDifficulty);
         set("$naderin_ftl_systemName", salvageSystem.getNameWithLowercaseTypeShort());
         set("$naderin_ftl_dist", getDistanceLY(salvageSystem));
         set("$naderin_ftl_supplySystemName", pirateSystem.getNameWithLowercaseTypeShort());
