@@ -19,7 +19,7 @@ naderin_ftl_askShip,DialogOptionSelected,"$option == naderin_ftl_askShip","$aske
 SetTextHighlights ""The Luminary""
 FireAll naderin_ftl_greetingOpts","""Ah. Right."" $HeOrShe sniffles. ""I had this most lovely ship. I called her The Luminary, because she was my light in the darkness. Me and her, so many journeys we've had together... ah.""
 
-You wait patiently for the poor fellow to blow through another round of Tri-Tachyon branded tissues. ""Sorry, captain. It's just... Pirates! Pirates struck down my pride and joy, and now for all I know it's a pile of scrap in their cursed holds. So... if you would do me a favour and find out what happened to 'er, I'd at least have some sense of closure."" ",,
+You wait patiently for the poor fellow to blow through another round of Tri-Tachyon branded tissues. ""Sorry, captain. It's just... Pirates! Pirates struck down my pride and joy, and now for all I know it's a pile of scrap in their cursed holds. So... if you would do me a favour and find out what happened to her, I'd at least have some sense of closure.""",,
 naderin_ftl_findCoverOpt,naderin_ftl_greetingOpts,"$foundCover == false
 $askedAboutPayment == false",,,"5:naderin_ftl_findCover:Find some cover before it's too late",
 naderin_ftl_findCover,DialogOptionSelected,"$option == naderin_ftl_findCover","$foundCover = true
@@ -50,9 +50,12 @@ SetTextHighlights ""Apogee-class cruiser""","""You want to know... fine. If you 
 ""It was a routine survey mission. The Luminary was perfect for the job, of course. She was an Apogee-class cruiser, and she'd seen her fair share of battles. So had I, but... those pirates. Normally, a fleet of their size'd be too slow to catch us, but they caught us by surprise as we were jumping in.""
 
 ""We were too close to run, so we fought. It took us losing half the surveying fleet before we could disengage, and make a break for it. We e-burned away in a panic, and the pirates... sustained burn. Can you believe that?""","naderin_ftl_askAboutBattleCont:Continue",
-naderin_ftl_askAboutBattleCont,DialogOptionSelected,"$option == naderin_ftl_askAboutBattleCont","FireAll naderin_ftl_greetingOpts","The outcome was obvious. The pirate fleet caught up eventually to the panicked survey fleet and managed to defeat the rest of the fleet in a second engagement. It was, as $heOrShe puts it, ""a hopeless battle"".
+naderin_ftl_askAboutBattleCont,DialogOptionSelected,"$option == naderin_ftl_askAboutBattleCont","FireAll naderin_ftl_greetingOpts
+SetTextHighlights ""the trail will go cold in at least a cycle""","The outcome was obvious. The pirate fleet caught up eventually to the panicked survey fleet and managed to defeat the rest of the fleet in a second engagement. It was, as $heOrShe puts it, ""a hopeless battle"".
 
 ""I was lucky enough to escape that second fight on a Dram as it were, captain. Might have been the cowardice, luck, or both, but at least I'm here to tell the tale.""
+
+Under these circumstances, you estimate that the trail will go cold in at least a cycle.
 
 $HeOrShe takes the chance to grab yet another handful of Tri-Tachyon branded tissues before you continue.",,
 naderin_ftl_askAboutShipOpt,naderin_ftl_greetingOpts,"$askedAboutShip == false
@@ -122,7 +125,7 @@ AddTextSmall ""Target location estimated"" highlight","Fortunately, the other ha
 ""The defending fleet must have managed to disengage after some losses on both sides. If what we've been told is true, well, there'll be a second debris field around here in the direction the survey fleet attempted to escape to. If we go through a few heuristics...""
 
 There's some muffled discussion until you hear a ping from your Tri-Pad. ""Check your map when you can, $playerSirOrMadam. Let's see if it worked.""",,
-naderin_ftl_fdfInteractionIfFirstElse,naderin_ftl_fdfInteractionIfFirst,,,"What is clear, however, is that no new information can be gleaned from the wreckage here.",,
+naderin_ftl_fdfInteractionIfFirstElse,naderin_ftl_fdfInteractionIfFirst,"$global.naderin_ftl_searched == true",,"What is clear, however, is that no new information can be gleaned from the wreckage here.",,
 naderin_ftl_fdfInteractionCont2,DialogOptionSelected,"$option == naderin_ftl_fdfInteractionCont2","Call $global.naderin_ftl_ref makeUnimportant
 ShowDefaultVisual
 FireBest OpenInteractionDialog",,,
@@ -328,7 +331,7 @@ naderin_ftl_easyRaidOption,PopulateOptions,"$market.naderin_ftl_starworks score:
 $global.naderin_ftl_located == true
 !$isPerson
 $global.naderin_ftl_learnToCopyPasses == true
-","FireBest naderin_ftl_disableEasyLuminaryRaidIfNeeded
+!$global.naderin_ftl_increasedSecurity","FireBest naderin_ftl_disableEasyLuminaryRaidIfNeeded
 Call $global.naderin_ftl_ref updateData",,"3:naderin_ftl_easyRaidStart:Prepare a raid to acquire The Luminary",
 naderin_ftl_disableEasyLuminaryRaidIfNeeded,naderin_ftl_disableEasyLuminaryRaidIfNeeded,"HostileFleetNearbyAndAware","SetEnabled naderin_ftl_easyRaidStart false
 SetTooltip naderin_ftl_easyRaidStart ""A nearby hostile fleet is tracking your movements, making a viable ground operation impossible.""",,,
@@ -367,7 +370,7 @@ $global.naderin_ftl_increasedSecurity == true","FireBest naderin_ftl_disableHard
 Call $global.naderin_ftl_ref updateData",,"3:naderin_ftl_hardRaidStart:Prepare a raid to acquire The Luminary",
 naderin_ftl_disableHardLuminaryRaidIfNeeded,naderin_ftl_disableHardLuminaryRaidIfNeeded,"HostileFleetNearbyAndAware","SetEnabled naderin_ftl_hardRaidStart false
 SetTooltip naderin_ftl_hardRaidStart ""A nearby hostile fleet is tracking your movements, making a viable ground operation impossible.""",,,
-naderin_ftl_hardRaidStart,DialogOptionSelected,"$option == naderin_ftl_easyRaidStart","$raidDifficulty = $naderin_ftl_raidDifficulty 0
+naderin_ftl_hardRaidStart,DialogOptionSelected,"$option == naderin_ftl_hardRaidStart","$raidDifficulty = $naderin_ftl_raidDifficulty 0
 $raidGoBackTrigger = naderin_ftl_raidBack 0
 $raidContinueTrigger = naderin_ftl_hardRaidFinished2 0
 AddRaidObjective genericIcon ""Perform ship hijacking operation"" HIGH 5000 naderin_ftl_hardRaidFinished1
@@ -376,7 +379,7 @@ ShowImageVisual raid_prepare","You convene your senior officers to discuss the o
 Even under these conditions, ship hijacking operations have been done before, and initial plans are drafted based on past occurrences. Projections estimate the operation will require a significant amount of marines ending with substantial casualties.","mktRaidNonMarket:Continue",
 naderin_ftl_hardRaidFinished1,naderin_ftl_hardRaidFinished1,,,"It's all hands on deck as the go order goes out. You can only watch from the bridge as assault teams and marine squads form up onto armoured shuttles and depart under what cover your fleet can provide.
 
-Thankfully, the combat area remains relatively exposed. Fire from your $shipOrFleet score direct hits on critical infrastructure from afar, though targets remain limited due to the necessity of remaining out of range of the station's own batteries. Shuttles arrive, some battered but all intact, and your marines begin breaching the compound.
+Thankfully, the combat area remains relatively exposed. Weapons fire from your $shipOrFleet score direct hits on critical infrastructure from afar, though targets remain limited due to the necessity of remaining out of range of the station's own batteries. Shuttles arrive, some battered but all intact, and your marines begin breaching the compound.
 
 Consoles flicker warningly, a dozen beeps and sirens warbling on and off as the situation develops. A live order-of-battle chart ticks off objectives as casualties, though limited, tick up. And yet, through the chaos, all that is left to you is to wait.",,
 naderin_ftl_hardRaidFinished2,naderin_ftl_hardRaidFinished2,,"AddShip $naderin_ftl_luminary
@@ -440,7 +443,8 @@ FireBest naderin_ftl_askBossAskCheck
 FireAll naderin_ftl_bossOpts","""Ah, you noticed, did you? That was my idea. Yeah. Great, isn't it?""",,
 naderin_ftl_askBossBribeOpt,naderin_ftl_bossOpts,"!$entity.naderin_ftl_bribed",,,"naderin_ftl_askBossBribe:Offer to make a 'donation' of sorts",
 naderin_ftl_askBossBribe,DialogOptionSelected,"$option == naderin_ftl_askBossBribe","SetTextHighlights ""10,000 credits"" ""shuttle pass""
-FireBest naderin_ftl_askBossBribeAcceptCheck","$HisOrHer eyes seem to twinkle the moment you mention a donation. ""Hm. Tell you what, 10,000 credits straight to my account, and I tell you who to talk to. I'll even toss in a lil' access pass to the action down below, stop people from asking questions. Sound good?""","naderin_ftl_askBossBribeAccept:Accept this deal
+FireBest naderin_ftl_askBossBribeAcceptCheck
+FireBest naderin_ftl_alreadyHavePass","$HisOrHer eyes seem to twinkle the moment you mention a donation. ""Hm. Tell you what, 10,000 credits straight to my account, and I tell you who to talk to. I'll even toss in a lil' access pass to the action down below, stop people from asking questions. Sound good?""","naderin_ftl_askBossBribeAccept:Accept this deal
 cutCommLink:""Nevermind.""",
 naderin_ftl_askBossBribeAccept,DialogOptionSelected,"$option == naderin_ftl_askBossBribeAccept","SetTextHighlights ""portboss""
 AddCredits -10000
@@ -528,7 +532,7 @@ Call $global.naderin_ftl_ref updateStage","""I thought nobody wanted that rust-b
 
 It is not long before you confirm receipt of The Luminary forming up alongside your $shipOrFleet.
 
-""Really pink and glittery, huh?"" $HeOrShe pauses to find the words. ""Unfortunate, what hooligans get up to in space. But, from one pirate to their vict-, er, fellow spacer, it do be what it... do be? Whatever. Just take it and go.""","cutCommLink:Cut the comm-link",
+""Real pink and glittery, huh?"" $HeOrShe pauses to find the words. ""Unfortunate, what hooligans get up to in space. But, from one pirate to their vict-, er, fellow spacer, it do be what it... do be? Whatever. Just take it and go.""","cutCommLink:Cut the comm-link",
 naderin_ftl_buyLuminaryFromPortbossAlt,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortbossAlt","AddCredits -50000
 AddShip $naderin_ftl_luminary
 AdjustRep $faction.id FRIENDLY 1
@@ -562,9 +566,8 @@ naderin_ftl_askBar1,DialogOptionSelected,"$option == naderin_ftl_askBar1",,"Befo
 There's a solitary cheer from a younger roguish fellow sitting beside them. ""Right? We've pirates got a tradition! This is Ludd's damned Kapteyn Starworks, not a kiddo playground for unicorns and ponies. Where's the bones, the guts? Where're the blood streaks to tell the whole sector we're coming?""","naderin_ftl_askBar2:Sit down and listen",
 naderin_ftl_askBar2,DialogOptionSelected,"$option == naderin_ftl_askBar2",,"Unfortunately, the conversation devolves into a series of insults and grumbling about the decline of ""aesthetic sense"" in the sector. Tuning the two out, it's not too long into watching some creative individuals setup several strange crane-painting contraptions on the holofeed before someone sits down beside you and orders themselves a drink.
 
-""You look like the sort of fellow who'd enjoy a paint sesh of their own."" A suit helmet obscures their face from view, with soot-red, glitter-stained overalls composing the rest of what appears to be some unofficial uniform. Their voice feels robotic, but no less emotional for it.
-
-""For all the brave faces who'd say they'd face a Reaper with naught but an overfluxed Gremlin, few are taking up my offer to dust up an Apogee with the manliest artiste tools any spacer'd drool over. But you, $playerSirOrMadam, I think you might be the one.""
+""You look like the sort of fellow who'd enjoy a paint sesh of their own."" A suit helmet obscures their face from view, with soot-red, glitter-stained overalls composing the rest of what appears to be some unofficial uniform. Their voice feels robotic, but no less emotional for it.","naderin_ftl_askBar2Cont:Continue",
+naderin_ftl_askBar2Cont,DialogOptionSelected,"$option == naderin_ftl_askBar2Cont",,"""For all the brave faces who'd say they'd face a Reaper with naught but an overfluxed Gremlin, few are taking up my offer to dust up an Apogee with the manliest artiste tools any spacer'd drool over. But you, $playerSirOrMadam, I think you might be the one.""
 
 ""So,"" they flourish, knocking aside their untouched drink and spilling the contents across the bar counter. ""I'll ask you straightaway. Will you join your kindred on the holofeed and show the world we've still got taste?""","naderin_ftl_askBar3a:Nod ambiguously
 naderin_ftl_askBar3b:""Why not?""
@@ -671,7 +674,7 @@ naderin_ftl_visitShuttle1c,DialogOptionSelected,"$option == naderin_ftl_visitShu
 There's a muffled grunt of acknowledgement from your pilot. 
 
 ""I feel ya. Routing you now, docking bay 3, attached shuttle bay 18. Courtesy of the portboss,"" they tack on hastily.","naderin_ftl_visitShuttle2:Continue",
-naderin_ftl_visitShuttle2,DialogOptionSelected,"$option == naderin_ftl_visitShuttle2","ShowImageVisual pirate_station","The special attention on The Luminary has placed it in the station boss' special docking bay, shielded and surrounded with 'bulkheads' so that crowds of onlookers can gaze upon the creative work of their fellow wannabe artists without the need for reasonable protective equipment.
+naderin_ftl_visitShuttle2,DialogOptionSelected,"$option == naderin_ftl_visitShuttle2","ShowImageVisual pirate_station","The special attention on The Luminary has placed it in the station boss' special docking bay, spaceway shielded and the bay itself surrounded with 'bulkheads' so that crowds of onlookers can gaze upon the creative work of their fellow wannabe artists without the need for reasonable protective equipment.
 
 It's of no surprise to you, then, that when you cross from the shuttle bay to the ship docking bay proper that you are greeted with an extravagant display. The imposing form of the Apogee stands before you, it's stature not at all diminished by the various ship-sized gantries holding its vast bulk aloft. From here on the ground, it's almost majestic.
 
@@ -694,8 +697,10 @@ naderin_ftl_visitShuttleGivePassOpt,naderin_ftl_visitShuttlePassOpts,"$global.na
 naderin_ftl_visitShuttleGivePass,DialogOptionSelected,"$option == naderin_ftl_visitShuttleGivePass","FireBest naderin_ftl_learnToCopyPasses","They don't spare a glance at their datapad as it chimes green. ""All's good. Oh, and,"" they lean in conspiratorially, ""don't tell anyone, but they're all the same. Copy the pass and send it to all your friends. We need more... artists, if you know what I mean.""","naderin_ftl_visitLuminary:Continue",
 naderin_ftl_visitShuttleNoPassOpt,naderin_ftl_visitShuttlePassOpts,"!$global.naderin_ftl_accessPass",,,"naderin_ftl_visitShuttleNoPass:""I don't have one.""",
 naderin_ftl_visitShuttleNoPass,DialogOptionSelected,"$option == naderin_ftl_visitShuttleNoPass","SetTextHighlights ""100 credits""
-FireBest naderin_ftl_visitShuttleNoPassOpts","""Last minute fee's 100 credits.""",,
-naderin_ftl_visitShuttleNoPassPayOpt,naderin_ftl_visitShuttleNoPassOpts,,,,"naderin_ftl_visitShuttleNoPassPay:Pay the fee",
+FireAll naderin_ftl_visitShuttleNoPassOpts","""Last minute fee's 100 credits.""",,
+naderin_ftl_visitShuttleNoPassPayOpt,naderin_ftl_visitShuttleNoPassOpts,,"FireBest naderin_ftl_visitShuttleNoPassPayCheck",,"naderin_ftl_visitShuttleNoPassPay:Pay the fee",
+naderin_ftl_visitShuttleNoPassPayCheck,naderin_ftl_visitShuttleNoPassPayCheck,"$player.credits < 100","SetEnabled naderin_ftl_visitShuttleNoPassPay false
+SetTooltip naderin_ftl_visitShuttleNoPassPay ""You're broke and don't have the 100 credits needed for this.""",,,
 naderin_ftl_visitShuttleNoPassPay,DialogOptionSelected,"$option == naderin_ftl_visitShuttleNoPassPay","AddCredits -100
 FireBest naderin_ftl_learnToCopyPasses
 $global.naderin_ftl_accessPass = true","A tap on their datapad and it chimes green, with a matching notification from your own comms. ""All's good. Oh, and,"" they lean in conspiratorially, ""don't tell anyone, but they're all the same. Copy the pass and send it to all your friends. We need more... artists, if you know what I mean.""","naderin_ftl_visitLuminary:Continue",
@@ -718,9 +723,9 @@ naderin_ftl_visitLuminary,DialogOptionSelected,"$option == naderin_ftl_visitLumi
 
 You're now amongst the crowd of pirates gawking at the sight of cranes operating makeshift implements of mass decoration. Though a hijacking operation would have to be done with you in the relative safety of orbit, there's still a few options available to you now that you're here in person.",,
 naderin_ftl_visitLuminaryAskAroundOpt,naderin_ftl_visitLuminaryOpts,"!$global.naderin_ftl_askedAround",,,"naderin_ftl_visitLuminaryAskAround:Ask for people's opinions",
-naderin_ftl_visitLuminaryAskAround,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryAskAround","$global.naderin_ftl_askedAround = true","""I don't like it,"" the first one says to you when you walk up to them. There's a thin scar crossing vertically through his left eye, though it's hard to tell if it's real. ""If it weren't the portboss' ship, I'd have flown it out of here a cycle ago.""
+naderin_ftl_visitLuminaryAskAround,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryAskAround","$global.naderin_ftl_askedAround = true","""I don't like it,"" the first one says to you when you walk up to him. There's a thin scar crossing vertically through his left eye, though it's hard to tell if it's real. ""If it weren't the portboss' ship, I'd have flown it out of here a cycle ago.""
 
-Beside him stands a bulky fellow, with as many muscles as they have cybernetics. ""Fun's all the same to me. Paint it, explode it, toss it out into vacuum, who cares? People will always be divided, and that there's a half having fun's all the justification I need to be fine with it.""
+Beside him stands a bulky fellow with as many muscles as they have cybernetics, and yet with a voice like velvet. ""Fun's all the same to me. Paint it, explode it, toss it out into vacuum, who cares? People will always be divided, and that there's a half having fun's all the justification I need to be fine with it.""
 
 ""As if,"" the scarred one scoffs. ""You just like it because you're glazin' the heck out of Ol' Rick up there on the crane, and think he's a hot shot artist from Galatia. Well, he hates the damn thing, he's drawing turds on the bridge! And Galatia doesn't even have an art department, they're all science folk!""
 
@@ -753,7 +758,7 @@ naderin_ftl_visitLuminaryChallenge2b,DialogOptionSelected,"$option == naderin_ft
 naderin_ftl_visitLuminaryChallenge3b:""So you'll let destiny get in the way of what you want?""",
 naderin_ftl_visitLuminaryChallenge3a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryChallenge3a","$option = naderin_ftl_visitLuminaryChallenge3b
 FireBest DialogOptionSelected",,,
-naderin_ftl_visitLuminaryChallenge3b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryChallenge3b",,"""Listen to yourself!"" The man facepalms over his scarred eye. ""$PlayerHeOrShe's right. You've got muscle, you're decked out in more cyber tech than most of us. You've also done things the average spacer's never seen. So what if Rick's a pirate, so are you! And if not you, then who?""
+naderin_ftl_visitLuminaryChallenge3b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryChallenge3b",,"""Listen to yourself!"" The man facepalms over his scarred eye, dragging the palm down his face in exasperation. ""$PlayerHeOrShe's right. You've got muscle, you're decked out in more cyber tech than most of us. You've also done things the average spacer's never seen. So what if Rick's a pirate, so are you! And if not you, then who?""
 
 Though strangers to you, you're becoming more invested in their relationship than you'd thought you'd be.
 
@@ -797,7 +802,7 @@ There's some running around as your new co-conspirators sign onto the relevant t
 Eventually, the time comes. All that's left is for you to initiate the operation.","naderin_ftl_visitLuminaryHijacking3:""Operation is a go.""",
 naderin_ftl_visitLuminaryHijacking3,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking3",,"You sit comfortably far away from the action at a buffet table in the corner of the docking bay. It makes for a convenient alibi, though for all the food you can only pretend to eat the more palatable looking options.
 
-It's business as usual as a round of pirates dressed up in aprons and smocks leave The Luminary, and a fresh gaggle enter with a new set of paints and assorted materials. Agent Blue, the codename of your augmented co-conspirator, successfully enters alongside Agent Red, the codename of the other guy.
+It's business as usual as a round of pirates dressed up in aprons and smocks leave The Luminary, and a fresh gaggle enter with a new set of paints and assorted materials. Agent Blue, the codename of your more augmented co-conspirator, successfully enters alongside Agent Red, the codename of the other guy.
 
 ""These codenames are silly,"" Red whispers on the encrypted comms-line. ""Why not just use our names?""
 
@@ -818,7 +823,7 @@ naderin_ftl_visitLuminaryHijacking4b,DialogOptionSelected,"$option == naderin_ft
 
 ""Oh, cool as cucumbers, you two."" A scruffy looking fellow with paint for teeth nudges Red and Blue both on the shoulder. ""But don't you two forget. Like walking into the abyss, art is. Where are we going, and what will we find? Except the danger's making a mess and angering the boss. Ha ha ha.""
 
-The scruffy fellow shakes their head a moment after before stumbling on ahead. 
+The scruffy fellow shakes their head a moment before stumbling on ahead.
 
 ""I think I know that guy,"" Red comments. ""I'm pretty sure he's made the biggest mess out of everyone here. He's one to talk.""
 
@@ -840,7 +845,7 @@ The scruffy fellow guffaws at their own joke before stumbling on ahead.
 naderin_ftl_visitLuminaryHijacking5b:Say nothing and continue watching",
 naderin_ftl_visitLuminaryHijacking5a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking5a","$option = naderin_ftl_visitLuminaryHijacking5b
 FireBest DialogOptionSelected","""Okay,"" they both unenthusiastically chorus in unison.",,
-naderin_ftl_visitLuminaryHijacking5b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking5b",,"The visual feed you recieve from the two displays nothing you haven't seen before. Wiring, doors, blinky buttons, the bread and butter of every cadet that's ever served aboard a ship.
+naderin_ftl_visitLuminaryHijacking5b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking5b",,"The visual feed you recieve from the two displays little you haven't seen before. Wiring, doors, blinky buttons, the bread and butter of every cadet that's ever served aboard a ship.
 
 What catches you off-guard is the quality of some of the art on the walls. Sure, there's the odd phallic illustration, or crudely drawn stick figure. But where most you expected vandalism and graffiti stand drawings and works of art in their own right, though nothing at you'd see at the level of high society. No, what's here is raw, rough, but emotional. The piece that strikes you most is a depiction of cadets, men and women around a drinking table, all making their last hurrah before work calls them back aboard to meet the vacuum that will inevitably claim their lives.
 
@@ -853,10 +858,10 @@ naderin_ftl_visitLuminaryHijacking6a,DialogOptionSelected,"$option == naderin_ft
 
 Agent Blue holds up a blue spray can in one hand, their other an outstretched palm framing the corridor wall before them. There's a field of flowers now, entirely in blue. It doesn't look amateur at all, though you suspect they had some help from their cybernetics.
 
-Agent Red, on the other hand, has added to the list of inappropriate doodles. ""Hey, what I draw is art. And the hundreds of people around us would agree with me. I think.""
+Agent Red, on the other hand, has added to the list of inappropriate doodles. ""Hey, what I draw is art. And the dozens of people around us would agree with me. I think.""
 
 ""Sure, man. Sure.""","naderin_ftl_visitLuminaryHijacking7:Continue",
-naderin_ftl_visitLuminaryHijacking6b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking6b","$naderin_ftl_risk++","Red looks at the corridor intersection from where they entered from. ""I think there's another group around the corner? We'll ask them.""
+naderin_ftl_visitLuminaryHijacking6b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking6b","$naderin_ftl_risk++","Red looks at the corridor intersection where they entered from. ""I think there's another group around the corner? We'll ask them.""
 
 The two meet none other than the same scruffy fellow from earlier. He looks displeased when Red explains the situation to him.
 
@@ -894,7 +899,7 @@ Red blinks. ""Woah, wait. You're just leaving?""
 
 There's a slow nod of realisation from Blue. ""Your handiwork, right?""","naderin_ftl_visitLuminaryHijacking10a:""Yes, the fruits of my social engineering.""
 naderin_ftl_visitLuminaryHijacking10b:""In the debrief later. Get inside now.""",
-naderin_ftl_visitLuminaryHijacking9b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking9b",,"""No entry allowed. Back off."" Red folds their arms and scowls convincingly, though the effect is diminished by their earlier state of surprise.
+naderin_ftl_visitLuminaryHijacking9b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking9b",,"""No entry allowed. Back off."" Red folds his arms and scowls convincingly, though the effect is diminished by his earlier state of surprise.
 
 ""...right."" She draws herself up confidently, likely believing herself not to be in any danger. ""I see what's going on here. Well, I'll come back later.""
 
@@ -1026,7 +1031,7 @@ Blue's side has birds now alongside the sun, descending upon upon the blue field
 
 ""Oh yeah, like I'd refuse to help a friend just because they didn't get a contract for help with their love interest.""
 
-They pause, and slowly turn to face their friend. ""Then I suppose ...thanks. I owe you one.""","naderin_ftl_visitLuminaryHijacking17a:Now's a good time to leave, disconnect from comms
+They pause, and slowly turn to face their friend. ""Then I suppose... thanks. I owe you one.""","naderin_ftl_visitLuminaryHijacking17a:Now's a good time to leave, disconnect from comms
 naderin_ftl_visitLuminaryHijacking17b:Remain silent",
 naderin_ftl_visitLuminaryHijacking16b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking16b",,"""I knew it."" Red sighs, scribbling gravestones onto the corridor wall. ""Can't believe you signed us up without pay! Rookie mistake.""
 
@@ -1039,7 +1044,7 @@ naderin_ftl_visitLuminaryHijacking17b:Remain silent",
 naderin_ftl_visitLuminaryHijacking16c,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking16c","$option = naderin_ftl_visitLuminaryHijacking16b
 FireBest DialogOptionSelected",,,
 naderin_ftl_visitLuminaryHijacking17a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking17a",,"You take the chance to say a quick goodbye and close your end of the call. Now you're in relative peace, save for the fact that you're in the buffet corner with an untouched plate.","naderin_ftl_visitLuminaryHijackingEnd:Continue",
-naderin_ftl_visitLuminaryHijacking17b,DialogOptionSelected,,,"There's a moment of silence before they both face an imaginary camera on the roof. ""Bossman, we've a private conversation. Please, uh, since we're done with the hard part...""","naderin_ftl_visitLuminaryHijacking18a:""Of course.""
+naderin_ftl_visitLuminaryHijacking17b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking17b",,"There's a moment of silence before they both face an imaginary camera on the roof. ""Bossman, we've a private conversation. Please, uh, since we're done with the hard part...""","naderin_ftl_visitLuminaryHijacking18a:""Of course.""
 naderin_ftl_visitLuminaryHijacking18b:Leave without a word
 naderin_ftl_visitLuminaryHijacking18c:Make them end the call from their end",
 naderin_ftl_visitLuminaryHijacking18a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking18a",,"You make your goodbyes and close your end of the call. Now you're in relative peace, save for the fact that you're in the buffet corner with an untouched plate.","naderin_ftl_visitLuminaryHijackingEnd:Continue",
@@ -1049,12 +1054,13 @@ naderin_ftl_visitLuminaryHijacking18c,DialogOptionSelected,"$option == naderin_f
 Eventually, they kick you off the group call. Now you're in relative peace, save for the fact that you're in the buffet corner with an untouched plate.","naderin_ftl_visitLuminaryHijackingEnd:Continue",
 naderin_ftl_visitLuminaryHijackingEnd,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijackingEnd",,"Now that you're alone with your thoughts, there's a few notes you're already making. Trusting unknowns on a critical operation? Their willingness to go along with the operation anyway when they were eventually convinced to? Their overall performance throughout? There's questions (including some from your ops chief to you), but no answers.
 
-Though, after you've left, you realise the most important question of all: you don't even know their names.","naderin_ftl_visitLuminaryFriendship2:Continue after a quick after-action report with your crew",
+Though, after you've left, you realise the most troubling question of all: you don't even know their names.","naderin_ftl_visitLuminaryFriendship2:Continue after a quick after-action report with your crew",
 naderin_ftl_visitLuminaryFriendship,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryFriendship","AddXP 10000","Their cybernetic eye flickers. It's a second, two... then they turn and run for it. Barelling down the walkways, knocking people aside in a flurry of shouts and screams. The man with the scar is stunned, mouth agape as their eyes double back between you both.
 
-""All this time, you said what I never could."" He lowers his head, wondering. Then he raises it and looks you in the eye. ""I think I'll owe you a drink after all this, captain. Before that, though."" He winks at you. ""I've a friend to help."" And then he's gone, racing after their friend, but to you someone you've never before met.
+""All this time, you said what I never could."" He lowers his head, wondering. Then he raises it and looks you in the eye. ""I think I'll owe you a drink after all this, captain. Before that, though."" He winks at you. ""I've a friend to help."" 
 
-You couldn't do it in the end, you realise. Manipulating them, even though they were strangers. But, perhaps, it's for the best. This job was always yours to finish in the end, and you'll see it through. One way or the other.
+And then he's gone, racing after their friend, but to you someone you've never before met.","naderin_ftl_visitLuminaryFriendshipCont:Continue",
+naderin_ftl_visitLuminaryFriendshipCont,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryFriendshipCont",,"You couldn't do it in the end. Manipulating them, even though they were strangers. But, perhaps, it's for the best. This job was always yours to finish in the end, and you'll see it through. One way or the other.
 
 Though, watching them leave, you realise you don't even know their names.","naderin_ftl_visitLuminaryFriendship2:Continue",
 naderin_ftl_visitLuminaryFriendship2,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryFriendship2","FireAll naderin_ftl_visitLuminaryOpts","Time goes on, and you're back in front of The Luminary.
@@ -1125,9 +1131,9 @@ naderin_ftl_visitLuminaryMugging3c,DialogOptionSelected,"$option == naderin_ftl_
 FireBest DialogOptionSelected","Your greed satisfied for now, you decide not to push your luck.",,
 naderin_ftl_visitLuminaryRevengeEnd,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryRevengeEnd","FireAll naderin_ftl_visitLuminaryOpts
 FireBest naderin_ftl_possibleGuilt","With that over, it's back to the mission at hand.",,
-naderin_ftl_possibleGuilt,naderin_ftl_possibleGuilt,"$naderin_ftl_guilt > 0","$naderin_ftl_risk++","Actually... you feel a bit of something. It's a thin thread around your heart, a discordant note in the music you don't hear. 
+naderin_ftl_possibleGuilt,naderin_ftl_possibleGuilt,"$naderin_ftl_guilt > 0","$naderin_ftl_risk++","Actually... you feel a bit of something. It's a thin thread around your heart, a discordant note in a record left on repeat. 
 
-Is it... guilt? No, it can't be. How can that be guilt? Why would you be feeling guilt?",,
+What could it be?",,
 naderin_ftl_visitLuminaryInspectOpt,naderin_ftl_visitLuminaryOpts,,,,"naderin_ftl_visitLuminaryInspect:Review what you know about The Luminary",
 naderin_ftl_visitLuminaryInspect,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryInspect","Call $naderin_tdd_ref updateData
 Call $global.naderin_ftl_ref showShip
@@ -1161,8 +1167,9 @@ Then the shuttle shakes, like turbulence for a second. ""...shuttles don't get t
 It appears the call is non-negotiable.","naderin_ftl_visitLuminaryLeave1a:Take the call",
 naderin_ftl_visitLuminaryLeave2,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave2","$global.naderin_ftl_increasedSecurity = true","""Trouble, $playerSirOrMadam."" It's your intelligence officer reporting. ""It appears we've been had. Someone found out about what we did to The Luminary, and our trojan has been wiped. Security below has been beefed up too, and nobody's allowed in or out since you left. And... nothing specific about our associates below, fortunately.""
 
-It appears retrieval of The Luminary will require other means.","naderin_ftl_visitLuminaryLeaveEnd:Return to your fleet",
-naderin_ftl_visitLuminaryLeaveEnd,naderin_ftl_visitLuminaryLeave,,"ShowDefaultVisual
+It appears retrieval of The Luminary will require other means.","naderin_ftl_visitLuminaryLeave3:Return to your fleet",
+naderin_ftl_visitLuminaryLeave3,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave3","FireBest naderin_ftl_visitLuminaryLeaveEnd",,,
+naderin_ftl_visitLuminaryLeaveEnd,naderin_ftl_visitLuminaryLeaveEnd,,"ShowDefaultVisual
 FireAll PopulateOptions",,,
 "#END Descend To The Docking Bay",,,,,,
 ,,,,,,
@@ -1171,7 +1178,7 @@ naderin_ftl_pickup,PopulateOptions,"$hasMarket
 $market.id == station_kapteyn
 $menuState == main
 $global.naderin_ftl_located == true
-$global.naderin_ftl_ratAttached = true
+$global.naderin_ftl_ratAttached == true
 !$global.naderin_ftl_increasedSecurity",,,"2:naderin_ftl_pickup2:Activate remote control of The Luminary",
 naderin_ftl_pickup2,DialogOptionSelected,"$option == naderin_ftl_pickup2",,"With the remote access trojan active on The Luminary, it will be possible to maneuver the ship out of the docking bay and towards your fleet.","naderin_ftl_pickup3:Extract The Luminary
 naderin_ftl_pickupBack:Not now",
@@ -1180,23 +1187,73 @@ FireAll PopulateOptions",,,
 naderin_ftl_pickup3,DialogOptionSelected,"$option == naderin_ftl_pickup3",,"Your crew wait for a quiet moment below in The Luminary's docking bay. What counts for nighttime on the Starworks arrives, and there's a window of opportunity where the ship is empty and attention minimal, save for a multitude of guards and sealed entryways.
 
 Unfortunately for them, all that stands between the ship and freedom is a single docking bay atmo shield.","naderin_ftl_pickup4:Continue",
-naderin_ftl_pickup4,DialogOptionSelected,"$option == naderin_ftl_pickup4","AddShip $naderin_ftl_luminary
+naderin_ftl_pickup4,DialogOptionSelected,"$option == naderin_ftl_pickup4",,"You watch from the bridge as The Luminary shudders to life. Lights activate one by one, and entryways into the ship seal themselves shut. Security guards look on helplessly as the ship's engines activate, liftoff, and thrust. The Luminary breaks free of it's hangar clamps by force before its engines flare up, launching the ship into the atmo shield in front. Rather than let the ship pass through, it solidifies, shimmers, and holds firm.
+
+The shield overloads with flux in seconds. Vacuum consumes the docking bay.","naderin_ftl_pickup5:Continue","despite being called raidedForLuminary, you didn't really raid for it, huh"
+naderin_ftl_pickup5,DialogOptionSelected,"$option == naderin_ftl_pickup5","AddShip $naderin_ftl_luminary
 $global.naderin_ftl_acquired = true
 $global.naderin_ftl_raidedForLuminary = true
-Call $global.naderin_ftl_ref updateData","You watch from the bridge as The Luminary shudders to life. Lights activate one by one, and entryways into the ship seal themselves shut. Security guards look on helplessly as the ship's engines activate, liftoff, and thrust. The Luminary breaks free of it's hangar clamps by force before its engines flare up, launching the ship into the atmo shield in front. Rather than let the ship pass through, it solidifies, shimmers, and holds firm.
-
-The shield overloads with flux in seconds. Vacuum consumes the docking bay.
-
-Though a touch damaged, The Luminary forms up with your $shipOrFleet without further incident, and crew transfer aboard quickly before the more dangerous station security measures come online and patrols come knocking.
+Call $global.naderin_ftl_ref updateData","Though a touch damaged, The Luminary forms up with your $shipOrFleet without further incident, and crew transfer aboard quickly before the more dangerous station security measures come online and patrols come knocking.
 
 ""I daresay it looked like an artificial intelligence hijacked the thing,"" your sensors officer reports to you. ""But since it's obvious who stole the ship, we should leave before... ah, contacts on sensors, $playerSirOrMadam. Orders?""","naderin_ftl_pickupEnd:""Time to go.""","despite being called raidedForLuminary, you didn't really raid for it, huh"
 naderin_ftl_pickupEnd,DialogOptionSelected,"$option == naderin_ftl_pickupEnd","DismissDialog",,,
 "#END Free Retrieval",,,,,,
 "#END The Starworks",,,,,,
 ,,,,,,
-# Luminary Found,,,,,,
-naderin_ftl_withLuminary,PickGreeting,"$naderin_ftl_giver == true",,,,
-"#END Luminary Found",,,,,,
+# Return To Client,,,,,,
+naderin_ftl_withLuminary,PickGreeting,"Call $global.naderin_ftl_ref updateData
+$naderin_ftl_giver == true
+$global.naderin_ftl_acquired == true","FireBest naderin_ftl_withLuminaryHandOverCheck
+FireBest naderin_ftl_withLuminaryKeepItFunTooltip
+ShowPersonVisual","""You have my ship!"" $HeOrShe is, thankfully, not in a sneezing fit by the time you call $himOrHer. ""Send it over and I'll have the credits sent to you immediately.""","naderin_ftl_withLuminaryHandOver:Transfer The Luminary over
+naderin_ftl_withLuminaryBuyOffer:Offer to buy it from them instead
+naderin_ftl_withLuminaryKeepIt:Decide to keep the ship instead",
+naderin_ftl_withLuminaryHandOver,DialogOptionSelected,"$option == naderin_ftl_withLuminaryHandOver","Call $global.naderin_ftl_ref transferLuminary
+AddCredits 150000
+$naderin_ftl_returned = true 0
+Call $global.naderin_ftl_ref updateStage","You watch on a second screen as The Luminary slowly departs from your fleet.
+
+""It's a little... damaged, but I'm sure I'll be able to find someone to fix her up. Now, if you don't mind, I have some celebrating to do.""","cutCommLink:Cut the comm link",
+naderin_ftl_withLuminaryHandOverCheck,naderin_ftl_withLuminaryHandOverCheck,"$player.numShips == 1","SetEnabled naderin_ftl_withLuminaryHandOver false
+SetTooltip naderin_ftl_withLuminaryHandOver ""You can't hand over your last ship""",,,
+naderin_ftl_withLuminaryBuyOffer,DialogOptionSelected,"$option == naderin_ftl_withLuminaryBuyOffer","FireBest naderin_ftl_withLuminaryBuyOfferCheck
+SetTextHighlights ""100,000 credits""","""...you want to buy it off me instead? My pride and joy!?""
+
+$HeOrShe considers your offer for a moment.
+
+""100,000 credits. No less. You and I both know how hard it is to get yourself your own Apogee in this day and age.""","naderin_ftl_withLuminaryBuy:Accept this deal
+naderin_ftl_withLuminaryHandOver:Transfer over The Luminary instead for the reward
+naderin_ftl_withLuminaryKeepIt:Actually, just keep The Luminary",
+naderin_ftl_withLuminaryBuyOfferCheck,naderin_ftl_withLuminaryBuyOfferCheck,"$player.credits < 100000","SetEnabled naderin_ftl_withLuminaryBuy false
+SetTooltip naderin_ftl_withLuminaryBuy ""You don't have the 100,000 credits needed for this.""",,,
+naderin_ftl_withLuminaryBuy,DialogOptionSelected,"$option == naderin_ftl_withLuminaryBuy","$naderin_ftl_returned = true 0
+Call $global.naderin_ftl_ref updateStage
+AddCredits -100000","$HeOrShe looks at their screen as the credits are transferred.
+
+""I already regret this. But now I have enough for a brand new one...""","cutCommLink:Cut the comm link",
+naderin_ftl_withLuminaryKeepIt,DialogOptionSelected,"$option == naderin_ftl_withLuminaryKeepIt",,"$HeOrShe grimaces. ""What, you came here just to tell me you're keeping The Luminary for yourself? You sick monster. Unless this is a joke. Is it? Please tell me it is.""","naderin_ftl_withLuminaryKeepConfirm:Apologise, for you are keeping The Luminary
+naderin_ftl_withLuminaryBuyOffer:Offer to buy it from them instead
+naderin_ftl_withLuminaryHandOver:Transfer The Luminary over",
+naderin_ftl_withLuminaryKeepItFunTooltip,naderin_ftl_withLuminaryKeepItFunTooltip,"$player.credits < 0","SetTooltip naderin_ftl_withLuminaryKeepIt ""Reminder: You are in debt!""",,,
+naderin_ftl_withLuminaryKeepConfirm,DialogOptionSelected,"$option == naderin_ftl_withLuminaryKeepConfirm","$naderin_ftl_keptTheLuminary = true 0
+Call $global.naderin_ftl_ref updateStage
+","""Oh.""","cutCommLink:Cut the comm link",
+naderin_ftl_withoutLuminary,PickGreeting,"Call $global.naderin_ftl_ref updateData
+$naderin_ftl_giver == true
+!$global.naderin_ftl_acquired
+$global.naderin_ftl_located == true","ShowPersonVisual","""You're back."" $HeOrShe is still visibly unwell by the time you call $himOrHer. ""Any news about The Luminary?""","naderin_ftl_withoutLuminaryConsiderLocation:Reveal you know The Luminary's location
+naderin_ftl_withoutLuminaryNo:""No.""",
+naderin_ftl_withoutLuminaryConsiderLocation,DialogOptionSelected,"$option == naderin_ftl_withoutLuminaryConsiderLocation","SetTextHighlights ""full 150,000 credit reward"" ""only 50,000 credits""","""So you have satisfactory evidence of where it is, but you don't want to collect the full 150,000 credit reward?"" $HeOrShe looks at you quizzically. ""I mean, fine. I won't ask. But it's your loss.""
+
+You recall that the reward for discovering The Luminary's 'final fate' is only 50,000 credits.","naderin_ftl_withoutLuminaryNo:""Actually, I've changed my mind.""
+naderin_ftl_withoutLuminaryRevealLocation:Begin transmission of your mission logs",
+naderin_ftl_withoutLuminaryRevealLocation,DialogOptionSelected,"$option == naderin_ftl_withoutLuminaryRevealLocation","$naderin_ftl_locationAdvised = true 0
+Call $global.naderin_ftl_ref updateStage
+AddCredits 50,000","You agree to only receiving a reduced payment in return for not having to fetch $hisOrHer ship for them.
+
+""Well, I suppose I still have plenty to hire someone else with. Though you did not go the full distance, I will thank you regardless, captain.""","cutCommLink:Cut the comm link",
+naderin_ftl_withoutLuminaryNo,DialogOptionSelected,"$option == naderin_ftl_withoutLuminaryNo",,"""Okay."" $HeOrShe blows their nose on a wet napkin. ""Well? Get on with it, then.""","cutCommLink:Cut the comm link",
+"#END Return To Client",,,,,,
 "#END Finding The Luminary",,,,,,
 ,,,,,,
 # The Derinkuyu Drop,,,,,,
@@ -1208,17 +1265,16 @@ $market.id != derinkuyu_market
 !$global.naderin_tdd_acceptedMission","AddBarEvent naderin_tdd_mission ""Speak with the quiet man at the end of the bar"" ""At the end of the bar, a quiet man sits alone tapping on their Tri-Pad. They glance around from time to time, clearly waiting for something - or someone.""",,,
 naderin_tdd_barSel,DialogOptionSelected,"$option == naderin_tdd_mission","$missionId = naderin_tdd
 NaderinSetActivePerson ""naderin_harlan""
-SetTextHighlights 75,000
-FireAll naderin_tdd_barDialogOpts","""Finally!"" He breathes a sigh of relief as you approach. ""Nobody's been taking me up on this opportunity, and I've been begging for days!""
+SetTextHighlights ""75,000 credits""
+FireAll naderin_tdd_barDialogOpts","""Ah!"" He breathes a sigh of relief as you approach. ""Nobody's been taking me up on this opportunity, and I've been looking for hours!""
 
-""It's just like any other dead drop. Nothing special with the location, nothing special with the package. Can't understand why nobody's taking me up on this!"" There's a trace of uncertainty in their voice.
+""It's just like any other dead drop. Nothing special with the location, nothing special with the package. Can't understand why nobody's taking me up on this!"" There's a trace of uncertainty in his voice.
 
-They laugh unconfidently, tapping on their Tri-Pad far too much. An act, likely just to look busy. In control. But you can see it's all bravado.
+He laughs unconfidently, tapping on their Tri-Pad far too much. An act, likely just to look busy. In control. But you can see it's all bravado.
 
 And yet, for what?
 
-""I can arrange a payment of 75,000 credits upon completion. No deadline, as long as you make the drop. And, of course, don't be seen making it. All standard stuff. That's okay with you, right?""
-",,"# I bet there's an easier way to set the active person that I missed"
+""I can arrange a payment of 75,000 credits upon completion. No deadline, as long as you make the drop. And, of course, don't be seen making it. All standard stuff. That's okay with you, right?""",,"# I bet there's an easier way to set the active person that I missed"
 naderin_tdd_barSelAgain,DialogOptionSelected,"$option == naderin_tdd_mission
 $global.naderin_tdd_missionDeclinedBefore == true","$missionId = naderin_tdd
 NaderinSetActivePerson ""naderin_harlan""
@@ -1240,22 +1296,20 @@ naderin_tdd_nervesOpt1,naderin_tdd_barDialogOpts,"!$askedNerves1
 naderin_tdd_convo1,DialogOptionSelected,"$option == naderin_tdd_convo1","$askedNerves1 = true
 FireAll naderin_tdd_barDialogOpts","There's a moment of silence before he responds.
 
-""Am I?"" They chuckle to themselves, but nobody's smiling.",,
+""Am I?"" He chuckles to himself, but nobody's smiling.",,
 naderin_tdd_nervesOpt2,naderin_tdd_barDialogOpts,"$askedNerves1
 !$askedNerves2",,,"naderin_tdd_convo2:""You look pretty nervous to me.""",
 naderin_tdd_convo2,DialogOptionSelected,"$option == naderin_tdd_convo2","$askedNerves2 = true
-FireAll naderin_tdd_barDialogOpts","They blink at you in another moment of silence.
+FireAll naderin_tdd_barDialogOpts","He blinks at you in another moment of silence.
 
-It's far too long before they respond. ""I can't say anything more than I already have. Are you taking the job or not?""",,
+It's far too long before he responds. ""I can't say anything more than I already have. Are you taking the job or not?""",,
 naderin_tdd_acceptOpt,naderin_tdd_barDialogOpts,,,,"naderin_tdd_accept:Accept",
 naderin_tdd_accept,DialogOptionSelected,"$option == naderin_tdd_accept","unset $askedDetails
 unset $askedNerves1
 unset $askedNerves2
-AdjustRepPerson naderin_harlan FRIENDLY 5","They slam down their Tri-Pad, staring at you with a grin that's just far too wide.
+AdjustRepPerson naderin_harlan FRIENDLY 5","""Good! Then it is decided."" He gives you a firm handshake, though he's far too close for comfort.
 
-""Yes! Thank you. Thank you, thank you, thank you! You won't regret this!"" There's a flurry of handshakes and tears streaming down his face, and he's far too close for comfort.
-
-Just as the overenthusiastic handshaking begins to feel excessively excessive, he steps back a bit, perhaps realising that dribbling snot all over your shoulder isn't making the best impression on you.","naderin_tdd_accept2:Ask where you're delivering the package",
+Just as the handshaking begins to drag on and feel excessively excessive, he steps back a bit. Perhaps he's realising that he isn't making the best impression on you.","naderin_tdd_accept2:Ask where you're delivering the package",
 naderin_tdd_accept2,DialogOptionSelected,"$option == naderin_tdd_accept2","BeginMission naderin_tdd
 $global.naderin_tdd_acceptedMission = true","""Ah. Right. You need to know where..."" It's only a few taps later on his Tri-Pad that your own pings with a notification. ""So, the package is on the way to your fleet. But, ah.""
 
@@ -1263,21 +1317,19 @@ There's always something wrong, isn't there?
 
 ""Apologies. You'll need to contact someone over at Derinkuyu for the location of the drop. I'm just a middleman!""
 
-You watch as they scurry off into some corner of the bar, ordering themselves a round of drinks before you can get a word in. 
+You watch as he scurries off into some corner of the bar, ordering themselves a round of drinks before you can get a word in. 
 
-It's only when your crew begins loading the package — a shielded crate of... something — onto your flagship that you begin to wonder just what you've gotten yourself into.","naderin_tdd_badger:Demand an explanation
+It's only when your crew begins loading the package - a shielded crate of... something - onto your flagship that you begin to wonder just what you've gotten yourself into.","naderin_tdd_badger:Demand an explanation
 naderin_tdd_examine:Examine the package discreetly
 backToBar:Return to the bar",
-naderin_tdd_badger,DialogOptionSelected,"$option == naderin_tdd_badger",,"By the time you catch up with them, they're dead drunk.
-
-You find it unlikely they'll be able to tell you anything of value.","naderin_tdd_examine:Examine the package discreetly
+naderin_tdd_badger,DialogOptionSelected,"$option == naderin_tdd_badger",,"It's too late. By the time you rush over to catch up with him, he's gone in the sea of bar patrons.","naderin_tdd_examine:Examine the package discreetly
 backToBar:Take a look around the bar",
 naderin_tdd_examine,DialogOptionSelected,"$option == naderin_tdd_examine","HideFirstPerson
-ShowDefaultVisual","In this day and age, only the most trusting of captains agree to deliver things without checking what they're carrying. You are not one of them.
+ShowImageVisual cache_large","In this day and age, only the most trusting of captains agree to deliver things without checking what they're carrying. You are not one of them.
 
 With practiced precision, your technicians and engineers crack open the shielded crate without tripping any alarms or hidden security measures. It doesn't take long to discover a custom-built miniaturized stealth relay, folded neatly and waiting to conduct any number of nefarious schemes upon its enemies.
 
-""Hey, watch it!"" You hear your chief engineer suddenly bark over comms, overeager machinery powering down in the background. ""The crate was one thing, this is another. Everyone knows these things could be rigged to explode if you touch them wrong. Plus, if we break it apart... well. Scans first.""","naderin_tdd_examine2:Watch your crew get to work",
+""Hey, watch it!"" You hear your chief engineer suddenly bark over comms, overeager machinery powering down in the background. ""Might be superstition, but everyone knows these things could be rigged to explode if you touch them wrong. Plus, if we break it apart... well. Scans first.""","naderin_tdd_examine2:Watch your crew get to work",
 naderin_tdd_examine2,DialogOptionSelected,"$option == naderin_tdd_examine2",,"It is after a few scans (and a lecture on following protocol) that your crew discover that the relay is based on already existing designs, only with significant exterior markings and modifications on top. Non-intrusive examinations of the relay's structure are as thorough as possible, but unfortunately the crew are forced to go without the gung-ho of engineering's brand new laser powered breach cutters.
 
 ""Could've sworn... no, it's fine work, but not military. Whoever made this slapped on some exterior modifications to a common, downscaled design, which reminds me of the shortcuts you'd find apprentices make on their assessments."" Your chief engineer chuckles to themselves, shaking their head a little. ""I suppose this level of makeshift work could plausibly pass for spaceworthy. Not that anyone in their right mind would ever consider it up to code.""","naderin_tdd_examine3:Continue",
@@ -1291,7 +1343,7 @@ That's all he says to you as you walk away.
 OR
 ""Ah. Well. That's fine.""
 
-He returns to their Tri-Pad, tapping away for reasons only they know.","backToBar:Take a look around the bar",
+He returns to their Tri-Pad, tapping away in clear disappointment.","backToBar:Take a look around the bar",
 "#END Starting Bar Event",,,,,,
 ,,,,,,
 # Contact Remy,,,,,,
@@ -1308,9 +1360,9 @@ naderin_tdd_remyHello,DialogOptionSelected,"$option == naderin_tdd_remyHello",,"
 
 ""Ah, yes, hello! Bright stars, and all that. What are you here for?""","naderin_tdd_remyHello2:""Do the words 'dead drop' ring any bells for you?""
 naderin_tdd_remyDetails:""I was told to call you for the details about a dead drop.""",
-naderin_tdd_remyHello2,DialogOptionSelected,"$option == naderin_tdd_remyHello2",,"""What? Oh, it's you! Harlan sent me a message the moment you said yes.""
+naderin_tdd_remyHello2,DialogOptionSelected,"$option == naderin_tdd_remyHello2",,"""What? Oh, it's you! They sent me a message the moment you said yes.""
 
-""I wasn't expecting anyone to take on this mission after how long I'd been waiting... but now that you're here, I can finally get this thing off my back! You have no idea all the troubles I've had to go through. Getting Harlan to ask around was my last resort. After talking to all those stuck-up assholes myself—""
+""I wasn't expecting anyone to take on this mission after all the... well, you don't need to know that. But now that you're here, I can finally get this thing off my back! You have no idea all the troubles I've had to go through. After talking to all those stuck-up assholes myself-""
 
 Remy decides at that moment to take a swig of alcohol from a bottle beside him, as if there were some metaphorical weight lifting off their shoulders.","naderin_tdd_remyDetails:Ask where you're delivering the drop",
 naderin_tdd_remyNothing,DialogOptionSelected,"$option == naderin_tdd_remyNothing",,"You stare silently at them, waiting for a response. Remy simply stares back, also waiting for you to say something.
@@ -1443,7 +1495,7 @@ naderin_tdd_objectScan3:Continue",
 naderin_tdd_objectScanSuperstitions,DialogOptionSelected,"$option == naderin_tdd_objectScanSuperstitions","$player.ethosKnowledge++","Your crew exchange glances.
 
 ""As you say, $playerSirOrMadam.""","naderin_tdd_objectScan3:Continue",
-naderin_tdd_objectScanWhy,DialogOptionSelected,"$option == naderin_tdd_objectScanWhy",,"""There's nothing new on sensors, $playerSirOrMadam."" Your crew exchange glances as your sensors officer double-checks their work. ""I can't see any reason for concern at the moment, but...""","naderin_tdd_objectScan3:Continue",
+naderin_tdd_objectScanWhy,DialogOptionSelected,"$option == naderin_tdd_objectScanWhy",,"""Nothing new on sensors, $playerSirOrMadam."" Your crew exchange glances as your sensors officer double-checks their work. ""I can't see any reason for concern at the moment, but...""","naderin_tdd_objectScan3:Continue",
 naderin_tdd_objectScan3,DialogOptionSelected,"$option == naderin_tdd_objectScan3","ShowDefaultVisual","Just as your crew begin to second-guess themselves, a garbled hyperwave burst blares out from the relay without warning. And then, as if having fulfilled its purpose, it shudders back into view of your sensors... and then breaks apart into multiple pieces.
 
 Your comms officer taps at their console, but they appear to make no progress. ""The hyperwave message is just junk. Nothing we can sift out from the static, $playerSirOrMadam.""

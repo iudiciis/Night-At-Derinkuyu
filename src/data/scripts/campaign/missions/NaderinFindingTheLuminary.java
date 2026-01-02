@@ -16,6 +16,7 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
+import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -30,7 +31,7 @@ import org.lwjgl.util.vector.Vector2f;
 public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
     // Use stages to track how far the Player has progressed, and to react accordingly.
-    public static enum Stage {
+    public enum Stage {
         SEARCHING_SALVAGE,
         SECOND_SALVAGE,
         RESUPPLY_INTERCEPT,
@@ -38,6 +39,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         PAYMENT,
         COMPLETED,
         FAILED,
+        FAILED_NO_PENALTY,
     }
 
     // protected SectorEntityToken firstDebrisField;
@@ -48,7 +50,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     protected PersonAPI giver;
     protected MarketAPI starworks;
     protected FleetMemberAPI fleetMember;
-    protected int reward = 150000;
+    // protected int reward = 150000;
     protected float raidDifficulty = 150f;
 
     // Apparently more for organisation - can go into the create function instead.
@@ -113,12 +115,13 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         ShipVariantAPI variant = Global.getSettings().getVariant("apogee_Balanced").clone();
         variant.clear();
 
-        int dMods = 4 + genRandom.nextInt(2);
-        DModManager.addDMods(variant, true, dMods, genRandom);
         fleetMember = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variant);
         fleetMember.setShipName("ISS The Luminary");
         fleetMember.getCrewComposition().setCrew(100000);
         fleetMember.getRepairTracker().setCR(0.7f);
+
+        int dMods = 4 + genRandom.nextInt(2);
+        DModManager.addDMods(fleetMember, true, dMods, genRandom);
 
         // Debris Fields
         beginStageTrigger(Stage.SEARCHING_SALVAGE);
@@ -156,7 +159,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerAutoAdjustFleetStrengthModerate();
         triggerSetStandardHostilePirateFlags();
         //triggerMakeFleetIgnoredByOtherFleets();
-        triggerMakeFleetIgnoreOtherFleets();
+        triggerMakeFleetIgnoreOtherFleetsExceptPlayer();
         triggerPickLocationAtInSystemJumpPoint(pirateSystem);
         triggerSpawnFleetAtPickedLocation("$naderin_ftl_pirates", null);
         triggerOrderFleetPatrolEntity(true);
@@ -168,28 +171,28 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerCreateMediumPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
         triggerCreateSmallPatrolAroundMarket(starworks, Stage.VISITING_THE_STARWORKS, 0f);
 
-        beginGlobalFlagTrigger("$naderin_ftl_learnToCopyPasses");
-        triggerCustomAction(context -> {
-            if (raidDifficulty == 150f) raidDifficulty = 100f;
-        });
-        endTrigger();
-
-        beginGlobalFlagTrigger("$naderin_ftl_increasedSecurity");
-        triggerCustomAction(context -> raidDifficulty = 300f);
-        endTrigger();
+        List<SectorEntityToken> jumpPoints = starworks.getStarSystem().getJumpPoints();
+        for (SectorEntityToken point : jumpPoints) {
+            spawnVengeanceFleet(point);
+        }
 
         beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary", Stage.VISITING_THE_STARWORKS, Stage.PAYMENT);
-        triggerIncreaseMarketHostileTimeout(starworks, 30f);
+        triggerIncreaseMarketHostileTimeout(starworks, 15f);
         endTrigger();
-
-        triggerCreateMediumPatrolAroundMarket(starworks, Stage.PAYMENT, 10f);
 
         // Stages
         setName("Finding The Luminary");
         setStoryMission();
+        setTimeLimit(Stage.FAILED, 365, null, Stage.RESUPPLY_INTERCEPT);
+        setNoAbandon();
+
         setStartingStage(Stage.SEARCHING_SALVAGE);
         setSuccessStage(Stage.COMPLETED);
         setFailureStage(Stage.FAILED);
+
+        addNoPenaltyFailureStages(Stage.FAILED_NO_PENALTY);
+        setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, starworks);
+        setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, giver.getMarket());
 
         // Progression
         setStageOnGlobalFlag(Stage.SECOND_SALVAGE, "$naderin_ftl_calculated");
@@ -197,6 +200,8 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         setStageOnGlobalFlag(Stage.VISITING_THE_STARWORKS, "$naderin_ftl_located");
         setStageOnGlobalFlag(Stage.PAYMENT, "$naderin_ftl_acquired");
         setStageOnMemoryFlag(Stage.COMPLETED, getPerson(), "$naderin_ftl_returned");
+        setStageOnMemoryFlag(Stage.COMPLETED, getPerson(), "$naderin_ftl_locationAdvised");
+        setStageOnMemoryFlag(Stage.FAILED, getPerson(), "$naderin_ftl_keptTheLuminary");
 
         return true;
     }
@@ -225,6 +230,20 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                 Global.getSoundPlayer().playSound("hit_heavy", 1f, 1f, Global.getSoundPlayer().getListenerPos(), new Vector2f());
                 return true;
             }
+            case "transferLuminary" -> {
+                FleetMemberAPI luminary = null;
+                for (FleetMemberAPI member : Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy()) {
+                    if (member.getId().equals(fleetMember.getId())) {
+                        luminary = member;
+                        break;
+                    }
+                }
+                if (luminary != null) {
+                    AddRemoveCommodity.addFleetMemberLossText(luminary, dialog.getTextPanel());
+                    Global.getSector().getPlayerFleet().getFleetData().removeFleetMember(luminary);
+                }
+                return true;
+            }
         }
         return super.callAction(action, ruleId, dialog, params, memoryMap);
     }
@@ -249,6 +268,19 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             return true;
         }
         return false;
+    }
+
+    protected void spawnVengeanceFleet(SectorEntityToken spawnPoint) {
+        beginGlobalFlagTrigger("$naderin_ftl_raidedForLuminary", Stage.VISITING_THE_STARWORKS, Stage.PAYMENT);
+        triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.RAIDER, starworks.getStarSystem());
+        triggerSetFleetFaction(Factions.PIRATES);
+        triggerAutoAdjustFleetStrengthModerate();
+        triggerPickLocationAroundEntity(spawnPoint, 100f);
+        triggerSpawnFleetAtPickedLocation("$naderin_ftl_vengeanceFleet", null);
+        triggerSetStandardAggroPirateFlags();
+        triggerFleetAllowLongPursuit();
+        triggerOrderFleetInterceptPlayer();
+        endTrigger();
     }
 
     @Override
