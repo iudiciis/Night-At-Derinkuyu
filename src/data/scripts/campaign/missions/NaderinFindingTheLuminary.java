@@ -68,8 +68,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             return false;
         }
 
-        // prevent appearing twice. remember to set the flag in rules.csv!
-        // (alternative is a big timeout in bar_events.csv)
+        // prevent appearing twice. remember to set the flag somewhere!
         boolean completed = Global.getSector().getMemoryWithoutUpdate().getBoolean("$naderin_ftl_completed");
         if (completed) {
             return false;
@@ -88,7 +87,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         // Giver
         giver = getPerson();
         if (giver == null) return false;
-        makeImportant(giver, "$naderin_ftl_giver", Stage.PAYMENT, Stage.COMPLETED);
+        makeImportant(giver, "$naderin_ftl_giver", Stage.VISITING_THE_STARWORKS, Stage.PAYMENT, Stage.COMPLETED);
 
         // Starworks setup
         starworks = Global.getSector().getEconomy().getMarket("station_kapteyn");
@@ -183,11 +182,16 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerIncreaseMarketHostileTimeout(starworks, 15f);
         endTrigger();
 
+        beginStageTrigger(Stage.FAILED, Stage.FAILED_NO_PENALTY, Stage.COMPLETED);
+        triggerSetGlobalMemoryValuePermanent("$naderin_ftl_completed", true);
+        endTrigger();
+
         // Stages
         setName("Finding The Luminary");
         setStoryMission();
         setTimeLimit(Stage.FAILED, 365, null, Stage.RESUPPLY_INTERCEPT);
         setNoAbandon();
+        setRepPenaltyPerson(25f);
 
         setStartingStage(Stage.SEARCHING_SALVAGE);
         setSuccessStage(Stage.COMPLETED);
@@ -197,7 +201,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, starworks);
         setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, giver.getMarket());
 
-        // Progression
+        // Progression (use 'connect with flag' instead next time)
         setStageOnGlobalFlag(Stage.SECOND_SALVAGE, "$naderin_ftl_calculated");
         setStageOnGlobalFlag(Stage.RESUPPLY_INTERCEPT, "$naderin_ftl_searched");
         setStageOnGlobalFlag(Stage.VISITING_THE_STARWORKS, "$naderin_ftl_located");
@@ -250,6 +254,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             case "addLuminary" -> {
                 Global.getSector().getPlayerFleet().getFleetData().addFleetMember(fleetMember);
                 AddShip.addShipGainText(fleetMember, dialog.getTextPanel());
+                return true;
             }
             case "refusedToReturn" -> {
                 DelayedFleetEncounter e = new DelayedFleetEncounter(genRandom, getMissionId());
@@ -263,6 +268,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                 e.triggerMakeNoRepImpact();
                 e.triggerSetStandardAggroInterceptFlags();
                 e.endCreate();
+                return true;
             }
         }
         return super.callAction(action, ruleId, dialog, params, memoryMap);
@@ -349,14 +355,15 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                     f.getDisplayNameWithArticle() + ".", opad);
             label.setHighlight("The Luminary", starworks.getName(), f.getDisplayNameWithArticle());
             label.setHighlightColors(h, f.getBaseUIColor(), f.getBaseUIColor());
+
+            info.addPara("Alternatively, go back to " +
+                    giver.getMarket().getName() + " to collect a reduced 50,000 credit reward.", opad);
         }
         if (currentStage == Stage.PAYMENT) {
+            // if(Global.getSector().getMemoryWithoutUpdate().contains("$naderin_ftl_keep")) {
+            // label = info.addPara("It's time to return what you've 'found' of The Luminary to " + getPerson().getNameString() + ".", opad);
             LabelAPI label;
-            if(Global.getSector().getMemoryWithoutUpdate().contains("$naderin_ftl_keep")) {
-                label = info.addPara("It's time to return what you've 'found' of The Luminary to " + getPerson().getNameString() + ".", opad);
-            } else {
-                label = info.addPara("It's time to return what you've found of The Luminary to " + getPerson().getNameString() + ".", opad);
-            }
+            label = info.addPara("It's time to return what you've found of The Luminary to " + getPerson().getNameString() + ".", opad);
             label.setHighlight("The Luminary");
             label.setHighlightColor(h);
 

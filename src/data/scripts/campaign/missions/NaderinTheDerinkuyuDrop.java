@@ -10,18 +10,23 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
-import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithSearch;
+import com.fs.starfarer.api.loading.CampaignPingSpec;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import data.scripts.campaign.ids.NaderinPeople;
 
+/**
+ * The first quest written for Night At Derinkuyu.
+ * Quite short, and mostly a rehashing of the already existing Dead Drop mission.
+ * @author iudiciis
+ */
 public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
     // See com\fs\starfarer\api\impl\campaign\missions\DeadDropMission.java
 
-    public static enum Stage {
+    public enum Stage {
         CONTACT,
         DROP_OFF,
         SUBMIT,
@@ -86,8 +91,8 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeFleetGoAwayAfterDefeat();
         triggerSetPirateFleet(); // important, pirate fleet behaves differently otherwise when transponder is off
-        // triggerSetPatrol();
         triggerOrderFleetPatrolHyper(system);
+        triggerFleetInterceptPlayerOnSight(true);
         endTrigger();
 
         // Mercenary complication
@@ -100,7 +105,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeNoRepImpact();
         triggerMakeNonHostile();
-        triggerMakeFleetIgnoreOtherFleets();
+        triggerMakeFleetIgnoreOtherFleetsExceptPlayer();
         triggerMakeFleetGoAwayAfterDefeat();
         triggerOrderFleetInterceptPlayer();
         triggerFleetMakeImportant(null, Stage.SUBMIT);
@@ -108,6 +113,24 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         endTrigger();
 
         return true;
+    }
+
+    // See InterdictionPulseAbility, or addPing
+    protected void pingEffect() {
+        SectorEntityToken.VisibilityLevel vis = target.getVisibilityLevelToPlayerFleet();
+        if (vis == SectorEntityToken.VisibilityLevel.NONE || vis == SectorEntityToken.VisibilityLevel.SENSOR_CONTACT) return;
+
+        CampaignPingSpec custom = new CampaignPingSpec();
+        custom.setUseFactionColor(false);
+        custom.setWidth(7);
+        custom.setMinRange(100f);
+        custom.setRange(200);
+        custom.setDuration(2f);
+        custom.setAlphaMult(0.25f);
+        custom.setInFraction(0.2f);
+        custom.setNum(1);
+
+        Global.getSector().addPing(target, custom);
     }
 
     @Override
@@ -131,6 +154,9 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
                         true, icon, text, tags);
             }
             return true;
+        } else if (action.equals("pingEffect")) {
+            pingEffect();
+            return true;
         } else {
             return super.callAction(action, ruleId, dialog, params, memoryMap);
         }
@@ -146,7 +172,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         // set("$naderin_tdd_dist", getDistanceLY(target));     // getDistanceLY relies on the quest originator
         int dist = 0;
         if (giver.getMarket() != null) {
-            dist = (int) Math.round(Misc.getDistanceLY(giver.getMarket().getLocationInHyperspace(), target.getLocationInHyperspace()));
+            dist = Math.round(Misc.getDistanceLY(giver.getMarket().getLocationInHyperspace(), target.getLocationInHyperspace()));
         }
         set("$naderin_tdd_dist", dist);
 	}
