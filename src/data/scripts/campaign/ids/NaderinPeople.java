@@ -31,7 +31,7 @@ public class NaderinPeople {
             person.getName().setFirst("Harlan");
             person.getName().setLast("Hines");
             person.setVoice(Voices.SPACER);
-            // no portrait yet
+            person.setPortraitSprite("graphics/naderin/characters/hines.png");
             person.getStats().setSkillLevel(Skills.GUNNERY_IMPLANTS, 1);
 
             ip.addPerson(person);
@@ -49,7 +49,7 @@ public class NaderinPeople {
             person.getName().setLast("Laurent");
             person.setVoice(Voices.SPACER);
             person.addTag(Tags.CONTACT_UNDERWORLD);
-            // no portrait yet
+            person.setPortraitSprite("graphics/naderin/characters/remy.png");
             person.getStats().setSkillLevel(Skills.SENSORS, 1);
             person.getStats().setSkillLevel(Skills.NAVIGATION, 1);
 

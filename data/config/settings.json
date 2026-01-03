@@ -10,7 +10,9 @@
   },
 
   "graphics": {
-    "illustrations": {
+    "characters": {
+      "hines": "graphics/naderin/characters/hines.png",
+      "remy": "graphics/naderin/characters/remy.png"
     }
   }
 }

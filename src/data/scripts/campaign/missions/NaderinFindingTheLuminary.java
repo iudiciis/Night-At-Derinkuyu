@@ -15,8 +15,10 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.*;
+import com.fs.starfarer.api.impl.campaign.missions.DelayedFleetEncounter;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
+import com.fs.starfarer.api.impl.campaign.rulecmd.AddShip;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -24,7 +26,6 @@ import com.fs.starfarer.api.util.Misc;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
- * Intended to be the first mission the player encounters, they are tasked with finding the ISS Luminary.
  * A simple fetch quest with a classic dose of space violence.
  * @author iudiciis
  */
@@ -49,6 +50,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     protected StarSystemAPI pirateSystem;
     protected PersonAPI giver;
     protected MarketAPI starworks;
+    protected ShipVariantAPI variant;
     protected FleetMemberAPI fleetMember;
     // protected int reward = 150000;
     protected float raidDifficulty = 150f;
@@ -112,15 +114,16 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         if (pirateSystem == null) return false;
 
         // Ship - see hand-me-down code in vanilla
-        ShipVariantAPI variant = Global.getSettings().getVariant("apogee_Balanced").clone();
+        variant = Global.getSettings().getVariant("apogee_Balanced").clone();
         variant.clear();
 
         fleetMember = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variant);
         fleetMember.setShipName("ISS The Luminary");
         fleetMember.getCrewComposition().setCrew(100000);
-        fleetMember.getRepairTracker().setCR(0.7f);
+        fleetMember.getRepairTracker().setCR(0.3f);
 
         int dMods = 4 + genRandom.nextInt(2);
+        DModManager.setDHull(variant);
         DModManager.addDMods(fleetMember, true, dMods, genRandom);
 
         // Debris Fields
@@ -243,6 +246,23 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                     Global.getSector().getPlayerFleet().getFleetData().removeFleetMember(luminary);
                 }
                 return true;
+            }
+            case "addLuminary" -> {
+                Global.getSector().getPlayerFleet().getFleetData().addFleetMember(fleetMember);
+                AddShip.addShipGainText(fleetMember, dialog.getTextPanel());
+            }
+            case "refusedToReturn" -> {
+                DelayedFleetEncounter e = new DelayedFleetEncounter(genRandom, getMissionId());
+                e.setDelayMedium();
+                e.setLocationInnerSector(false, Factions.INDEPENDENT);
+                e.beginCreate();
+                e.triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.VERY_HIGH, Factions.MERCENARY, FleetTypes.PATROL_LARGE, new Vector2f());
+                e.triggerSetFleetOfficers(OfficerNum.MORE, OfficerQuality.HIGHER);
+                e.triggerFleetSetFaction(Factions.INDEPENDENT);
+                e.triggerSetFleetFlag("$naderin_ftl_consequences");
+                e.triggerMakeNoRepImpact();
+                e.triggerSetStandardAggroInterceptFlags();
+                e.endCreate();
             }
         }
         return super.callAction(action, ruleId, dialog, params, memoryMap);

@@ -287,6 +287,11 @@ They shrug. ""I traded it to some other folk for some supplies. They'll be headi
 # The Starworks,,,,,,
 ,,,,,,
 # Raid For The Luminary,,,,,,
+naderin_ftl_acquireLuminary,naderin_ftl_acquireLuminary,,"#AddShip $naderin_ftl_luminary
+Call $global.naderin_ftl_ref addShip
+$global.naderin_ftl_acquired = true
+$global.naderin_ftl_raidedForLuminary = true
+Call $global.naderin_ftl_ref updateData",,,
 ,,,,,,
 # Normal Raid,,,,,,
 naderin_ftl_raidOption,PopulateOptions,"$market.naderin_ftl_starworks score:1000
@@ -310,10 +315,7 @@ naderin_ftl_raidFinished1,naderin_ftl_raidFinished1,,,"The plan your officers de
 Marine squads arrive slowly onto the port concourse disguised as rowdy crew looking to unload and unwind. All manage to snake their way towards the docking bays where The Luminary is held, but are stopped short of entering the particular section where your prize is stored. Tactical teams discreetly take their time preparing charges, taking positions, and coordinating with targeting feeds onboard your $shipOrFleet.
 
 Chaos breaks out instantly the moment your tac lead gives the go-ahead, and what counts for security is quickly overwhelmed in a burst of flashes as your marines breach the compound. A crack squad of marines rush into the Apogee and are met with additional gunfire, comms crackling as your marines find themselves fighting for control both inside the ship and out in the docking bay as the first of local security begin to pour in earlier than expected.",,
-naderin_ftl_raidFinished2,naderin_ftl_raidFinished2,,"AddShip $naderin_ftl_luminary
-$global.naderin_ftl_acquired = true
-$global.naderin_ftl_raidedForLuminary = true
-Call $global.naderin_ftl_ref updateData","Bridge crew aboard your flagship execute EW solutions as marines simultaneously toss out smoke charges in an attempt to buy time. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
+naderin_ftl_raidFinished2,naderin_ftl_raidFinished2,,"FireBest naderin_ftl_acquireLuminary","Bridge crew aboard your flagship execute EW solutions as marines simultaneously toss out smoke charges in an attempt to buy time. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
 
 With station-side security unable to do more than leave a few scorch marks on the Apogee as it links up with your $shipOrFleet, the outcome is obvious. 
 
@@ -347,10 +349,7 @@ naderin_ftl_easyRaidFinished1,naderin_ftl_easyRaidFinished1,,,"The plan your off
 Marine squads arrive slowly onto the port concourse disguised as rowdy crew looking to unload and unwind. All manage to snake their way towards the docking bays where The Luminary is held, and proceed to easily enter the particular section where your prize is stored using their access passes. Tactical teams discreetly take their time entering the ship whilst coordinating with hostile tracking solutions onboard your $shipOrFleet to avoid suspicion.
 
 Then, your tac lead gives the go-ahead. Marines knock out the first round of hostiles onboard, but a few manage to shout and sound the alarm. What counts for security is quickly overwhelmed in a burst of flashes as a crack squad of your marines use the ship's various entry points as cover. The remaining marines begin mopping up the remaining hostiles aboard the Apogee but are met with additional gunfire, comms crackling as your marines find themselves fighting for control both inside the ship and out in the docking bay as the first of local security begin to pour in earlier than expected.",,
-naderin_ftl_easyRaidFinished2,naderin_ftl_easyRaidFinished2,,"AddShip $naderin_ftl_luminary
-$global.naderin_ftl_acquired = true
-$global.naderin_ftl_raidedForLuminary = true
-Call $global.naderin_ftl_ref updateData","Bridge crew aboard your flagship execute EW solutions as marines simultaneously toss out smoke charges in an attempt to buy time. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
+naderin_ftl_easyRaidFinished2,naderin_ftl_easyRaidFinished2,,"FireBest naderin_ftl_acquireLuminary","Bridge crew aboard your flagship execute EW solutions as marines simultaneously toss out smoke charges in an attempt to buy time. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
 
 With station-side security unable to do more than leave a few scorch marks on the Apogee as it links up with your $shipOrFleet, the outcome is obvious. 
 
@@ -382,10 +381,7 @@ naderin_ftl_hardRaidFinished1,naderin_ftl_hardRaidFinished1,,,"It's all hands on
 Thankfully, the combat area remains relatively exposed. Weapons fire from your $shipOrFleet score direct hits on critical infrastructure from afar, though targets remain limited due to the necessity of remaining out of range of the station's own batteries. Shuttles arrive, some battered but all intact, and your marines begin breaching the compound.
 
 Consoles flicker warningly, a dozen beeps and sirens warbling on and off as the situation develops. A live order-of-battle chart ticks off objectives as casualties, though limited, tick up. And yet, through the chaos, all that is left to you is to wait.",,
-naderin_ftl_hardRaidFinished2,naderin_ftl_hardRaidFinished2,,"AddShip $naderin_ftl_luminary
-$global.naderin_ftl_acquired = true
-$global.naderin_ftl_raidedForLuminary = true
-Call $global.naderin_ftl_ref updateData","Bridge crew aboard your flagship execute EW solutions, target analysis, and coordinate fire as marines begin entering The Luminary itself. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
+naderin_ftl_hardRaidFinished2,naderin_ftl_hardRaidFinished2,,"FireBest naderin_ftl_acquireLuminary","Bridge crew aboard your flagship execute EW solutions, target analysis, and coordinate fire as marines begin entering The Luminary itself. Marines onboard The Luminary are forced into clearing the ship room-by-room, but all it takes is a squad to reach the bridge and initiate take-off procedures for the rest of the raid team to begin withdrawing by way of the ship itself.
 
 With station-side security unable to do more than leave a few scorch marks on the Apogee as it links up with your $shipOrFleet, the outcome is obvious.
 
@@ -526,7 +522,8 @@ Stunning them into silence, you express your deep empathy and sincere desire to 
 naderin_ftl_askPortbossBuy50HaggleCont,DialogOptionSelected,"$option == naderin_ftl_askPortbossBuy50HaggleCont",,"Unfortunately, as the charitable individual you are, there is but only a limited amount of funding you can allocate to the various causes throughout the sector, and 50,000 is all you can spare. But there are alternatives! Already, your crew are sending along vast data packages filled to the brink with books and all other non-physical items needed to bring all those affected out of the abyss of despair and towards a brand new dawn that is the future, for what future could there be but one where they hand over 50,000 credits in exchange for losing one busted Apogee?
 
 ""I'd say that was a joke, but... you make a bit of sense? Too much sense."" $HeOrShe shakes $hisOrHer head, defeated. ""Can't believe I have a bleedin' heart after all. I'll make the arrangements now. And tell your crew to cut the damn wordy help packages, I don't need a thousand of them in my inbox!"" The comm-link feed fizzles to what you find to be a surprisingly aesthetic holding screen.","naderin_ftl_buyLuminaryFromPortbossAlt:Continue",
-naderin_ftl_buyLuminaryFromPortboss,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortboss","AddShip $naderin_ftl_luminary
+naderin_ftl_buyLuminaryFromPortboss,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortboss","#AddShip $naderin_ftl_luminary
+Call $global.naderin_ftl_ref addShip
 $global.naderin_ftl_acquired = true
 Call $global.naderin_ftl_ref updateStage","""I thought nobody wanted that rust-bucket. I mean, surveys? Who wants to do those? Get a nice battleship instead, you know? Well, either way, even if it were fun to deface the face of science, I'd trade an Apogee frilled-to-the-gills for a fistful of credits any day. Even if it's only this much.""
 
@@ -534,7 +531,8 @@ It is not long before you confirm receipt of The Luminary forming up alongside y
 
 ""Real pink and glittery, huh?"" $HeOrShe pauses to find the words. ""Unfortunate, what hooligans get up to in space. But, from one pirate to their vict-, er, fellow spacer, it do be what it... do be? Whatever. Just take it and go.""","cutCommLink:Cut the comm-link",
 naderin_ftl_buyLuminaryFromPortbossAlt,DialogOptionSelected,"$option ==  naderin_ftl_buyLuminaryFromPortbossAlt","AddCredits -50000
-AddShip $naderin_ftl_luminary
+#AddShip $naderin_ftl_luminary
+Call $global.naderin_ftl_ref addShip
 AdjustRep $faction.id FRIENDLY 1
 $global.naderin_ftl_acquired = true
 Call $global.naderin_ftl_ref updateStage","The arrangements are made quickly and it is not long before you confirm receipt of The Luminary forming up alongside your $shipOrFleet.
@@ -1155,19 +1153,17 @@ $naderin_ftl_risk > 1",,"Your business here concluded for the time being, you de
 
 ""Uh, $playerSirOrMadam? There's an incoming call from traffic control, but the signature's wrong. I can't verify that it's actually them.""","naderin_ftl_visitLuminaryLeave1a:Accept the call
 naderin_ftl_visitLuminaryLeave1b:Decline the call",
-naderin_ftl_visitLuminaryLeave1a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave1a",,"Where the image of the caller is meant to go, there scrolls an endlessly repeating line of text instead.
-
-I SEE YOU.
-
-""There's... nothing else, $playerSirOrMadam."" Not even sound. ""We can't trace it either, but it has to be from the Starworks.""","naderin_ftl_visitLuminaryLeave2:""Bridge, updates?""",
-naderin_ftl_visitLuminaryLeave1b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave1b",,"Your pilot declines the call, but another request appears immediately. They try blocking traffic control temporarily, but it doesn't work. The caller switches between contacts, spoofing strangers, people you know.
+naderin_ftl_visitLuminaryLeave1a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave1a","FireBest naderin_ftl_visitLuminaryLeave1aText","Where the image of the caller is meant to go, there scrolls an endlessly repeating line of text instead.","naderin_ftl_visitLuminaryLeave2:""Bridge, updates?""",
+naderin_ftl_visitLuminaryLeave1aText,naderin_ftl_visitLuminaryLeave1aText,,"AddTextSmall ""I SEE YOU"" highlight
+AddText ""\""There's... nothing else, $playerSirOrMadam.\"" Not even sound. \""We can't trace it either, but it has to be from the Starworks.\""""",,,
+naderin_ftl_visitLuminaryLeave1b,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave1b",,"Your pilot declines the call, but another request appears immediately. They try blocking requests from traffic control temporarily, but it doesn't work. The caller switches between contacts, spoofing strangers and people you know.
 
 Then the shuttle shakes, like turbulence for a second. ""...shuttles don't get turbulence. Not in high atmo.""
 
 It appears the call is non-negotiable.","naderin_ftl_visitLuminaryLeave1a:Take the call",
 naderin_ftl_visitLuminaryLeave2,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave2","$global.naderin_ftl_increasedSecurity = true","""Trouble, $playerSirOrMadam."" It's your intelligence officer reporting. ""It appears we've been had. Someone found out about what we did to The Luminary, and our trojan has been wiped. Security below has been beefed up too, and nobody's allowed in or out since you left. And... nothing specific about our associates below, fortunately.""
 
-It appears retrieval of The Luminary will require other means.","naderin_ftl_visitLuminaryLeave3:Return to your fleet",
+It appears retrieval of The Luminary will require other means. That, or you'll have to give up on it entirely and return to your client empty-handed for a reduced reward.","naderin_ftl_visitLuminaryLeave3:Return to your fleet",
 naderin_ftl_visitLuminaryLeave3,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave3","FireBest naderin_ftl_visitLuminaryLeaveEnd",,,
 naderin_ftl_visitLuminaryLeaveEnd,naderin_ftl_visitLuminaryLeaveEnd,,"ShowDefaultVisual
 FireAll PopulateOptions",,,
@@ -1190,7 +1186,8 @@ Unfortunately for them, all that stands between the ship and freedom is a single
 naderin_ftl_pickup4,DialogOptionSelected,"$option == naderin_ftl_pickup4",,"You watch from the bridge as The Luminary shudders to life. Lights activate one by one, and entryways into the ship seal themselves shut. Security guards look on helplessly as the ship's engines activate, liftoff, and thrust. The Luminary breaks free of it's hangar clamps by force before its engines flare up, launching the ship into the atmo shield in front. Rather than let the ship pass through, it solidifies, shimmers, and holds firm.
 
 The shield overloads with flux in seconds. Vacuum consumes the docking bay.","naderin_ftl_pickup5:Continue","despite being called raidedForLuminary, you didn't really raid for it, huh"
-naderin_ftl_pickup5,DialogOptionSelected,"$option == naderin_ftl_pickup5","AddShip $naderin_ftl_luminary
+naderin_ftl_pickup5,DialogOptionSelected,"$option == naderin_ftl_pickup5","#AddShip $naderin_ftl_luminary
+Call $global.naderin_ftl_ref addShip
 $global.naderin_ftl_acquired = true
 $global.naderin_ftl_raidedForLuminary = true
 Call $global.naderin_ftl_ref updateData","Though a touch damaged, The Luminary forms up with your $shipOrFleet without further incident, and crew transfer aboard quickly before the more dangerous station security measures come online and patrols come knocking.
@@ -1254,6 +1251,15 @@ AddCredits 50,000","You agree to only receiving a reduced payment in return for 
 ""Well, I suppose I still have plenty to hire someone else with. Though you did not go the full distance, I will thank you regardless, captain.""","cutCommLink:Cut the comm link",
 naderin_ftl_withoutLuminaryNo,DialogOptionSelected,"$option == naderin_ftl_withoutLuminaryNo",,"""Okay."" $HeOrShe blows their nose on a wet napkin. ""Well? Get on with it, then.""","cutCommLink:Cut the comm link",
 "#END Return To Client",,,,,,
+,,,,,,
+# Vengeance If Kept,,,,,,
+naderin_ftl_consequences,BeginFleetEncounter,"$naderin_ftl_consequences score:1000
+!$entity.naderin_ftl_encounteredMerc","$entity.naderin_ftl_encounteredMerc = true
+FleetDesc
+HailPlayer",,,
+naderin_ftl_consequencesCommsOpen,OpenCommLink,"$naderin_ftl_consequences score:1000
+!$entity.ignorePlayerCommRequests","$entity.ignorePlayerCommRequests = true","""Captain $playerName!"" $HeOrShe beams at you. ""My employer is paying me handsomely for this hit out on you. I do so hope you'll oblige me.""","cutCommLink:Cut the comm-link",
+"#END Vengeance If Kept",,,,,,
 "#END Finding The Luminary",,,,,,
 ,,,,,,
 # The Derinkuyu Drop,,,,,,
@@ -1687,8 +1693,8 @@ naderin_tdd_remyFinal2,DialogOptionSelected,"$option == naderin_tdd_remyFinal2",
 # A Curious Probe,,,,,,
 "#END A Curious Probe",,,,,,
 ,,,,,,
-# Just Like Alexander At Telemessos,,,,,,
-"#END Just Like Alexander At Telemessos",,,,,,
+# Telemessos Redux,,,,,,
+"#END Telemessos Redux",,,,,,
 ,,,,,,
 # Remy,,,,,,
 naderin_remyDefaultGreeting,PickGreeting,"$id == naderin_remy score:20","ShowPersonVisual
@@ -1889,10 +1895,10 @@ SetTextHighlights $hijack_hull $hijack_designation $hijack_price $hijack_marines
 
 $HeOrShe takes a moment to calm down before they continue.
 
-""Anyway, for just $hijack_price credits and $hijack_marines marines, we should be able to overwhelm any onboard crew lingering around in there. Don't worry, I've got the security codes, guard schedules, and the support of a few disgruntled MuniSec militia to keep it all hush-hush, if you're willing.""","hijack_look:Ask for detailed info on the military vessel
+""Anyway, for just $hijack_price credits and $hijack_marines marines, we should be able to overwhelm any onboard crew lingering around in there. Don't worry, I've got the security codes, guard schedules, and the support of a few disgruntled local militia to keep it all hush-hush, if you're willing.""","hijack_look:Ask for detailed info on the military vessel
 contact_decline:Decline",
 naderin_remy_hijackOperation1,DialogOptionSelected,"$option == hijack_op1
-$id == naderin_remy score:200",,"Dressed up in MuniSec garb, your hand-picked marines fall in line with a few actual MuniSec militia. They walk up to the ship, making a racket until the ship's crew poke their noses out to see what's going on.
+$id == naderin_remy score:200",,"Dressed up in the garb of local authorities, your hand-picked marines fall in line with a few actual police militia. They walk up to the ship, making a racket until the ship's crew poke their noses out to see what's going on.
 
 It's at that time that your marines present them with a forged, but realistic illegal parking ticket, and force the entire crew out of the ship with threats of fines and imprisonment, allowing your own marines to board soon after.
 
@@ -1974,13 +1980,6 @@ $PersonName flicks the holo away and pulls up a sector map. ""We're pretty sure 
 ""All the easier for me now that I don't have to lift a finger pulling the strings myself, sure. But I doubt whoever strung them up like this did enough of a job to keep them there for any longer than $bcb_days days. But you'll get a hefty payout of $bcb_reward credits if you complete it in time, so... sound good to you?""",,
 "#END Bounty Details",,,,,,
 "#END Underworld Bounty (Vanilla)",,,,,,
-,,,,,,
-# Extraction Mission (todo),,,,,,
-naderin_remyExtr_blurb1,naderin_remyExtr_blurb,"$remyExtr_variation == COLONY",,"""Huh."" $HeOrShe clicks their tongue as their glance at their datapad. ""There's a friend of mine that is, ah, shall we say, in need of extraction. There was an incident that left 'em behind bars, and they want out as soon as possible.""",,"# todo?"
-naderin_remyExtr_offerOption1,naderin_remyExtr_offerOption,"$remyExtr_variation == COLONY",,,"naderin_remyExtr_start:Ask about the extraction operation","# todo?"
-naderin_remyExtr_offerText1,DialogOptionSelected,"$option == naderin_remyExtr_start",,,"naderin_remyExtr_accept:Accept
-naderin_remyExtr_decline:Decline","# todo?"
-"#END Extraction Mission (todo)",,,,,,
 "#END Remy",,,,,,
 "#END Missions",,,,,,
 

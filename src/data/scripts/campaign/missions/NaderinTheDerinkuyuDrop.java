@@ -104,7 +104,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         triggerMakeFleetGoAwayAfterDefeat();
         triggerOrderFleetInterceptPlayer();
         triggerFleetMakeImportant(null, Stage.SUBMIT);
-        triggerFleetSetName("Grey Rock Privateers");
+        // triggerFleetSetName("Independent Mercenaries");
         endTrigger();
 
         return true;
