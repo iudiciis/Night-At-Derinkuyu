@@ -32,6 +32,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         SUBMIT,
         COMPLETED,
         FAILED,
+        FAILED_DECIV,
     }
 
     protected Integer reward = 75000;
@@ -78,8 +79,10 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         setStageOnMemoryFlag(Stage.SUBMIT, target, "$naderin_tdd_submit");
         setStageOnMemoryFlag(Stage.COMPLETED, giver, "$naderin_tdd_completed");
         setCreditReward(reward);
-        setRepRewardPerson(0f);
-        setRepRewardFaction(0f);
+
+        addNoPenaltyFailureStages(Stage.FAILED_DECIV);
+        connectWithMarketDecivilized(Stage.SUBMIT, Stage.FAILED_DECIV, derinkuyu);
+        setStageOnMarketDecivilized(Stage.FAILED_DECIV, createdAt);
 
         // See HubMissionWithTriggers.java
         // Pirate complication
@@ -123,12 +126,12 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         CampaignPingSpec custom = new CampaignPingSpec();
         custom.setUseFactionColor(false);
         custom.setWidth(7);
-        custom.setMinRange(100f);
-        custom.setRange(200);
-        custom.setDuration(2f);
+        custom.setMinRange(10f);
+        custom.setRange(500);
+        custom.setDuration(5f);
         custom.setAlphaMult(0.25f);
         custom.setInFraction(0.2f);
-        custom.setNum(1);
+        custom.setNum(2);
 
         Global.getSector().addPing(target, custom);
     }

@@ -19,6 +19,8 @@ import com.fs.starfarer.api.impl.campaign.missions.DelayedFleetEncounter;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddShip;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.AddRaidObjective;
+import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -76,7 +78,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
 
         if (barEvent) {
             setGiverRank(Ranks.CITIZEN);
-            setGiverPost(pickOne(Ranks.POST_SPACER, Ranks.POST_FLEET_COMMANDER));
+            setGiverPost(pickOne(Ranks.POST_MERCENARY, Ranks.POST_FLEET_COMMANDER));
             setGiverImportance(PersonImportance.LOW);
             setGiverFaction(Factions.INDEPENDENT);
             createGiver(createdAt, true, false);
@@ -189,7 +191,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         // Stages
         setName("Finding The Luminary");
         setStoryMission();
-        setTimeLimit(Stage.FAILED, 365, null, Stage.RESUPPLY_INTERCEPT);
+        setTimeLimit(Stage.FAILED, 365, null, Stage.VISITING_THE_STARWORKS);
         setNoAbandon();
         setRepPenaltyPerson(25f);
 
@@ -268,6 +270,19 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                 e.triggerMakeNoRepImpact();
                 e.triggerSetStandardAggroInterceptFlags();
                 e.endCreate();
+                return true;
+            }
+            // There is probably a better way of doing this
+            case "clearCustomRaidObjectives" -> {
+                String raidObjName = "Perform ship hijacking operation";
+                String raidNextTrigger = "naderin_ftl_raidFinished1";
+                for (AddRaidObjective.CustomRaidObjectiveAdder adder : Global.getSector().getListenerManager().getListeners(AddRaidObjective.CustomRaidObjectiveAdder.class)) {
+                    if (adder.name.equals(raidObjName) && adder.trigger.equals(raidNextTrigger) && !adder.isDone()) {
+                        Global.getSector().getListenerManager().removeListener(adder);
+                        Global.getSector().getScripts().remove(adder);
+                        break;
+                    }
+                }
                 return true;
             }
         }
