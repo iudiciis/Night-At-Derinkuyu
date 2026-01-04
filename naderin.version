@@ -46,7 +46,7 @@
 
     # Links to a direct download of the mod; fetched from the online version file
     # Used to download updates through LunaLib's main menu version checker UI
-    "directDownloadURL":"https://github.com/iudiciis/Night-At-Derinkuyu/releases/download/v0.1.0b/NightAtDerinkuyu.zip",
+    "directDownloadURL":"https://github.com/iudiciis/Night-At-Derinkuyu/releases/download/latest/NightAtDerinkuyu.zip",
 
     # Point at a directly accessible text file; fetched from the online version file
     # The contents of said file will be shown for that mod in LunaLib's main menu version checker UI
