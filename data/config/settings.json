@@ -3,12 +3,16 @@
     "data.scripts.campaign.rulecmd"
   ],
   "bonusXP": {
-    "naderin_askedForMoney": 1
+    "naderin_askedForMoney": 1,
+    "naderin_ftl_convinced": 1,
+    "naderin_ftl_insisted": 1,
+    "naderin_ftl_challenged": 1
   },
 
   "graphics": {
-    "illustrations": {
-      "vanilla_generic_probe": "graphics/illustrations/vanilla_generic_probe.jpg"
+    "characters": {
+      "hines": "graphics/naderin/characters/hines.png",
+      "remy": "graphics/naderin/characters/remy.png"
     }
   }
 }
