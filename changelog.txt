@@ -1,3 +1,9 @@
+Version 0.3.0
+First version on the forums. (hopefully)
+- Dialogue rewrite of the first bar mission, "The Derinkuyu Drop"
+- All (intended) dialogue for the unlocked Independent Underworld contact completed
+- New mission, "Finding The Luminary", where you can get an early Apogee if you want to
+
 Version 0.1.0b
 First version of the mod!
 - Adds a single, short bar mission
