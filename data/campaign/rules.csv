@@ -750,7 +750,7 @@ naderin_ftl_visitLuminaryAskAround2b,DialogOptionSelected,"$option == naderin_ft
 ""Well! Maybe. But... I can't.""
 
 The arguing quiets, and there's a chance for you to burn drive away at top speed unscathed.","naderin_ftl_visitLuminaryChallenge:Take advantage of this
-naderin_ftl_visitLuminaryAskAround3:Exit the conversation gracefully",
+naderin_ftl_visitLuminaryAskAround3:Exit the conversation gracefully","Sometimes, I like to imagine that it takes a story point for John Starsector to be willing to get involved in an emotional situation, even if that is completely untrue"
 naderin_ftl_visitLuminaryAskAround3,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryAskAround3","FireAll naderin_ftl_visitLuminaryOpts","It's too awkward to stay around those two, so you slowly take a step back. Then two, three...
 
 You're out. But you probably won't be successfully eavesdropping for any new information anytime soon.",,
@@ -997,13 +997,19 @@ Agent Red drops the body unceremoniously next to a box of crayons. ""Jeez, that 
 ""...we aren't?""","naderin_ftl_visitLuminaryHijacking16a:""You are.""
 naderin_ftl_visitLuminaryHijacking16b:""You are not.""
 naderin_ftl_visitLuminaryHijacking16c:Remain silent",
-naderin_ftl_visitLuminaryHijacking16a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking16a",,"The two glance at each other. 
+naderin_ftl_visitLuminaryHijacking16a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijacking16a","FireAll naderin_ftl_hijackingPayoutCheck","The two glance at each other. 
 
 ""How much?"" they ask in unison.","naderin_ftl_visitLuminaryHijackingPayoutA:""100 credits. Each.""
 naderin_ftl_visitLuminaryHijackingPayoutB:""1,000 credits.""
 naderin_ftl_visitLuminaryHijackingPayoutC:""10,000 credits.""
 naderin_ftl_visitLuminaryHijacking16b:Give a vague answer
 naderin_ftl_visitLuminaryHijacking16c:Make an excuse","# debt?"
+naderin_ftl_hijackingPayoutCheckA,naderin_ftl_hijackingPayoutCheck,"$player.credits < 200","SetEnabled naderin_ftl_visitLuminaryHijackingPayoutA false
+SetTooltip naderin_ftl_visitLuminaryHijackingPayoutA ""You're broke and don't have the 200 credits needed for this.""",,,
+naderin_ftl_hijackingPayoutCheckB,naderin_ftl_hijackingPayoutCheck,"$player.credits < 1000","SetEnabled naderin_ftl_visitLuminaryHijackingPayoutB false
+SetTooltip naderin_ftl_visitLuminaryHijackingPayoutB ""You don't have the 1000 credits needed for this.""",,,
+naderin_ftl_hijackingPayoutCheckC,naderin_ftl_hijackingPayoutCheck,"$player.credits < 10000","SetEnabled naderin_ftl_visitLuminaryHijackingPayoutC false
+SetTooltip naderin_ftl_visitLuminaryHijackingPayoutC ""You don't have the 10000 credits needed for this.""",,,
 naderin_ftl_visitLuminaryHijackingPayoutA,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryHijackingPayoutA","AddCredits -200","Immediately, you are given anonymised accounts to pay to. You pay, of course.
 
 ""More than most people make, I suppose."" Red shrugs, scribbling pictures of grass blades onto the corridor wall. ""Still, can't believe you signed us up without asking for pay! Rookie mistake.""
@@ -1157,7 +1163,7 @@ The shuttle ride back is uneventful.",,
 naderin_ftl_visitLuminaryLeaveAlt,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave
 $naderin_ftl_risk > 1",,"Your business here concluded for the time being, you decide to leave.
 
-""Uh, $playerSirOrMadam? There's an incoming call from traffic control, but the signature's wrong. I can't verify that it's actually them.""","naderin_ftl_visitLuminaryLeave1a:Accept the call
+""Uh, $playerSirOrMadam?"" Midflight, your shuttle pilot motions towards a notification on the shuttle control panel. ""There's an incoming call from traffic control, but the signature's wrong. I can't verify that it's actually them.""","naderin_ftl_visitLuminaryLeave1a:Accept the call
 naderin_ftl_visitLuminaryLeave1b:Decline the call",
 naderin_ftl_visitLuminaryLeave1a,DialogOptionSelected,"$option == naderin_ftl_visitLuminaryLeave1a","FireBest naderin_ftl_visitLuminaryLeave1aText","Where the image of the caller is meant to go, there scrolls an endlessly repeating line of text instead.","naderin_ftl_visitLuminaryLeave2:""Bridge, updates?""",
 naderin_ftl_visitLuminaryLeave1aText,naderin_ftl_visitLuminaryLeave1aText,,"AddTextSmall ""I SEE YOU"" highlight
@@ -1443,7 +1449,7 @@ naderin_tdd_remyLeave,DialogOptionSelected,"$option == naderin_tdd_remyLeave","$
 FireBest DialogOptionSelected
 Call $naderin_tdd_ref updateStage","You cut the comm link.
 
-Not a minute after does an apologetic message arrive from Remy, suddenly informing you that you'll have to return to him to recieve payment, rather than immediately upon making the drop.
+Not a minute after does an apologetic message arrive from Remy, suddenly informing you that you'll have to return to him to receive payment, rather than immediately upon making the drop.
 
 You get the feeling that there'll be more unforeseen complications in the future.",,
 naderin_tdd_greetAgain,PickGreeting,"$id == naderin_remy
@@ -1526,7 +1532,7 @@ Despite this, your sensors officer notes that even if the onboard electronics we
 ,,,,,,
 # Pirate Interaction,,,,,,
 naderin_tdd_pirateEncounter,BeginFleetEncounter,"$naderin_tdd_pirates_ref score:3000
-!$entity.tdd_alreadyMetPlayer
+!$tdd_alreadyMetPlayer
 # Call $naderin_tdd_ref updateData","$player.naderin_tdd_metPirates = true
 FleetDesc
 HailPlayer
@@ -1661,15 +1667,17 @@ FireAll naderin_tdd_remyDropComplicationOpts","""Ah, yes. I did mention that the
 Remy taps a finger against $hisOrHer chin. ""Just a few raiders, nobody important. Still, I'm glad you were able to deal with them either way.""",,
 naderin_tdd_thankRemyOpt,naderin_tdd_remyDropComplicationOpts,"$player.naderin_tdd_askedForMore == true
 !$thankedRemy",,,"naderin_tdd_thankRemy:Thank them for the advance in credits earlier",
-naderin_tdd_thankRemy,DialogOptionSelected,"$option == naderin_tdd_thankRemy","$thankedRemy = true
+naderin_tdd_thankRemy,DialogOptionSelected,"$option == naderin_tdd_thankRemy","$naderin_tdd_complaints++
+$thankedRemy = true
 AdjustRepPerson naderin_remy FRIENDLY 1
-FireAll naderin_tdd_remyDropComplicationOpts","""Oh. Well, you're welcome. But don't think that a minute later I didn't realise the base pay was already enough to cover all that!"" Despite saying so, there's a faint smile on $hisOrHer face.",,
+FireAll naderin_tdd_remyDropComplicationOpts","""Oh. Well, you're welcome. But don't think that a minute later I didn't realise the base pay was already enough to cover all that!"" Despite saying so, there's a faint smile on $hisOrHer face.",,"thanking him is not technically a complaint, but is counted anyway"
 naderin_tdd_finishComplainingOpt,naderin_tdd_remyDropComplicationOpts,"$naderin_tdd_complaints > 0",,,"naderin_tdd_finishComplaining:""That's it.""",
 naderin_tdd_finishComplaining,DialogOptionSelected,"$option == naderin_tdd_finishComplaining","$naderin_tdd_completed = true
 Call $naderin_tdd_ref updateStage","$HeOrShe takes a moment to write something down on a datapad before you notice that the payment has been transferred to your account.
 
 ","naderin_tdd_end:Continue",
-naderin_tdd_finishComplainingAlt,DialogOptionSelected,"$option == naderin_tdd_finishComplainingAlt","AddStoryPoints 1
+naderin_tdd_finishComplainingAlt,DialogOptionSelected,"$option == naderin_tdd_finishComplaining
+$naderin_tdd_complaints > 3","AddXP 5000
 $naderin_tdd_completed = true
 Call $naderin_tdd_ref updateStage","""Thank you for bringing all of... this to my attention. You've been surprisingly thorough."" $HeOrShe takes a moment to call over someone, possibly an assistant, before you notice that the payment has been transferred to your account.
 ","naderin_tdd_end:Continue",
@@ -1888,7 +1896,7 @@ naderin_remy_dspBlurb,dsp_blurb,"$id == naderin_remy score:200",,"""Big ticket i
 naderin_remy_dspOfferTextContact,DialogOptionSelected,"$option == dsp_start
 $id == naderin_remy score:200","$missionId = dsp
 Highlight $dsp_dist $dsp_disruptDays $dsp_reward $dsp_marines
-Call $dsp_ref showMap ""Target: $dsp_marketName""","""I'll get straight to it, captain. The task is to see the $dsp_industry $dsp_marketOnOrAt $dsp_marketName, $dsp_dist light-years away disrupted for at least $dsp_disruptDays days. On success, you'll recieve $dsp_reward credits.""
+Call $dsp_ref showMap ""Target: $dsp_marketName""","""I'll get straight to it, captain. The task is to see the $dsp_industry $dsp_marketOnOrAt $dsp_marketName, $dsp_dist light-years away disrupted for at least $dsp_disruptDays days. On success, you'll receive $dsp_reward credits.""
 
 $HeOrShe sets aside the bottle of grog they had been drinking, quickly bringing up further details onto a shared holo-display. ""Tac-intel's identified a few points of consideration. Take a look."" The details are consistent and thorough overall, giving you a complete overview on $dsp_marketName.
 
