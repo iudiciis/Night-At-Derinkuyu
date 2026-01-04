@@ -4,8 +4,8 @@
 	"author":"iudiciis",
 	"version":{
 		"major":0,
-		"minor":2,
-		"patch":"0b"
+		"minor":3,
+		"patch":0
 	},
 	"description":"Story mod that currently adds one simple quest.",
 	"gameVersion":"0.98a-RC8",
