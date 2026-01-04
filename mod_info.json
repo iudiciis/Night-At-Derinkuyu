@@ -7,7 +7,7 @@
 		"minor":3,
 		"patch":0
 	},
-	"description":"Story mod that currently adds one simple quest.",
+	"description":"Story mod that currently adds two short quests, vaguely (but not really) related to Derinkuyu.",
 	"gameVersion":"0.98a-RC8",
 	"jars":["jars/NightAtDerinkuyu.jar"],
 	"modPlugin":"data.scripts.NaderinModPlugin"
