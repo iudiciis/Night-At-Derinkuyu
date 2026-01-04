@@ -91,6 +91,7 @@ public class NaderinTheDerinkuyuDrop extends HubMissionWithSearch {
         triggerAutoAdjustFleetSize(FleetSize.SMALL, FleetSize.LARGE);
         triggerPickLocationTowardsPlayer(system.getHyperspaceAnchor(), 10f, getUnits(0.3f));
         triggerSpawnFleetAtPickedLocation("$naderin_tdd_pirates_ref", null);
+        triggerFleetMakeImportant(null, Stage.DROP_OFF, Stage.SUBMIT);
         triggerSetFleetMissionRef("$naderin_tdd_ref");
         triggerMakeFleetGoAwayAfterDefeat();
         triggerSetPirateFleet(); // important, pirate fleet behaves differently otherwise when transponder is off

@@ -13,6 +13,7 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.impl.campaign.CoreReputationPlugin.RepRewards;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.DelayedFleetEncounter;
@@ -20,7 +21,6 @@ import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddShip;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.AddRaidObjective;
-import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.MarketCMD;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -193,7 +193,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         setStoryMission();
         setTimeLimit(Stage.FAILED, 365, null, Stage.VISITING_THE_STARWORKS);
         setNoAbandon();
-        setRepPenaltyPerson(25f);
+        setRepPenaltyPerson(RepRewards.EXTREME);
 
         setStartingStage(Stage.SEARCHING_SALVAGE);
         setSuccessStage(Stage.COMPLETED);
@@ -419,7 +419,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         } else if (currentStage == Stage.VISITING_THE_STARWORKS) {
             return starworks.getStarSystem().getCenter();
         } else if (currentStage == Stage.PAYMENT) {
-            return getPerson().getMarket().getPlanetEntity();
+            return getPerson().getMarket().getStarSystem().getCenter();
         } else {
             return super.getMapLocation(map);
         }

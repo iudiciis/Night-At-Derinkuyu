@@ -1,3 +1,13 @@
+Version 0.3.1
+Patch Fixes:
+- player could pay their co-conspirators and go into debt doing so
+- player could not actually get a reward from "complaining" to Remy
+- pirate complication in Drop mission always hailed player and was not set as important
+- intel screen getMapLocation didn't actually point the player where they needed to go during the payment phase of the Luminary quest
+- deciding to keep The Luminary resulted in -100 vengeful rep with the quest giver, changed to `EXTREME` penalty (less than you think)
+- two instances of receive being misspelt
+- add minor stage setting during situation when leaving via shuttle with 'guilt'
+
 Version 0.3.0
 First version on the forums. (hopefully)
 - Dialogue rewrite of the first bar mission, "The Derinkuyu Drop"
