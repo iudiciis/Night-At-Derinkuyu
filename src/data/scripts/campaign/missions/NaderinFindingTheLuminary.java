@@ -260,18 +260,21 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
             }
             case "refusedToReturn" -> {
                 DelayedFleetEncounter e = new DelayedFleetEncounter(genRandom, getMissionId());
-                e.setDelayMedium();
+                e.setDelayVeryShort();
                 e.setLocationInnerSector(false, Factions.INDEPENDENT);
                 e.beginCreate();
                 e.triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.VERY_HIGH, Factions.MERCENARY, FleetTypes.PATROL_LARGE, new Vector2f());
                 e.triggerSetFleetOfficers(OfficerNum.MORE, OfficerQuality.HIGHER);
+                e.triggerSetFleetQuality(FleetQuality.HIGHER);
                 e.triggerFleetSetFaction(Factions.INDEPENDENT);
                 e.triggerSetFleetFlag("$naderin_ftl_consequences");
+                e.triggerSetFleetGenericHailPermanent("naderin_ftl_consequencesHail");
                 e.triggerMakeNoRepImpact();
                 e.triggerSetStandardAggroInterceptFlags();
                 e.endCreate();
                 return true;
             }
+            // Needed to avoid edge-case where player sees multiple raid options
             // There is probably a better way of doing this
             case "clearCustomRaidObjectives" -> {
                 String raidObjName = "Perform ship hijacking operation";

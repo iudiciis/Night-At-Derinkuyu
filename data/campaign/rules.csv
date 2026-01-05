@@ -1244,7 +1244,8 @@ naderin_ftl_withLuminaryKeepIt,DialogOptionSelected,"$option == naderin_ftl_with
 naderin_ftl_withLuminaryBuyOffer:Offer to buy it from them instead
 naderin_ftl_withLuminaryHandOver:Transfer The Luminary over",
 naderin_ftl_withLuminaryKeepItFunTooltip,naderin_ftl_withLuminaryKeepItFunTooltip,"$player.credits < 0","SetTooltip naderin_ftl_withLuminaryKeepIt ""Reminder: You are in debt!""",,,
-naderin_ftl_withLuminaryKeepConfirm,DialogOptionSelected,"$option == naderin_ftl_withLuminaryKeepConfirm","$naderin_ftl_keptTheLuminary = true 0
+naderin_ftl_withLuminaryKeepConfirm,DialogOptionSelected,"$option == naderin_ftl_withLuminaryKeepConfirm","Call $global.naderin_ftl_ref refusedToReturn
+$naderin_ftl_keptTheLuminary = true 0
 Call $global.naderin_ftl_ref updateStage
 ","""Oh.""","cutCommLink:Cut the comm link",
 naderin_ftl_withoutLuminary,PickGreeting,"Call $global.naderin_ftl_ref updateData
@@ -1265,12 +1266,13 @@ naderin_ftl_withoutLuminaryNo,DialogOptionSelected,"$option == naderin_ftl_witho
 "#END Return To Client",,,,,,
 ,,,,,,
 # Vengeance If Kept,,,,,,
-naderin_ftl_consequences,BeginFleetEncounter,"$naderin_ftl_consequences score:1000
-!$entity.naderin_ftl_encounteredMerc","$entity.naderin_ftl_encounteredMerc = true
-FleetDesc
-HailPlayer",,,
-naderin_ftl_consequencesCommsOpen,OpenCommLink,"$naderin_ftl_consequences score:1000
-!$entity.ignorePlayerCommRequests","$entity.ignorePlayerCommRequests = true","""Captain $playerName!"" $HeOrShe beams at you. ""My employer is paying me handsomely for this hit out on you. I do so hope you'll oblige me.""","cutCommLink:Cut the comm-link",
+naderin_ftl_consequencesHail,naderin_ftl_consequencesHail,,"$entity.ignorePlayerCommRequests = true","""Captain $playerName!"" $HeOrShe beams at you. ""My employer is paying me handsomely for this hit out on you. I do so hope you'll oblige me.""","naderin_ftl_consequencesWho:'Wait, why?""
+cutCommLink:Cut the comm-link",
+naderin_ftl_consequencesWho,DialogOptionSelected,"$option == naderin_ftl_consequencesWho","SetTextHighlights ""illuminating""","""You do not know?"" $HeOrShe seems to contemplate for a second, $hisOrHer smile not once fading. ""Well. I will tell you this. Their words were very... illuminating.""
+
+You remember now. It was not too long ago that you had taken a trip to recover a particular ship, a ship which you had elected not to return to its former owner.
+
+""I hope you understand that this is a perfectly reasonable, proportional response to your actions, $playerName. I also hope that you do not regret it."" With those words said, $heOrShe cuts off the connection.","cutCommLinkNoText:Continue",
 "#END Vengeance If Kept",,,,,,
 "#END Finding The Luminary",,,,,,
 ,,,,,,
