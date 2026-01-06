@@ -1,3 +1,9 @@
+Version 0.3.2
+Patch Fixes:
+- fixed rare occurrence where revealing the second debris field in the first step of the "Finding The Luminary" mission failed due to "curr" being null. This happened if you saved after starting the mission, then loaded before having fully interacted with the first debris field. If you run into this issue, the workaround is to find the second debris field manually (the first debris field is very big, the second is very small).
+- fixed one instance of blurb text for one of the vanilla underworld mission replacements never actually firing, showing the default vanilla text instead
+- added forum link to version checker file
+
 Version 0.3.1
 Patch Fixes:
 - player could pay their co-conspirators and go into debt doing so

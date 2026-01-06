@@ -21,7 +21,7 @@
     # This is used to launch directly to the forum thread from in the game.
     # The ID is the set of digits at the end of the forum thread URL before the dot.
     # For example: https://fractalsoftworks.com/forum/index.php?topic=8181.0 has a modThreadId of 8181
-    #"modThreadId":8181,
+    "modThreadId":34741,
 
     # The ID of the NexusMods page for this mod (optional)
     # This is used to launch directly to the NexusMods page from in the game.
@@ -37,7 +37,7 @@
     {
         "major":0,
         "minor":3,
-        "patch":1 # Can be a number, character or string (1, 2, a, b, "-RC2", etc)
+        "patch":2 # Can be a number, character or string (1, 2, a, b, "-RC2", etc)
     },
 
     ###################################################################################

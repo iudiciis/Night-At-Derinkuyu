@@ -18,6 +18,8 @@ import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.impl.campaign.missions.DelayedFleetEncounter;
 import com.fs.starfarer.api.impl.campaign.missions.hub.HubMissionWithBarEvent;
+import com.fs.starfarer.api.impl.campaign.missions.hub.MissionTrigger.TriggerAction;
+import com.fs.starfarer.api.impl.campaign.missions.hub.MissionTrigger.TriggerActionContext;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddShip;
 import com.fs.starfarer.api.impl.campaign.rulecmd.salvage.AddRaidObjective;
@@ -25,6 +27,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.SectorMapAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
+import org.apache.log4j.Logger;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
@@ -32,6 +35,7 @@ import org.lwjgl.util.vector.Vector2f;
  * @author iudiciis
  */
 public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
+    public static Logger log = Global.getLogger(NaderinFindingTheLuminary.class);
 
     // Use stages to track how far the Player has progressed, and to react accordingly.
     public enum Stage {
@@ -131,25 +135,19 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         beginStageTrigger(Stage.SEARCHING_SALVAGE);
         LocData firstDebrisLoc = new LocData(EntityLocationType.ORBITING_PLANET_OR_STAR, null, salvageSystem);
         triggerSpawnDebrisField(400f, 1f, firstDebrisLoc);
-        triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE, Stage.SECOND_SALVAGE);
+        triggerEntityMakeImportant("$naderin_ftl_fdf", Stage.SEARCHING_SALVAGE);
         endTrigger();
 
-        // probably better to instantiate now rather than on trigger
+        // probably better to instantiate now rather than on trigger for the entity reference
         LocData secondDebrisLoc = new LocData(EntityLocationType.HIDDEN_NOT_NEAR_STAR, null, salvageSystem);
         secondDebrisField = spawnDebrisField(100f, 2f, secondDebrisLoc);
         makeImportant(secondDebrisField, "$naderin_ftl_sdf", Stage.SEARCHING_SALVAGE, Stage.SECOND_SALVAGE);
+        Global.getSector().getMemoryWithoutUpdate().set("$naderin_ftl_sdf", secondDebrisField);
 
         // surely there's an easier way to instantly reveal an entity's location to the player
-        beginStageTrigger(Stage.SECOND_SALVAGE);
         // triggerMakeDiscoverable, maybe
-        triggerCustomAction(context -> {
-            // I have no idea which ones we actually need and which ones we can get rid of
-            secondDebrisField.getDetectedRangeMod().modifyFlat("gen", 10f);
-            secondDebrisField.setExtendedDetectedAtRange(20000f);
-            secondDebrisField.setDetectionRangeDetailsOverrideMult(10f);
-            secondDebrisField.setSensorProfile(20000f);
-            // context.entity = secondDebrisField;
-        });
+        beginStageTrigger(Stage.SECOND_SALVAGE);
+        triggerCustomAction(new NaderinFTLRevealSecondDebrisFieldAction(secondDebrisField));
         endTrigger();
 
         // Pirate Fleet Complication and Cache
@@ -162,7 +160,6 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         triggerCreateFleet(FleetSize.MEDIUM, FleetQuality.DEFAULT, Factions.PIRATES, FleetTypes.PATROL_MEDIUM, pirateSystem);
         triggerAutoAdjustFleetStrengthModerate();
         triggerSetStandardHostilePirateFlags();
-        //triggerMakeFleetIgnoredByOtherFleets();
         triggerMakeFleetIgnoreOtherFleetsExceptPlayer();
         triggerPickLocationAtInSystemJumpPoint(pirateSystem);
         triggerSpawnFleetAtPickedLocation("$naderin_ftl_pirates", null);
@@ -203,7 +200,7 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, starworks);
         setStageOnMarketDecivilized(Stage.FAILED_NO_PENALTY, giver.getMarket());
 
-        // Progression (use 'connect with flag' instead next time)
+        // Progression (maybe use 'connect with flag' instead next time)
         setStageOnGlobalFlag(Stage.SECOND_SALVAGE, "$naderin_ftl_calculated");
         setStageOnGlobalFlag(Stage.RESUPPLY_INTERCEPT, "$naderin_ftl_searched");
         setStageOnGlobalFlag(Stage.VISITING_THE_STARWORKS, "$naderin_ftl_located");
@@ -215,7 +212,6 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
         return true;
     }
 
-    //
     @Override
     protected boolean callAction(String action, String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         switch (action) {
@@ -378,8 +374,6 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
                     giver.getMarket().getName() + " to collect a reduced 50,000 credit reward.", opad);
         }
         if (currentStage == Stage.PAYMENT) {
-            // if(Global.getSector().getMemoryWithoutUpdate().contains("$naderin_ftl_keep")) {
-            // label = info.addPara("It's time to return what you've 'found' of The Luminary to " + getPerson().getNameString() + ".", opad);
             LabelAPI label;
             label = info.addPara("It's time to return what you've found of The Luminary to " + getPerson().getNameString() + ".", opad);
             label.setHighlight("The Luminary");
@@ -431,5 +425,23 @@ public class NaderinFindingTheLuminary extends HubMissionWithBarEvent {
     @Override
     public String getBaseName() {
         return "Finding The Luminary";
+    }
+
+    // can't use a lambda, needed to ensure "curr" exists
+    public static class NaderinFTLRevealSecondDebrisFieldAction implements TriggerAction {
+        protected SectorEntityToken entity;
+
+        public NaderinFTLRevealSecondDebrisFieldAction(SectorEntityToken entity) {
+            this.entity = entity;
+        }
+
+        public void doAction(TriggerActionContext context) {
+            // Pretty sure we don't need all of these
+            entity.getDetectedRangeMod().modifyFlat("gen", 10f);
+            entity.setExtendedDetectedAtRange(20000f);
+            entity.setDetectionRangeDetailsOverrideMult(10f);
+            entity.setSensorProfile(20000f);
+            log.info("naderin ftl: Revealed second debris field.");
+        }
     }
 }
