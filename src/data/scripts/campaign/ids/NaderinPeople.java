@@ -49,6 +49,8 @@ public class NaderinPeople {
             person.getName().setLast("Laurent");
             // person.setVoice(Voices.SPACER);
             person.addTag(Tags.CONTACT_UNDERWORLD);
+            person.removeTag(Tags.CONTACT_MILITARY); // guarantee not military
+            person.removeTag(Tags.CONTACT_TRADE); // guarantee not trade
             person.setPortraitSprite("graphics/naderin/characters/remy.png");
             person.getStats().setSkillLevel(Skills.SENSORS, 1);
             person.getStats().setSkillLevel(Skills.NAVIGATION, 1);

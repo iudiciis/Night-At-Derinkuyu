@@ -120,7 +120,7 @@ naderin_ftl_fdfInteractionCont,DialogOptionSelected,"$option == naderin_ftl_fdfI
 naderin_ftl_fdfInteractionIfFirstCond,naderin_ftl_fdfInteractionIfFirstCond,"$global.naderin_ftl_secondFound == false","FireBest naderin_ftl_fdfInteractionIfFirst",,,
 naderin_ftl_fdfInteractionIfFirst,naderin_ftl_fdfInteractionIfFirst,,"SetTextHighlights ""map""
 $global.naderin_ftl_calculated = true
-Call $naderin_tdd_ref updateStage
+Call $naderin_tdd_ref updateData
 AddTextSmall ""Target location estimated"" highlight","Fortunately, the other half of your bridge crew appear to have made more useful discoveries.
 
 ""The defending fleet must have managed to disengage after some losses on both sides. If what we've been told is true, well, there'll be a second debris field around here in the direction the survey fleet attempted to escape to. If we go through a few heuristics...""
@@ -2036,7 +2036,7 @@ OR
 
 ""League patrol in the pocket of rogues? Hegemony inspector too overzealous in their search? Church patrol trying to confiscate perfectly legal scientific equipment? That's when people start calling on us, to start reminding them that the spacers of the sector can be just every bit as ruthless as the pirates they claim to protect us from.""
 
-""...well, not that I necessarily believe all that, but we'll get paid well either way. Just like I got paid to say all that,"" $HeOrShe adds with a sardonic laugh, flicking the ad-holo off with a dismissive gesture.",,
+""...well, not that I necessarily believe all that, but we'll get paid well either way. Just like I got paid to say all that,"" $heOrShe adds with a sardonic laugh, flicking the ad-holo off with a dismissive gesture.",,
 ,,,,,,
 # Bounty Details,,,,,,
 naderin_remy_ucbTrader,CBTraderOfferDesc,"$id == naderin_remy score:200","SetTextHighlights ""$bcb_systemName"" ""$bcb_dist light-years away"" ""$bcb_days days"" ""$bcb_reward credits""","""There's a trade fleet that's rubbed certain folks the wrong way. How, we don't know, but such is their 'transgression' that they're asking me to get someone - you, should you accept - to give them the show of their lives.""
