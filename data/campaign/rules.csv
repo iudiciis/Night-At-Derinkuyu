@@ -305,6 +305,7 @@ FireAll PopulateOptions",,,"Go back opt is automatically provided"
 naderin_ftl_disableLuminaryRaidIfNeeded,naderin_ftl_disableLuminaryRaidIfNeeded,"HostileFleetNearbyAndAware","SetEnabled naderin_ftl_raidStart false
 SetTooltip naderin_ftl_raidStart ""A nearby hostile fleet is tracking your movements, making a viable ground operation impossible.""",,,
 naderin_ftl_raidStart,DialogOptionSelected,"$option == naderin_ftl_raidStart","Call $global.naderin_ftl_ref clearCustomRaidObjectives
+$normalRaid = true 0
 $raidDifficulty = $naderin_ftl_raidDifficulty 0
 $raidGoBackTrigger = naderin_ftl_raidBack 0
 $raidContinueTrigger = naderin_ftl_raidFinished2 0
@@ -312,7 +313,7 @@ AddRaidObjective genericIcon ""Perform ship hijacking operation"" MEDIUM 3000 na
 ShowImageVisual raid_prepare","You convene your senior officers to discuss the option of seizing The Luminary outright. Initial queries from your crew to the local authorities are rebuffed, but simple visual observation from orbit easily identifies The Luminary sitting in one of the docking bays. From there, it's not hard to figure out that the pirates are intentionally showing off their prize... and conducting what your crew believe to be certain ""special modifications"".
 
 Ship hijacking operations have been done before, and initial plans are drafted based on past occurrences. Projections estimate the operation will require only a fair amount of marines ending with acceptable casualties. Assuming, of course, that extraction is complete before local security elements can properly activate in response.","mktRaidNonMarket:Continue","note that if we placed the raid scripts in raidOption, it would also be available in the standard raid menu"
-naderin_ftl_raidFinished1,naderin_ftl_raidFinished1,,,"The plan your officers decided on involved, of course, the art of surprise.
+naderin_ftl_raidFinished1,naderin_ftl_raidFinished1,"$normalRaid == true",,"The plan your officers decided on involved, of course, the art of surprise.
 
 Marine squads arrive slowly onto the port concourse disguised as rowdy crew looking to unload and unwind. All manage to snake their way towards the docking bays where The Luminary is held, but are stopped short of entering the particular section where your prize is stored. Tactical teams discreetly take their time preparing charges, taking positions, and coordinating with targeting feeds onboard your $shipOrFleet.
 
@@ -1192,7 +1193,8 @@ $market.id == station_kapteyn
 $menuState == main
 $global.naderin_ftl_located == true
 $global.naderin_ftl_ratAttached == true
-!$global.naderin_ftl_increasedSecurity","SetOptionColor naderin_ftl_pickup2 highlight",,"2:naderin_ftl_pickup2:Activate remote control of The Luminary",
+!$global.naderin_ftl_increasedSecurity
+!$global.naderin_ftl_acquired","SetOptionColor naderin_ftl_pickup2 highlight",,"2:naderin_ftl_pickup2:Activate remote control of The Luminary",
 naderin_ftl_pickup2,DialogOptionSelected,"$option == naderin_ftl_pickup2",,"With the remote access trojan active on The Luminary, it will be possible to maneuver the ship out of the docking bay and towards your fleet.","naderin_ftl_pickup3:Extract The Luminary
 naderin_ftl_pickupBack:Not now",
 naderin_ftl_pickupBack,DialogOptionSelected,"$option == naderin_ftl_pickupBack","ShowDefaultVisual
